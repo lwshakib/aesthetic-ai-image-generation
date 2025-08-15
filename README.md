@@ -2,6 +2,10 @@
 
 A modern, full-stack web application that leverages advanced AI models to generate stunning artwork from text prompts. Built with Next.js 15, TypeScript, and powered by cutting-edge AI services.
 
+![Application Demo](public/demo.gif)
+
+_Watch the application in action - Generate stunning AI artwork with just a text prompt!_
+
 ![Aesthetic AI Image Generation](https://img.shields.io/badge/Next.js-15.4.6-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
 ![Prisma](https://img.shields.io/badge/Prisma-6.14.0-2D3748?style=for-the-badge&logo=prisma)

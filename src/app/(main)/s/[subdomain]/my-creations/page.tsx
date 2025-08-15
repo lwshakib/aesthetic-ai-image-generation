@@ -190,7 +190,7 @@ function MyCreationsPage() {
 
   return (
     <div className="w-full min-h-screen bg-background py-10">
-      <h1 className="text-3xl font-bold text-center mb-8 text-white">
+      <h1 className="text-3xl font-bold text-center mb-8 text-primary">
         My Creations
       </h1>
       {loading ? (
