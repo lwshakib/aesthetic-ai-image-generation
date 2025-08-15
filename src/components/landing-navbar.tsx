@@ -89,6 +89,7 @@ export function LandingNavbar() {
               <ModeToggle />
             </div>
             <NavbarButton
+              href={`${protocol}://app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}
               onClick={() => setIsMobileMenuOpen(false)}
               variant="primary"
               className="w-full"

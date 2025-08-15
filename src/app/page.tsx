@@ -21,7 +21,7 @@ export default function Home() {
       <LandingNavbar />
 
       {/* Hero Section */}
-      <section className="px-4 text-center flex flex-col items-center justify-center min-h-[80vh] relative">
+      <section className="px-4 text-center flex flex-col items-center justify-center min-h-[80vh] relative mt-20">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
         <div className="relative z-10 max-w-4xl mx-auto">
           <Badge variant="secondary" className="mb-6 px-4 py-2 text-sm">
@@ -30,13 +30,13 @@ export default function Home() {
           </Badge>
 
           <h1 className="text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-6 leading-tight">
-            AI Art Generator
+            AI Image Generation Platform
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed">
-            Unleash your creativity! Instantly generate stunning artwork using
-            the power of artificial intelligence. Enter a prompt and watch your
-            imagination come to life.
+            Unleash your creativity! Instantly generate stunning images using
+            the power of artificial intelligence. Enter a prompt and transform
+            your ideas into visuals.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
@@ -98,17 +98,17 @@ export default function Home() {
                   <Palette className="w-6 h-6 text-primary" />
                 </div>
                 <CardTitle className="text-xl">
-                  Instant Art Generation
+                  Instant Image Generation
                 </CardTitle>
                 <CardDescription className="text-base">
-                  Generate beautiful artwork in seconds using advanced AI
+                  Generate high-quality images in seconds using advanced AI
                   models.
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-muted-foreground">
                   Simply enter your prompt and let the AI do the magic. No
-                  artistic skills required!
+                  design skills required!
                 </p>
               </CardContent>
             </Card>
@@ -141,7 +141,7 @@ export default function Home() {
                 </div>
                 <CardTitle className="text-xl">Developer API</CardTitle>
                 <CardDescription className="text-base">
-                  Integrate AI art generation into your own apps with our
+                  Integrate AI image generation into your own apps with our
                   easy-to-use API.
                 </CardDescription>
               </CardHeader>
@@ -169,7 +169,7 @@ export default function Home() {
               See what's possible
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Explore stunning AI-generated artwork created by our community
+              Explore stunning AI-generated images created by our community
             </p>
           </div>
 

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import FooterNavLinks from "@/components/FooterNavLinks";
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "next-themes";
@@ -12,7 +12,9 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
           <div className="flex items-center gap-3">
             <img
-              src={resolvedTheme === "dark" ? "/dark_logo.svg" : "/light_logo.svg"}
+              src={
+                resolvedTheme === "dark" ? "/dark_logo.svg" : "/light_logo.svg"
+              }
               alt="Aesthetic AI Logo"
               width={40}
               height={40}
@@ -23,7 +25,7 @@ export function Footer() {
                 Aesthetic AI
               </span>
               <p className="text-sm text-muted-foreground">
-                Create amazing art with AI
+                Create amazing images with AI
               </p>
             </div>
           </div>
