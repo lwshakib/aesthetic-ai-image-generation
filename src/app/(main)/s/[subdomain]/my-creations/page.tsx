@@ -79,26 +79,42 @@ function MyCreationsPage() {
   ) => {
     e.stopPropagation();
     setPending((p) => [...p, image.id]);
+
     if (image.favoriteId) {
+      // Optimistically remove favorite
       setCreations((cs) =>
         cs.map((img) =>
           img.id === image.id ? { ...img, favoriteId: undefined } : img
         )
       );
+      setFavorites((favs) => favs.filter((f) => f.imageId !== image.id));
+
       try {
         await fetch("/api/user/favorites", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ favoriteId: image.favoriteId }),
         });
-        setFavorites((favs) => favs.filter((f) => f.imageId !== image.id));
-      } catch {}
+      } catch (err) {
+        // Revert on error
+        setCreations((cs) =>
+          cs.map((img) =>
+            img.id === image.id ? { ...img, favoriteId: image.favoriteId } : img
+          )
+        );
+        setFavorites((favs) => [
+          ...favs,
+          { id: image.favoriteId!, imageId: image.id },
+        ]);
+      }
     } else {
+      // Optimistically add favorite
       setCreations((cs) =>
         cs.map((img) =>
           img.id === image.id ? { ...img, favoriteId: "pending" } : img
         )
       );
+
       try {
         const res = await fetch("/api/user/favorites", {
           method: "POST",
@@ -117,13 +133,15 @@ function MyCreationsPage() {
             { id: json.data.id, imageId: image.id },
           ]);
         } else {
+          // Revert on error
           setCreations((cs) =>
             cs.map((img) =>
               img.id === image.id ? { ...img, favoriteId: undefined } : img
             )
           );
         }
-      } catch {
+      } catch (err) {
+        // Revert on error
         setCreations((cs) =>
           cs.map((img) =>
             img.id === image.id ? { ...img, favoriteId: undefined } : img

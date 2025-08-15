@@ -36,19 +36,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "Prompt Enhanced Successfully",
+        message: "Image generated successfully",
         data: newImage,
       },
       { status: 200 }
     );
   } catch (error) {
-    if (error instanceof Error) {
-      console.log(error?.message);
-      return NextResponse.json({
+    console.error("Image generation error:", error);
+    return NextResponse.json(
+      {
         success: false,
         message: "Internal Server Error",
-        error: error.message,
-      });
-    }
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
   }
 }

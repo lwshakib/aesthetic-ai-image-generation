@@ -23,7 +23,7 @@ export async function generateImageV1(
   seed: number = -1,
   responseExt: string = "png",
   numInferenceSteps: number = 4
-): Promise<any | null> {
+): Promise<any | { code: number; message: string } | null> {
   try {
     const user = await currentUser();
 
@@ -40,6 +40,17 @@ export async function generateImageV1(
     // Input validation
     if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
       throw new Error("Prompt must be a non-empty string.");
+    }
+
+    if (
+      !width ||
+      !height ||
+      width < 64 ||
+      height < 64 ||
+      width > 2048 ||
+      height > 2048
+    ) {
+      throw new Error("Invalid width or height. Must be between 64 and 2048.");
     }
 
     const validExts = ["png", "jpg"];
@@ -90,7 +101,13 @@ export async function generateImageV1(
     }
   } catch (error) {
     console.error("Error during image generation:", error);
-    return null;
+    if (error instanceof Error) {
+      return { code: 500, message: error.message };
+    }
+    return {
+      code: 500,
+      message: "Unknown error occurred during image generation",
+    };
   }
 }
 

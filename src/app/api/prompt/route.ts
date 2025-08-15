@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
     const { prompt } = await req.json();
     const enhancedPrompt = await enhancePrompt(prompt);
 
-    if(enhancedPrompt === null){
+    if (enhancedPrompt === null) {
       return NextResponse.json({
         success: false,
         message: "Internal Server Error",
@@ -22,13 +22,14 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    if (error instanceof Error) {
-      console.log(error?.message);
-      return NextResponse.json({
+    console.error("Prompt enhancement error:", error);
+    return NextResponse.json(
+      {
         success: false,
         message: "Internal Server Error",
-        error: error.message,
-      });
-    }
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
   }
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { Download, Share2, UserCircle } from "lucide-react";
 import { useState as useReactState } from "react";
@@ -78,18 +79,18 @@ export default function ModalWithCopyPrompt({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm dark">
-      <div className="relative bg-white dark:bg-neutral-900 rounded-xl shadow-2xl flex flex-col md:flex-row max-w-4xl w-full mx-4 overflow-hidden animate-fadeIn max-h-screen overflow-y-auto hide-scrollbar">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+      <div className="relative bg-background rounded-xl shadow-2xl flex flex-col md:flex-row max-w-4xl w-full mx-4 overflow-hidden animate-fadeIn max-h-screen overflow-y-auto hide-scrollbar">
         {/* Close button */}
         <button
-          className="absolute top-4 right-4 text-white text-2xl z-10 hover:text-red-400 transition"
+          className="absolute top-4 right-4 text-foreground text-2xl z-10 hover:text-red-400 transition"
           onClick={onClose}
           aria-label="Close"
         >
           &times;
         </button>
         {/* Image section */}
-        <div className="flex-1 min-w-[300px] bg-neutral-100 dark:bg-black flex items-center justify-center p-4">
+        <div className="flex-1 min-w-[300px] bg-muted flex items-center justify-center p-4">
           <img
             src={selected.imageUrl}
             alt={selected.prompt}
@@ -98,7 +99,7 @@ export default function ModalWithCopyPrompt({
           />
         </div>
         {/* Details section */}
-        <div className="flex-1 flex flex-col gap-4 p-6 text-neutral-900 dark:text-white min-w-[300px] max-w-md">
+        <div className="flex-1 flex flex-col gap-4 p-6 text-foreground min-w-[300px] max-w-md">
           {/* User info */}
           <div className="flex items-center gap-3">
             {selected.user?.imageUrl ? (
@@ -108,7 +109,7 @@ export default function ModalWithCopyPrompt({
                 className="w-10 h-10 rounded-full object-cover"
               />
             ) : (
-              <UserCircle className="w-10 h-10 text-white/80" />
+              <UserCircle className="w-10 h-10 text-muted-foreground" />
             )}
             <span className="font-semibold text-lg">{selected.user?.name}</span>
           </div>
@@ -118,17 +119,19 @@ export default function ModalWithCopyPrompt({
               <div className="text-xl font-bold">
                 {sliceWords(selected.prompt, 6)}
               </div>
-              <button
-                className="text-xs px-2 py-1 rounded bg-neutral-800 hover:bg-neutral-700 transition text-white border border-neutral-700 flex items-center gap-1"
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={handleCopy}
                 disabled={copied}
                 title="Copy prompt"
                 aria-label="Copy prompt"
               >
                 {copied ? "Copied!" : "Copy"}
-              </button>
-              <button
-                className="text-xs px-2 py-1 rounded bg-neutral-800 hover:bg-neutral-700 transition text-white border border-neutral-700 flex items-center gap-1"
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={handleDownload}
                 disabled={downloaded}
                 title="Download image"
@@ -136,9 +139,10 @@ export default function ModalWithCopyPrompt({
               >
                 <Download className="w-4 h-4" />
                 {downloaded ? "Downloaded!" : "Download"}
-              </button>
-              <button
-                className="text-xs px-2 py-1 rounded bg-neutral-800 hover:bg-neutral-700 transition text-white border border-neutral-700 flex items-center gap-1"
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={handleShare}
                 disabled={shared}
                 title="Share image"
@@ -146,26 +150,22 @@ export default function ModalWithCopyPrompt({
               >
                 <Share2 className="w-4 h-4" />
                 {shared ? "Shared!" : "Share"}
-              </button>
+              </Button>
             </div>
-            <div className="bg-neutral-200 dark:bg-neutral-800 rounded-lg p-3 text-sm whitespace-pre-line">
+            <div className="bg-muted rounded-lg p-3 text-sm whitespace-pre-line">
               {selected.prompt}
             </div>
           </div>
           {/* Details grid */}
           <div className="grid grid-cols-2 gap-3 text-xs mt-2">
             <div>
-              <div className="text-neutral-500 dark:text-neutral-400">
-                Resolution
-              </div>
+              <div className="text-muted-foreground">Resolution</div>
               <div>
                 {selected.width}×{selected.height}
               </div>
             </div>
             <div>
-              <div className="text-neutral-500 dark:text-neutral-400">
-                Created
-              </div>
+              <div className="text-muted-foreground">Created</div>
               <div>
                 {formatDistanceToNow(new Date(selected.createdAt), {
                   addSuffix: true,
@@ -173,11 +173,11 @@ export default function ModalWithCopyPrompt({
               </div>
             </div>
             <div>
-              <div className="text-neutral-500 dark:text-neutral-400">Seed</div>
+              <div className="text-muted-foreground">Seed</div>
               <div>{selected?.seed}</div>
             </div>
             <div>
-              <div className="text-neutral-500 dark:text-neutral-400">ID</div>
+              <div className="text-muted-foreground">ID</div>
               <div className="break-all">{selected.id}</div>
             </div>
           </div>

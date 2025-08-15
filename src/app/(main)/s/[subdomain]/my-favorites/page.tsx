@@ -36,6 +36,7 @@ export default function MyFavoritesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Favorite | null>(null);
+  const [pending, setPending] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchFavorites() {
@@ -113,26 +114,36 @@ export default function MyFavoritesPage() {
                   </span>
                 </div>
                 {/* Heart icon always filled for favorite */}
-                <span
+                <button
                   onClick={async (e) => {
                     e.stopPropagation();
+                    setPending((p) => [...p, fav.id]);
+
+                    // Optimistically remove from favorites
+                    setFavorites((favorites) =>
+                      favorites.filter((f) => f.id !== fav.id)
+                    );
+
                     try {
                       await fetch("/api/user/favorites", {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ favoriteId: fav.id }),
                       });
-                      setFavorites((favorites) =>
-                        favorites.filter((f) => f.id !== fav.id)
-                      );
                     } catch (err) {
-                      // Optionally handle error
+                      // Revert on error
+                      setFavorites((favorites) => [...favorites, fav]);
+                    } finally {
+                      setPending((p) => p.filter((id) => id !== fav.id));
                     }
                   }}
                   className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full p-1 pointer-events-auto bg-transparent cursor-pointer"
+                  disabled={pending.includes(fav.id)}
+                  aria-label="Remove from favorites"
+                  type="button"
                 >
                   <Heart className="w-6 h-6 fill-red-500 text-red-500 transition" />
-                </span>
+                </button>
               </div>
               {/* Image fills the card */}
               <img

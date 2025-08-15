@@ -30,6 +30,7 @@ interface NavItemsProps {
   }[];
   className?: string;
   onItemClick?: () => void;
+  activeIndex?: number;
 }
 
 interface MobileNavProps {
@@ -114,7 +115,12 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   );
 };
 
-export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
+export const NavItems = ({
+  items,
+  className,
+  onItemClick,
+  activeIndex,
+}: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
@@ -129,12 +135,15 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
         <Link
           onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
-          className="relative px-4 py-2 text-neutral-600 dark:text-neutral-300"
+          className={cn(
+            "relative px-4 py-2 text-neutral-600 dark:text-neutral-300",
+            activeIndex === idx && "text-black dark:text-white font-semibold"
+          )}
           key={`link-${idx}`}
           href={item.link}
         >
           <>
-            {hovered === idx && (
+            {(hovered === idx || activeIndex === idx) && (
               <motion.div
                 layoutId="hovered"
                 className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800"

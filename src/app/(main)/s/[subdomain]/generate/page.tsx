@@ -22,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useProModal } from "@/hooks/use-pro-modal";
 import { AnimatePresence, motion } from "framer-motion";
 import { Copy, Download, Share2 } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -30,7 +31,7 @@ export default function Page() {
   const [negativePrompt, setNegativePrompt] = useState("");
   const [width, setWidth] = useState("1024");
   const [height, setHeight] = useState("1024");
-  const [seed, setSeed] = useState(-1);
+  const [seed, setSeed] = useState<number>(-1);
   const [responseExt, setResponseExt] = useState("png");
   const [numInferenceSteps, setNumInferenceSteps] = useState(4);
   const [imageData, setImageData] = useState<{ imageUrl: string } | null>(null);
@@ -41,7 +42,40 @@ export default function Page() {
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const proModal = useProModal();
 
+  // Helper function to calculate display dimensions
+  const getDisplayDimensions = () => {
+    const actualWidth = width === "custom" ? customWidth : Number(width);
+    const actualHeight = height === "custom" ? customHeight : Number(height);
+
+    // Calculate aspect ratio
+    const aspectRatio = actualWidth / actualHeight;
+
+    // Maximum display dimensions
+    const maxWidth = 400;
+    const maxHeight = 400;
+
+    let displayWidth = actualWidth;
+    let displayHeight = actualHeight;
+
+    // Scale down if too large while maintaining aspect ratio
+    if (displayWidth > maxWidth || displayHeight > maxHeight) {
+      if (aspectRatio > 1) {
+        // Landscape
+        displayWidth = maxWidth;
+        displayHeight = maxWidth / aspectRatio;
+      } else {
+        // Portrait
+        displayHeight = maxHeight;
+        displayWidth = maxHeight * aspectRatio;
+      }
+    }
+
+    return { width: displayWidth, height: displayHeight };
+  };
+
   async function handleEnhancePrompt() {
+    if (!prompt.trim()) return;
+
     setIsEnhancing(true);
     try {
       const res = await fetch("/api/prompt", {
@@ -52,15 +86,21 @@ export default function Page() {
       const data = await res.json();
       if (data.success && data.data) {
         setPrompt(data.data);
+        toast.success("Prompt enhanced successfully!");
+      } else {
+        toast.error(data.message || "Failed to enhance prompt");
       }
     } catch (err) {
-      // Optionally handle error
+      console.error("Prompt enhancement error:", err);
+      toast.error("Failed to enhance prompt");
     } finally {
       setIsEnhancing(false);
     }
   }
 
   async function generateImage() {
+    if (!prompt.trim()) return;
+
     setIsGeneratingImage(true);
     setError(null);
     setImageData(null);
@@ -82,15 +122,19 @@ export default function Page() {
       if (res.status === 403) {
         proModal.onOpen();
         setImageData(null);
+        return;
       }
       if (res.status === 200 && data.success && data.data) {
-        setImageData(data.data); // data.data is an object
+        setImageData(data.data);
+        toast.success("Image generated successfully!");
       } else {
         setError(data.message || "Failed to generate image");
-        toast.error(data.message);
+        toast.error(data.message || "Failed to generate image");
       }
     } catch (err: any) {
-      setError(err?.message || "Unknown error");
+      const errorMessage = err?.message || "Unknown error";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsGeneratingImage(false);
     }
@@ -112,19 +156,26 @@ export default function Page() {
   const handleDownload = async () => {
     const url = imageData?.imageUrl;
     if (!url) return;
+
+    let objectUrl: string | null = null;
     try {
       const response = await fetch(url);
       const blob = await response.blob();
+      objectUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
+      link.href = objectUrl;
       link.download = `generated-image.${responseExt}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
       toast.success("Image downloaded!");
-    } catch {
+    } catch (error) {
+      console.error("Download error:", error);
       toast.error("Failed to download image");
+    } finally {
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
     }
   };
 
@@ -212,6 +263,9 @@ export default function Page() {
                         <SelectItem value="custom">Custom</SelectItem>
                       </SelectContent>
                     </Select>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Display: {getDisplayDimensions().width}px
+                    </p>
                     <AnimatePresence>
                       {width === "custom" && (
                         <motion.div
@@ -248,6 +302,9 @@ export default function Page() {
                         <SelectItem value="custom">Custom</SelectItem>
                       </SelectContent>
                     </Select>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Display: {getDisplayDimensions().height}px
+                    </p>
                     <AnimatePresence>
                       {height === "custom" && (
                         <motion.div
@@ -277,7 +334,7 @@ export default function Page() {
                       Inference Steps
                     </Label>
                     <span className="text-sm text-muted-foreground my-2">
-                      4
+                      {numInferenceSteps}
                     </span>
                   </div>
                   <Slider
@@ -299,7 +356,10 @@ export default function Page() {
                       id="seed"
                       type="number"
                       value={seed}
-                      onChange={(e) => setSeed(Number(e.target.value))}
+                      onChange={(e) => {
+                        const value = Number(e.target.value);
+                        setSeed(isNaN(value) ? -1 : value);
+                      }}
                       className="w-full"
                     />
                   </div>
@@ -334,7 +394,14 @@ export default function Page() {
                 {isGeneratingImage ? (
                   <>
                     <div className="w-full flex flex-col items-center justify-center gap-4 flex-1">
-                      <Skeleton className="w-full max-w-full max-h-[400px] h-[300px] rounded border shadow" />
+                      <Skeleton
+                        className="rounded border shadow"
+                        style={{
+                          width: getDisplayDimensions().width,
+                          height: getDisplayDimensions().height,
+                          maxWidth: "100%",
+                        }}
+                      />
                     </div>
                     <div className="w-full flex flex-row items-center gap-2 mt-4 absolute bottom-0 left-0 px-2 pb-2">
                       <Skeleton className="flex-1 h-9 rounded bg-muted" />
@@ -346,10 +413,14 @@ export default function Page() {
                 ) : imageData ? (
                   <>
                     <div className="w-full flex flex-col items-center justify-center flex-1">
-                      <img
+                      <Image
                         src={imageData?.imageUrl}
-                        alt="Generated"
-                        className="max-w-full max-h-[400px] rounded border shadow"
+                        alt="AI generated image based on prompt"
+                        width={getDisplayDimensions().width}
+                        height={getDisplayDimensions().height}
+                        className="rounded border shadow object-contain"
+                        priority={false}
+                        unoptimized={true}
                       />
                     </div>
                     <div className="w-full flex flex-row items-center gap-2 mt-4 absolute bottom-0 left-0 px-2 pb-2">
@@ -459,6 +530,9 @@ export default function Page() {
                         <SelectItem value="custom">Custom</SelectItem>
                       </SelectContent>
                     </Select>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Display: {getDisplayDimensions().width}px
+                    </p>
                     <AnimatePresence>
                       {width === "custom" && (
                         <motion.div
@@ -495,6 +569,9 @@ export default function Page() {
                         <SelectItem value="custom">Custom</SelectItem>
                       </SelectContent>
                     </Select>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Display: {getDisplayDimensions().height}px
+                    </p>
                     <AnimatePresence>
                       {height === "custom" && (
                         <motion.div
@@ -524,7 +601,7 @@ export default function Page() {
                       Inference Steps
                     </Label>
                     <span className="text-sm text-muted-foreground my-2 sm:ml-2">
-                      4
+                      {numInferenceSteps}
                     </span>
                   </div>
                   <Slider
@@ -546,7 +623,10 @@ export default function Page() {
                       id="seed"
                       type="number"
                       value={seed}
-                      onChange={(e) => setSeed(Number(e.target.value))}
+                      onChange={(e) => {
+                        const value = Number(e.target.value);
+                        setSeed(isNaN(value) ? -1 : value);
+                      }}
                       className="w-full"
                     />
                   </div>
@@ -575,14 +655,21 @@ export default function Page() {
               </div>
             </div>
           </ResizablePanel>
-          <ResizableHandle withHandle className="hidden sm:block" />
+          <ResizableHandle className="hidden sm:block" />
           <ResizablePanel defaultSize={60} minSize={40}>
             <div className="flex h-full flex-col items-center justify-center p-2 sm:p-6">
               <div className="w-full h-full flex flex-col items-center justify-center rounded-lg relative">
                 {isGeneratingImage ? (
                   <>
                     <div className="w-full flex flex-col items-center justify-center gap-4 flex-1">
-                      <Skeleton className="w-full max-w-full max-h-[400px] h-[300px] rounded border shadow" />
+                      <Skeleton
+                        className="rounded border shadow"
+                        style={{
+                          width: getDisplayDimensions().width,
+                          height: getDisplayDimensions().height,
+                          maxWidth: "100%",
+                        }}
+                      />
                     </div>
                     <div className="w-full flex flex-row items-center gap-2 mt-4 absolute bottom-0 left-0 px-2 pb-2">
                       <Skeleton className="flex-1 h-9 rounded bg-muted" />
@@ -594,10 +681,14 @@ export default function Page() {
                 ) : imageData ? (
                   <>
                     <div className="w-full flex flex-col items-center justify-center flex-1">
-                      <img
+                      <Image
                         src={imageData?.imageUrl}
-                        alt="Generated"
-                        className="max-w-full max-h-[400px] rounded border shadow"
+                        alt="AI generated image based on prompt"
+                        width={getDisplayDimensions().width}
+                        height={getDisplayDimensions().height}
+                        className="rounded border shadow object-contain"
+                        priority={false}
+                        unoptimized={true}
                       />
                     </div>
                     <div className="w-full flex flex-row items-center gap-2 mt-4 absolute bottom-0 left-0 px-2 pb-2">
