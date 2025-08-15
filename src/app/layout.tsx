@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
+import { shadcn } from "@clerk/themes";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -56,7 +57,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: [shadcn],
+      }}
+    >
       <html lang="en">
         <body>
           <ThemeProvider
