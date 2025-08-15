@@ -1,5 +1,6 @@
 {
   "name": "aesthetic-ai-image-generation",
+  "description": "A modern, full-stack web application that leverages advanced AI models to generate stunning artwork from text prompts. Built with Next.js 15, TypeScript, and powered by cutting-edge AI services.",
   "version": "0.1.0",
   "private": true,
   "scripts": {
