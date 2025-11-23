@@ -4,6 +4,7 @@ import ModalWithCopyPrompt from "@/components/ModalWithCopyPrompt";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Heart, UserCircle } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState as useReactState, useState } from "react";
 
 type Favorite = { id: string; imageId: string };
@@ -233,10 +234,13 @@ function MyCreationsPage() {
                   opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out"
                 >
                   {item.user?.imageUrl ? (
-                    <img
+                    <Image
                       src={item.user.imageUrl}
                       alt={item.user.name}
+                      width={24}
+                      height={24}
                       className="w-6 h-6 rounded-full object-cover"
+                      unoptimized
                     />
                   ) : (
                     <UserCircle className="w-6 h-6 text-white/80" />
@@ -264,14 +268,15 @@ function MyCreationsPage() {
                 </button>
               </div>
               {/* Image fills the card */}
-              <img
+              <Image
                 src={item.imageUrl}
                 alt={item.prompt}
                 width={item.width}
                 height={item.height}
                 className="w-full h-auto block object-cover"
-                loading="lazy"
                 style={{ aspectRatio: `${item.width} / ${item.height}` }}
+                unoptimized
+                priority={false}
               />
               {/* Bottom overlay: prompt (show on hover, no background) */}
               <div className="absolute bottom-0 left-0 w-full z-10 pointer-events-none flex justify-start">

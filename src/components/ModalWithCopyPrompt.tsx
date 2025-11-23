@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { Download, Share2, UserCircle } from "lucide-react";
+import Image from "next/image";
 import { useState as useReactState } from "react";
 
 interface UserInfo {
@@ -91,11 +92,15 @@ export default function ModalWithCopyPrompt({
         </button>
         {/* Image section */}
         <div className="flex-1 min-w-[300px] bg-muted flex items-center justify-center p-4">
-          <img
+          <Image
             src={selected.imageUrl}
             alt={selected.prompt}
+            width={selected.width}
+            height={selected.height}
             className="rounded-lg max-h-[70vh] w-auto h-auto object-contain shadow-lg"
             style={{ maxWidth: "100%" }}
+            unoptimized
+            priority
           />
         </div>
         {/* Details section */}
@@ -103,10 +108,13 @@ export default function ModalWithCopyPrompt({
           {/* User info */}
           <div className="flex items-center gap-3">
             {selected.user?.imageUrl ? (
-              <img
+              <Image
                 src={selected.user.imageUrl}
                 alt={selected.user.name}
+                width={40}
+                height={40}
                 className="w-10 h-10 rounded-full object-cover"
+                unoptimized
               />
             ) : (
               <UserCircle className="w-10 h-10 text-muted-foreground" />

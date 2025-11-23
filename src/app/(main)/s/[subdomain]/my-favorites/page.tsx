@@ -4,6 +4,7 @@ import ModalWithCopyPrompt from "@/components/ModalWithCopyPrompt";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Heart, UserCircle } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface Favorite {
@@ -101,10 +102,13 @@ export default function MyFavoritesPage() {
                 {/* User info (show on hover with animation) */}
                 <div className="flex items-center gap-2 bg-black/60 rounded-full px-2 py-1 pointer-events-auto opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
                   {fav.image.user?.imageUrl ? (
-                    <img
+                    <Image
                       src={fav.image.user.imageUrl}
                       alt={fav.image.user.name}
+                      width={24}
+                      height={24}
                       className="w-6 h-6 rounded-full object-cover"
+                      unoptimized
                     />
                   ) : (
                     <UserCircle className="w-6 h-6 text-white/80" />
@@ -146,16 +150,17 @@ export default function MyFavoritesPage() {
                 </button>
               </div>
               {/* Image fills the card */}
-              <img
+              <Image
                 src={fav.image.imageUrl}
                 alt={fav.image.prompt}
                 width={fav.image.width}
                 height={fav.image.height}
                 className="w-full h-auto block object-cover"
-                loading="lazy"
                 style={{
                   aspectRatio: `${fav.image.width} / ${fav.image.height}`,
                 }}
+                unoptimized
+                priority={false}
               />
               {/* Bottom overlay: prompt (show on hover, no background) */}
               <div className="absolute bottom-0 left-0 w-full z-10 pointer-events-none flex justify-start">

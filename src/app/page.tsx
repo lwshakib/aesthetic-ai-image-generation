@@ -14,6 +14,7 @@ import data from "@/data/data.json";
 import { protocol } from "@/lib/utils";
 import { PricingTable } from "@clerk/nextjs";
 import { ArrowRight, Code, Download, Palette, Sparkles } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -177,12 +178,14 @@ export default function Home() {
             {data.slice(0, 12).map((item, index) => (
               <div key={index} className="mb-4 break-inside-avoid group">
                 <div className="relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                  <img
+                  <Image
                     src={item.imageUrl}
                     alt={item.altText}
                     width={item.width}
                     height={item.height}
                     className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                    unoptimized
+                    priority={index < 4}
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
                 </div>
