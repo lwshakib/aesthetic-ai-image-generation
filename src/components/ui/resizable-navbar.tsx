@@ -7,7 +7,6 @@ import {
   useMotionValueEvent,
   useScroll,
 } from "motion/react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 
 import React, { useRef, useState } from "react";
@@ -29,7 +28,7 @@ interface NavItemsProps {
     link: string;
   }[];
   className?: string;
-  onItemClick?: () => void;
+  onItemClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   activeIndex?: number;
 }
 
@@ -243,24 +242,19 @@ export const MobileNavToggle = ({
 };
 
 export const NavbarLogo = () => {
-  const { theme, resolvedTheme } = useTheme();
-
   return (
-    <Link
-      href="/"
-      className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
-    >
-      <>
-        <img
-          src={resolvedTheme === "dark" ? "/dark_logo.svg" : "/light_logo.svg"}
-          alt="logo"
-          width={30}
-          height={30}
-        />
-        <span className="font-medium text-black dark:text-white">
-          Aesthetic AI
+    <Link href="/" className="relative z-20 mr-4 flex items-center px-2 py-1">
+      <span className="text-lg font-medium tracking-tight">
+        <span className="font-light text-foreground">a</span>
+        <span className="font-bold text-purple-600 dark:text-purple-400">
+          e
         </span>
-      </>
+        <span className="font-light text-foreground">sthetic</span>
+        <span className="mx-1.5 text-muted-foreground">·</span>
+        <span className="font-mono text-sm font-normal text-blue-600 dark:text-blue-400">
+          ai
+        </span>
+      </span>
     </Link>
   );
 };

@@ -3,15 +3,44 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
+    const body = await req.json();
     const {
       prompt,
-      negativePrompt,
+      negativePrompt = "",
       width,
       height,
-      seed,
-      responseExt,
-      numInferenceSteps,
-    } = await req.json();
+      seed = -1,
+      responseExt = "png",
+      numInferenceSteps = 4,
+    } = body;
+
+    // Input validation
+    if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Prompt is required and must be a non-empty string",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (
+      typeof width !== "number" ||
+      typeof height !== "number" ||
+      width < 64 ||
+      height < 64 ||
+      width > 2048 ||
+      height > 2048
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Width and height must be numbers between 64 and 2048",
+        },
+        { status: 400 }
+      );
+    }
 
     const newImage = await generateImageV1(
       prompt,

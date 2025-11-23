@@ -3,6 +3,16 @@ import { prisma } from "@/lib/prisma";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { GoogleGenAI } from "@google/genai";
 import OpenAI from "openai";
+import type { Image } from "@prisma/client";
+
+// Validate environment variables
+if (!process.env.GEMINI_API_KEY) {
+  throw new Error("GEMINI_API_KEY is not set");
+}
+
+if (!process.env.NEBIUS_API_KEY) {
+  throw new Error("NEBIUS_API_KEY is not set");
+}
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -15,6 +25,11 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
+type ImageGenerationResult = 
+  | Image
+  | { code: number; message: string }
+  | null;
+
 export async function generateImageV1(
   prompt: string,
   negativePrompt: string = "",
@@ -23,7 +38,7 @@ export async function generateImageV1(
   seed: number = -1,
   responseExt: string = "png",
   numInferenceSteps: number = 4
-): Promise<any | { code: number; message: string } | null> {
+): Promise<ImageGenerationResult> {
   try {
     const user = await currentUser();
 
@@ -66,14 +81,14 @@ export async function generateImageV1(
     const response = await client.images.generate({
       model: "black-forest-labs/flux-schnell",
       response_format: "url",
-      // @ts-expect-error
-      response_extension: responseExt,
       width: safeWidth,
       height: safeHeight,
       num_inference_steps: safeSteps,
       negative_prompt: negativePrompt || "",
       seed: safeSeed,
       prompt: prompt.trim(),
+      // response_extension is not in the OpenAI types but is supported by Nebius API
+      ...(responseExt && { response_extension: responseExt } as Record<string, string>),
     });
 
     // Assuming response format includes image URL(s)
@@ -135,7 +150,7 @@ export async function enhancePrompt(prompt: string): Promise<string | null> {
   }
 }
 
-async function checkImageGenerationEligibility(user: any) {
+async function checkImageGenerationEligibility(user: { id: string }) {
   const { has } = await auth();
   const response = await prisma.user.findUnique({
     where: {

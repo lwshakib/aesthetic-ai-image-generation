@@ -54,7 +54,21 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { imageId } = await req.json();
+    const body = await req.json();
+    const { imageId } = body;
+
+    // Input validation
+    if (!imageId || typeof imageId !== "string" || imageId.trim().length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "imageId is required and must be a non-empty string",
+          data: null,
+        },
+        { status: 400 }
+      );
+    }
+
     const user = await currentUser();
     if (!user) {
       return NextResponse.json(
@@ -93,7 +107,21 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const { favoriteId } = await req.json();
+    const body = await req.json();
+    const { favoriteId } = body;
+
+    // Input validation
+    if (!favoriteId || typeof favoriteId !== "string" || favoriteId.trim().length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "favoriteId is required and must be a non-empty string",
+          data: null,
+        },
+        { status: 400 }
+      );
+    }
+
     const user = await currentUser();
     if (!user) {
       return NextResponse.json(
@@ -115,7 +143,7 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "Added To favorites",
+      message: "Removed from favorites",
       data,
     });
   } catch (error) {

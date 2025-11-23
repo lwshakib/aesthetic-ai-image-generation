@@ -24,14 +24,16 @@ export async function checkUser() {
         clerkId: user.id,
         name,
         imageUrl: user.imageUrl as string,
-        email: user.emailAddresses[0].emailAddress,
+        email: user.emailAddresses[0]?.emailAddress || "",
       },
     });
 
     return newUser;
   } catch (error) {
+    console.error("Error in checkUser:", error);
     if (error instanceof Error) {
-      console.log(error.message);
+      console.error(error.message);
     }
+    return null;
   }
 }

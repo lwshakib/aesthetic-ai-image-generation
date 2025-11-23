@@ -28,7 +28,7 @@ export function LandingNavbar() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleSmoothScroll = (e: any) => {
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const href = e.currentTarget.getAttribute("href");
     if (href && href.startsWith("#")) {
       const id = href.slice(1);
@@ -46,7 +46,7 @@ export function LandingNavbar() {
       {/* Desktop Navigation */}
       <NavBody>
         <NavbarLogo />
-        <NavItems items={navItems} onItemClick={handleSmoothScroll as any} />
+        <NavItems items={navItems} onItemClick={handleSmoothScroll} />
         <div className="flex items-center gap-4">
           <div className="z-40">
             <ModeToggle />
