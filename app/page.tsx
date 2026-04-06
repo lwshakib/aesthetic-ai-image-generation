@@ -257,6 +257,7 @@ export default function Home() {
                   <div className="bg-[#050505]/80 w-full h-[520px] border border-[#222] rounded-3xl relative flex items-center justify-center perspective-distant overflow-hidden">
                     
                     {/* Navigation Buttons */}
+                    <div className="absolute inset-x-6 flex justify-between z-50 top-1/2 -translate-y-1/2 pointer-events-none">
                       <button 
                         onClick={prevSlide}
                         className="w-12 h-12 rounded-full bg-black/40 border border-white/10 text-white flex items-center justify-center backdrop-blur-xl pointer-events-auto hover:bg-white hover:text-black transition-all hover:scale-110 shadow-2xl"
@@ -269,6 +270,7 @@ export default function Home() {
                       >
                         <ChevronRight className="w-6 h-6" />
                       </button>
+                    </div>
 
                     {/* Deck Carousel */}
                     <div className="relative w-[280px] h-[400px] transform-style-preserve-3d flex items-center justify-center">
