@@ -86,10 +86,10 @@ export default function Home() {
           Aesthetic AI
         </div>
         <div className="hidden md:flex gap-8 text-sm text-[#888888] items-center font-mono">
-          <a href="#" className="hover:text-white transition-colors">Features</a>
-          <a href="#" className="hover:text-white transition-colors">Publishing</a>
-          <a href="#" className="hover:text-white transition-colors">Wattpad Sync</a>
-          <a href="#" className="hover:text-white transition-colors">Pricing</a>
+          <a href="#engine" className="hover:text-white transition-colors">Engine</a>
+          <a href="/image-generation" className="hover:text-white transition-colors">Gallery</a>
+          <a href="#models" className="hover:text-white transition-colors">Models</a>
+          <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
         </div>
         
         <a href="#engine" className="inline-flex scale-90 md:scale-100 transition-all hover:scale-105 active:scale-95 group">
@@ -104,7 +104,7 @@ export default function Home() {
         <section className="lg:px-8 lg:pt-32 lg:pb-40 flex flex-col lg:flex-row max-w-7xl mr-auto ml-auto pt-24 pr-6 pb-32 pl-6 items-center relative overflow-hidden">
           <div className="flex-1 lg:text-left z-10 text-center">
             <div className="inline-flex gap-2 animate-fade-up uppercase text-[10px] font-medium text-[#888888] tracking-[0.2em] font-mono bg-[#111111] border-[#222222] border rounded-full mb-8 pt-1.5 pr-4 pb-1.5 pl-4 items-center">
-              Wattpad Integration Live
+              FLUX.1 [schnell] Integration Live
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shadow-[0_0_8px_white]"></span>
             </div>
             
@@ -113,7 +113,7 @@ export default function Home() {
             </h1>
             
             <p className="md:text-xl lg:mx-0 leading-relaxed animate-fade-up delay-200 text-lg font-medium text-[#888888] font-heading max-w-2xl mr-auto mb-10 ml-auto translate-x-1">
-              The ultimate aesthetic engine for designers crafting sophisticated, high-fidelity AI imagery. Build complex prompts, weave intricate styles, and generate directly.
+              The ultimate aesthetic engine for designers crafting sophisticated, high-fidelity AI imagery. Build complex prompts with GLM-4.7 refinement and generate via FLUX ecosystem.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 lg:justify-start animate-fade-up delay-300 items-center justify-center">
@@ -140,8 +140,8 @@ export default function Home() {
               <div className="bg-gradient-to-t from-black via-black/40 to-transparent z-10 absolute inset-0"></div>
               <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/95719f33-05ac-4a57-b882-0015d0b8af8b_800w.webp" alt="Cover background" className="w-full h-full object-cover" />
               <div className="absolute bottom-6 left-4 right-4 z-20">
-                <p className="text-[10px] tracking-widest text-[#aaaaaa] mb-1 font-mono">THRILLER</p>
-                <h3 className="text-xl tracking-tight text-white leading-tight font-heading font-medium">The Velvet Shadow</h3>
+                <p className="text-[10px] tracking-widest text-[#aaaaaa] mb-1 font-mono">MASTERY</p>
+                <h3 className="text-xl tracking-tight text-white leading-tight font-heading font-medium">Urban Synthesis</h3>
               </div>
             </div>
             {/* Main front cover */}
@@ -149,12 +149,12 @@ export default function Home() {
               <div className="z-10 bg-gradient-to-t from-[#080808] via-black/20 to-transparent absolute inset-0"></div>
               <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c43265c1-3d68-44f0-b248-d7969e9fed75_800w.webp" alt="Cover background" className="w-full h-full object-cover" />
               <div className="text-[0.65rem] uppercase font-semibold text-amber-600 tracking-wider font-mono bg-white/90 z-30 rounded-md py-1 px-3 absolute top-6 right-6">
-                Wattpad Hit
+                FLUX.1 Powered
               </div>
               <div className="absolute bottom-10 left-8 right-8 z-20">
-                <p className="text-[10px] tracking-widest text-white/70 mb-2 uppercase font-mono">Sci-Fi Romance</p>
-                <h3 className="text-3xl tracking-tight text-white leading-tight mb-3 font-heading font-medium">Echoes of Neon</h3>
-                <p className="text-xs text-white/50 font-mono italic">By A. K. Writer</p>
+                <p className="text-[10px] tracking-widest text-white/70 mb-2 uppercase font-mono">Aesthetic Prompt</p>
+                <h3 className="text-3xl tracking-tight text-white leading-tight mb-3 font-heading font-medium">Architectural Glimpse</h3>
+                <p className="text-xs text-white/50 font-mono italic">Styled with FLUX.1</p>
               </div>
             </div>
           </div>
@@ -164,22 +164,22 @@ export default function Home() {
         <section className="lg:px-8 max-w-7xl mr-auto mb-32 ml-auto pr-6 pl-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] transition-all group">
-              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">2.5M</h2>
-              <p className="text-xs text-[#888888] font-mono leading-relaxed">Chapters published to Wattpad via our sync engine.</p>
+              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">4.2s</h2>
+              <p className="text-xs text-[#888888] font-mono leading-relaxed">Average generation time powered by FLUX [schnell].</p>
             </div>
             <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] transition-all group">
-              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">120k+</h2>
-              <p className="text-xs text-[#888888] font-mono leading-relaxed">Active writers crafting daily masterpieces.</p>
+              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">1.2M+</h2>
+              <p className="text-xs text-[#888888] font-mono leading-relaxed">Unique aesthetic masterworks generated daily.</p>
             </div>
             <div className="glass-panel flex flex-col text-black bg-white border-white rounded-3xl p-8 relative overflow-hidden group">
               <div className="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1739349926071-a4ef4ad781f7?w=800&q=80)] bg-cover bg-center opacity-10 group-hover:scale-110 transition-transform duration-700"></div>
-              <span className="text-[10px] font-bold tracking-widest uppercase mb-2 opacity-50 font-mono z-10">Success</span>
-              <h2 className="text-4xl tracking-tighter mb-2 font-heading font-bold z-10">84%</h2>
-              <p className="text-xs opacity-70 font-mono font-medium z-10">Higher reader retention rates compared to standard drafts.</p>
+              <span className="text-[10px] font-bold tracking-widest uppercase mb-2 opacity-50 font-mono z-10">Output</span>
+              <h2 className="text-4xl tracking-tighter mb-2 font-heading font-bold z-10">98%</h2>
+              <p className="text-xs opacity-70 font-mono font-medium z-10">Quality rating for complex prompt adherence.</p>
             </div>
             <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] transition-all group">
-              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">15+</h2>
-              <p className="text-xs text-[#888888] font-mono leading-relaxed">Pro-grade genre frameworks for complex narratives.</p>
+              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">20+</h2>
+              <p className="text-xs text-[#888888] font-mono leading-relaxed">Pro-grade style frameworks for diverse aesthetics.</p>
             </div>
           </div>
         </section>
@@ -194,7 +194,7 @@ export default function Home() {
               <span className="text-[10px] font-medium tracking-[0.3em] text-[#888888] uppercase mb-4 block font-mono">The Core Workflow</span>
               <h2 className="md:text-6xl text-4xl text-white tracking-tighter mb-6 font-heading font-medium">The Aesthetic Engine</h2>
               <p className="text-lg text-[#888888] max-w-2xl mx-auto font-heading leading-relaxed">
-                Select high-level parameters to generate structural foundations for your next visual masterpiece.
+                Refine prompts with GLM-4.7-Flash intelligence to generate high-fidelity structural foundations with FLUX.
               </p>
             </div>
 
@@ -243,7 +243,7 @@ export default function Home() {
                     <button className="w-full bg-white text-black py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(255,255,255,0.1)]">
                       Generate Structure
                     </button>
-                    <p className="text-center text-[10px] text-[#555] mt-4 font-mono uppercase tracking-tighter">Draft 12.4 • narrative_seed_8122</p>
+                    <p className="text-center text-[10px] text-[#555] mt-4 font-mono uppercase tracking-tighter">Draft 12.4 • aesthetic_seed_8122</p>
                   </div>
                 </div>
 
@@ -355,9 +355,9 @@ export default function Home() {
         <section className="lg:px-8 py-32 max-w-7xl mx-auto px-6 relative z-10" id="pricing">
           <div className="text-center mb-20 animate-fade-up">
             <span className="uppercase block text-[10px] font-bold text-[#888888] tracking-[0.4em] mb-4 font-mono">Investment</span>
-            <h2 className="md:text-5xl text-3xl text-white tracking-tight mb-4 font-heading font-medium">Plans for every writer.</h2>
+            <h2 className="md:text-5xl text-3xl text-white tracking-tight mb-4 font-heading font-medium">Plans for every creator.</h2>
             <p className="text-lg text-[#888888] max-w-2xl mx-auto font-heading font-medium">
-              Start prototyping for free, or unlock the full power of the Narrative Engine to master your genre.
+              Start prototyping for free, or unlock the full power of the Aesthetic Engine to master your craft.
             </p>
           </div>
 
@@ -369,30 +369,30 @@ export default function Home() {
                   <BookOpen className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl text-white font-bold tracking-tight font-heading">The Sketchbook</h3>
-                  <p className="text-[10px] text-[#555] font-mono uppercase tracking-widest font-bold">Essential tools</p>
+                  <h3 className="text-xl text-white font-bold tracking-tight font-heading">The Creator</h3>
+                  <p className="text-[10px] text-[#555] font-mono uppercase tracking-widest font-bold">Entry level</p>
                 </div>
               </div>
               
               <div className="mb-10">
                 <div className="flex items-baseline gap-2">
                   <span className="text-5xl tracking-tighter text-white font-heading font-bold">$0</span>
-                  <span className="text-xs text-[#888] font-mono uppercase">forever</span>
+                  <span className="text-xs text-[#888] font-mono uppercase">Images Incl.</span>
                 </div>
               </div>
 
                <ul className="space-y-4 mb-auto text-sm text-[#888] font-mono font-medium">
                 <li className="flex gap-3 items-center">
                   <Check className="w-4 h-4 text-white" />
-                  <span>1 Active project limit</span>
+                  <span>100 Generations / mo</span>
                 </li>
                 <li className="flex gap-3 items-center">
                   <Check className="w-4 h-4 text-white" />
-                  <span>Basic world-building tools</span>
+                  <span>Base-model access (Schnell)</span>
                 </li>
                 <li className="flex gap-3 items-center">
                   <Check className="w-4 h-4 text-white" />
-                  <span>Standard community access</span>
+                  <span>Standard History (7 days)</span>
                 </li>
               </ul>
 
@@ -417,8 +417,8 @@ export default function Home() {
                     <Sparkle className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-xl text-white font-bold tracking-tight font-heading">The Architect</h3>
-                    <p className="text-[10px] text-purple-400/70 font-mono uppercase tracking-widest font-bold">For pro designers</p>
+                    <h3 className="text-xl text-white font-bold tracking-tight font-heading">Pro Designer</h3>
+                    <p className="text-[10px] text-purple-400/70 font-mono uppercase tracking-widest font-bold">High-fidelity output</p>
                   </div>
                 </div>
                 
@@ -427,7 +427,7 @@ export default function Home() {
                     <span className="text-5xl tracking-tighter text-white font-heading font-bold">$12</span>
                     <span className="text-xs text-[#888] font-mono uppercase">/ month</span>
                   </div>
-                  <p className="text-[10px] text-[#555] mt-2 font-mono uppercase font-bold">$144 billed annually</p>
+                  <p className="text-[10px] text-[#555] mt-2 font-mono uppercase font-bold">Infinite synthesis</p>
                 </div>
 
                  <ul className="space-y-4 mb-auto text-sm text-[#ddd] font-mono font-medium">
@@ -435,19 +435,19 @@ export default function Home() {
                     <div className="w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center">
                       <Check className="w-3 h-3 text-black" />
                     </div>
-                    <span>Unlimited active projects</span>
+                    <span>Unlimited Generations</span>
                   </li>
                   <li className="flex gap-3 items-center">
                     <div className="w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center">
                       <Check className="w-3 h-3 text-black" />
                     </div>
-                    <span>Advanced narrative plot trees</span>
+                    <span>Prompt Refinement (GLM)</span>
                   </li>
                   <li className="flex gap-3 items-center">
                     <div className="w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center">
                       <Check className="w-3 h-3 text-black" />
                     </div>
-                    <span>Direct Wattpad Sync & Export</span>
+                    <span>Full History & Deletion Control</span>
                   </li>
                 </ul>
 
@@ -464,8 +464,8 @@ export default function Home() {
                   <Users className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl text-white font-bold tracking-tight font-heading">The Collective</h3>
-                  <p className="text-[10px] text-[#555] font-mono uppercase tracking-widest font-bold">For writing rooms</p>
+                  <h3 className="text-xl text-white font-bold tracking-tight font-heading">The Studio</h3>
+                  <p className="text-[10px] text-[#555] font-mono uppercase tracking-widest font-bold">For creative agencies</p>
                 </div>
               </div>
               
@@ -479,15 +479,15 @@ export default function Home() {
                <ul className="space-y-4 mb-auto text-sm text-[#888] font-mono font-medium">
                 <li className="flex gap-3 items-center">
                   <Check className="w-4 h-4 text-white" />
-                  <span className="text-white">Everything in Architect</span>
+                  <span className="text-white">Everything in Pro Designer</span>
                 </li>
                 <li className="flex gap-3 items-center">
                   <Check className="w-4 h-4 text-white" />
-                  <span>Co-writing collaboration hub</span>
+                  <span>Team-shared asset history</span>
                 </li>
                 <li className="flex gap-3 items-center">
                   <Check className="w-4 h-4 text-white" />
-                  <span>Custom genre AI models</span>
+                  <span>Custom style-tuned models</span>
                 </li>
               </ul>
 
@@ -506,7 +506,7 @@ export default function Home() {
             Aesthetic AI
           </div>
           <p className="text-[#555] text-[10px] font-mono uppercase tracking-widest">
-            © 2026 Aesthetic AI Labs. All rights reserved.
+            © 2026 Aesthetic AI. All rights reserved.
           </p>
           <div className="flex gap-6 text-[#888]">
             <Send className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
