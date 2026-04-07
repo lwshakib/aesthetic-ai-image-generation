@@ -92,11 +92,19 @@ export default function Home() {
           <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
         </div>
         
-        <a href="#engine" className="inline-flex scale-90 md:scale-100 transition-all hover:scale-105 active:scale-95 group">
-          <button type="button" className="inline-flex text-[12px] font-bold text-black tracking-widest font-mono h-10 rounded-full pr-8 pl-8 relative items-center justify-center bg-white shadow-[0_10px_20px_rgba(255,255,255,0.1)] hover:shadow-[0_15px_30px_rgba(255,255,255,0.2)] transition-all">
-            Start Your Blueprint
-          </button>
-        </a>
+        <div className="btn-wrapper scale-90 md:scale-100">
+          <a href="/image-generation" className="btn !font-bold !text-[12px] !tracking-widest !font-mono !h-10 !rounded-full !pr-8 !pl-8">
+            Start Generating
+          </a>
+          <div className="dot top left"></div>
+          <div className="dot top right"></div>
+          <div className="dot bottom right"></div>
+          <div className="dot bottom left"></div>
+          <div className="line horizontal top"></div>
+          <div className="line horizontal bottom"></div>
+          <div className="line vertical left"></div>
+          <div className="line vertical right"></div>
+        </div>
       </nav>
 
       <main className="flex-grow">
@@ -109,19 +117,27 @@ export default function Home() {
             </div>
             
             <h1 className="md:text-6xl lg:text-7xl leading-[1.05] animate-fade-up delay-100 text-4xl font-medium text-white tracking-tight font-heading mb-6">
-              Create the architecture of your next masterwork
+              Synthesize the visual essence of your next masterpiece
             </h1>
             
             <p className="md:text-xl lg:mx-0 leading-relaxed animate-fade-up delay-200 text-lg font-medium text-[#888888] font-heading max-w-2xl mr-auto mb-10 ml-auto translate-x-1">
-              The ultimate aesthetic engine for designers crafting sophisticated, high-fidelity AI imagery. Build complex prompts with GLM-4.7 refinement and generate via FLUX ecosystem.
+              The ultimate aesthetic engine for designers crafting sophisticated, high-fidelity AI imagery. Build complex prompts with advanced refinement and generate via FLUX ecosystem.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 lg:justify-start animate-fade-up delay-300 items-center justify-center">
-              <a href="#engine" className="inline-flex transition-all hover:scale-105 active:scale-95 group">
-                <button type="button" className="inline-flex text-[12px] font-bold text-black tracking-widest font-mono h-12 rounded-full pr-10 pl-10 relative items-center justify-center bg-white shadow-[0_15px_40px_rgba(255,255,255,0.15)] hover:shadow-[0_20px_50px_rgba(255,255,255,0.25)] transition-all">
-                  Start Your Blueprint
-                </button>
-              </a>
+            <div className="flex flex-col sm:flex-row gap-6 lg:justify-start animate-fade-up delay-300 items-center justify-center mt-10">
+              <div className="btn-wrapper">
+                <a href="/image-generation" className="btn !font-bold !text-[12px] !tracking-widest !font-mono !h-12 !rounded-full !pr-10 !pl-10">
+                  Start Generating
+                </a>
+                <div className="dot top left"></div>
+                <div className="dot top right"></div>
+                <div className="dot bottom right"></div>
+                <div className="dot bottom left"></div>
+                <div className="line horizontal top"></div>
+                <div className="line horizontal bottom"></div>
+                <div className="line vertical left"></div>
+                <div className="line vertical right"></div>
+              </div>
               <span className="flex items-center gap-2 text-sm text-[#555555] font-mono group cursor-pointer hover:text-white transition-colors">
                 See it in action
                 <PlayCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -163,21 +179,21 @@ export default function Home() {
         {/* Stats Grid */}
         <section className="lg:px-8 max-w-7xl mr-auto mb-32 ml-auto pr-6 pl-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] transition-all group">
+            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] hover:-translate-y-1 transition-all group">
               <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">4.2s</h2>
               <p className="text-xs text-[#888888] font-mono leading-relaxed">Average generation time powered by FLUX [schnell].</p>
             </div>
-            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] transition-all group">
+            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] hover:-translate-y-1 transition-all group">
               <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">1.2M+</h2>
               <p className="text-xs text-[#888888] font-mono leading-relaxed">Unique aesthetic masterworks generated daily.</p>
             </div>
-            <div className="glass-panel flex flex-col text-black bg-white border-white rounded-3xl p-8 relative overflow-hidden group">
-              <div className="absolute inset-0 bg-[url(https://images.unsplash.com/photo-1739349926071-a4ef4ad781f7?w=800&q=80)] bg-cover bg-center opacity-10 group-hover:scale-110 transition-transform duration-700"></div>
-              <span className="text-[10px] font-bold tracking-widest uppercase mb-2 opacity-50 font-mono z-10">Output</span>
-              <h2 className="text-4xl tracking-tighter mb-2 font-heading font-bold z-10">98%</h2>
-              <p className="text-xs opacity-70 font-mono font-medium z-10">Quality rating for complex prompt adherence.</p>
+            <div className="glass-panel flex flex-col text-white rounded-3xl p-8 relative overflow-hidden hover:border-[#444444] hover:-translate-y-1 transition-all group">
+              <div className="absolute inset-0 bg-purple-500/5 group-hover:bg-purple-500/10 transition-colors"></div>
+              <span className="text-[10px] font-bold tracking-widest uppercase mb-2 text-[#555] font-mono z-10">Output</span>
+              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-bold z-10">98%</h2>
+              <p className="text-xs text-[#888] font-mono font-medium z-10">Quality rating for complex prompt adherence.</p>
             </div>
-            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] transition-all group">
+            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] hover:-translate-y-1 transition-all group">
               <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">20+</h2>
               <p className="text-xs text-[#888888] font-mono leading-relaxed">Pro-grade style frameworks for diverse aesthetics.</p>
             </div>
@@ -194,7 +210,7 @@ export default function Home() {
               <span className="text-[10px] font-medium tracking-[0.3em] text-[#888888] uppercase mb-4 block font-mono">The Core Workflow</span>
               <h2 className="md:text-6xl text-4xl text-white tracking-tighter mb-6 font-heading font-medium">The Aesthetic Engine</h2>
               <p className="text-lg text-[#888888] max-w-2xl mx-auto font-heading leading-relaxed">
-                Refine prompts with GLM-4.7-Flash intelligence to generate high-fidelity structural foundations with FLUX.
+                Intelligent prompt refinement for high-fidelity synthesis with the FLUX ecosystem.
               </p>
             </div>
 
@@ -243,7 +259,7 @@ export default function Home() {
                     <button className="w-full bg-white text-black py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(255,255,255,0.1)]">
                       Generate Structure
                     </button>
-                    <p className="text-center text-[10px] text-[#555] mt-4 font-mono uppercase tracking-tighter">Draft 12.4 • aesthetic_seed_8122</p>
+                    <p className="text-center text-[10px] text-[#555] mt-4 font-mono uppercase tracking-tighter">Draft 12.4 • image_seed_8122</p>
                   </div>
                 </div>
 
@@ -499,19 +515,68 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-[#222] py-20 bg-[#050505]">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-           <div className="flex gap-2 text-xl text-white tracking-tight items-center font-heading font-medium">
-            <Logo className="w-7 h-7 text-white" />
-            Aesthetic AI
+      <footer className="border-t border-[#222] pt-32 pb-20 bg-[#050505] relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8 mb-20">
+          {/* Brand Column */}
+          <div className="space-y-8">
+            <div className="flex gap-2 text-2xl text-white tracking-tight items-center font-heading font-medium">
+              <Logo className="w-8 h-8 text-white" />
+              Aesthetic AI
+            </div>
+            <p className="text-sm text-[#888888] font-heading leading-relaxed max-w-xs">
+              Synthesize your next aesthetic masterpiece with high-fidelity AI models and advanced prompt refinement. Build the visual essence of your future projects today.
+            </p>
+            <div className="flex gap-5 text-[#555]">
+              <Send className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+              <MessageSquare className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+              <Camera className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+            </div>
           </div>
-          <p className="text-[#555] text-[10px] font-mono uppercase tracking-widest">
-            © 2026 Aesthetic AI. All rights reserved.
+
+          {/* Engine Column */}
+          <div className="space-y-8">
+            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono">Synthesis Engine</h4>
+            <ul className="space-y-4 text-sm text-[#888888] font-mono">
+              <li className="hover:text-white transition-colors cursor-pointer">Core Synthesis</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Style Library</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Prompt Refinement</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Custom Tuning</li>
+            </ul>
+          </div>
+
+          {/* Platform Column */}
+          <div className="space-y-8">
+            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono">Platform</h4>
+            <ul className="space-y-4 text-sm text-[#888888] font-mono">
+              <li className="hover:text-white transition-colors cursor-pointer"><a href="/image-generation">Gallery Explorer</a></li>
+              <li className="hover:text-white transition-colors cursor-pointer"><a href="#pricing">Creator Plans</a></li>
+              <li className="hover:text-white transition-colors cursor-pointer">Studio API</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Asset History</li>
+            </ul>
+          </div>
+
+          {/* Support Column */}
+          <div className="space-y-8">
+            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono">Ethos & Support</h4>
+            <ul className="space-y-4 text-sm text-[#888888] font-mono">
+              <li className="hover:text-white transition-colors cursor-pointer">Documentation</li>
+              <li className="hover:text-white transition-colors cursor-pointer">AI Ethics Policy</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Status Dashboard</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Help Center</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 pt-12 border-t border-[#111] flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-[#444] text-[10px] font-mono uppercase tracking-[0.3em]">
+            © 2026 Aesthetic AI. All rights reserved. Built for creators.
           </p>
-          <div className="flex gap-6 text-[#888]">
-            <Send className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
-            <MessageSquare className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
-            <Camera className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+          <div className="flex gap-8 text-[10px] text-[#444] font-mono uppercase tracking-widest">
+            <span className="hover:text-white transition-colors cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-white transition-colors cursor-pointer">Terms of Service</span>
+            <span className="hover:text-white transition-colors cursor-pointer">Legal Notice</span>
           </div>
         </div>
       </footer>
