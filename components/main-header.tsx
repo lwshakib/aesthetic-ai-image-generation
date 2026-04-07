@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { User, LogOut, Settings, CreditCard, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
+import { ModeToggle } from "./mode-toggle";
 
 export function MainHeader() {
   const router = useRouter();
@@ -35,18 +36,19 @@ export function MainHeader() {
   };
 
   return (
-    <header className="h-16 border-b border-[#222] bg-[#050505]/50 backdrop-blur-md sticky top-0 z-50 px-6 flex items-center justify-between">
+    <header className="h-16 border-b border-border bg-background/50 backdrop-blur-md sticky top-0 z-50 px-6 flex items-center justify-between">
       <Link href="/image-generation" className="flex items-center gap-2 group">
-        <Logo className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
-        <span className="text-lg font-heading font-medium tracking-tight text-white">
+        <Logo className="w-8 h-8 text-foreground group-hover:scale-110 transition-transform" />
+        <span className="text-lg font-heading font-medium tracking-tight text-foreground">
           Aesthetic AI
         </span>
       </Link>
 
       <div className="flex items-center gap-4">
+        <ModeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="h-9 w-9 rounded-full border border-[#222] bg-white/5 overflow-hidden hover:border-white/10 active:scale-95 transition-all outline-none">
+            <button className="h-9 w-9 rounded-full border border-border bg-muted/50 overflow-hidden hover:border-accent/10 active:scale-95 transition-all outline-none">
               {session?.user?.image ? (
                 <img 
                   src={session.user.image} 
@@ -55,20 +57,20 @@ export function MainHeader() {
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-purple-500/10">
-                  <User className="w-4 h-4 text-[#888]" />
+                  <User className="w-4 h-4 text-muted-foreground" />
                 </div>
               )}
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-[#111] border-[#222] rounded-2xl shadow-2xl p-2 animate-in fade-in zoom-in-95">
+          <DropdownMenuContent align="end" className="w-56 bg-popover border-border rounded-2xl shadow-2xl p-2 animate-in fade-in zoom-in-95">
             <div className="px-3 py-2 mb-2">
-                <p className="text-[10px] font-mono text-[#555] mb-1">Authenticated as</p>
-                <p className="text-sm font-medium text-white truncate">{session?.user?.email}</p>
+                <p className="text-[10px] font-mono text-muted-foreground mb-1">Authenticated as</p>
+                <p className="text-sm font-medium text-foreground truncate">{session?.user?.email}</p>
             </div>
-            <DropdownMenuSeparator className="bg-[#222]" />
+            <DropdownMenuSeparator className="bg-border" />
             <DropdownMenuItem 
                asChild
-               className="rounded-xl focus:bg-white/10 focus:text-white cursor-pointer px-3 py-2 text-xs font-mono text-[#888] gap-2 transition-all"
+               className="rounded-xl focus:bg-accent/10 focus:text-accent-foreground cursor-pointer px-3 py-2 text-xs font-mono text-muted-foreground gap-2 transition-all"
             >
               <Link href="/settings" className="flex items-center gap-2 w-full">
                 <Settings className="w-4 h-4" />
@@ -77,17 +79,17 @@ export function MainHeader() {
             </DropdownMenuItem>
             <DropdownMenuItem 
                asChild
-               className="rounded-xl focus:bg-white/10 focus:text-white cursor-pointer px-3 py-2 text-xs font-mono text-[#888] gap-2 transition-all"
+               className="rounded-xl focus:bg-accent/10 focus:text-accent-foreground cursor-pointer px-3 py-2 text-xs font-mono text-muted-foreground gap-2 transition-all"
             >
               <Link href="/billing" className="flex items-center gap-2 w-full">
                 <CreditCard className="w-4 h-4" />
                 Billing
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-[#222]" />
+            <DropdownMenuSeparator className="bg-border" />
             <DropdownMenuItem 
               onClick={handleSignOut}
-              className="rounded-xl focus:bg-white/10 focus:text-white cursor-pointer px-3 py-2 text-xs font-mono text-[#888] gap-2 transition-all"
+              className="rounded-xl focus:bg-accent/10 focus:text-accent-foreground cursor-pointer px-3 py-2 text-xs font-mono text-muted-foreground gap-2 transition-all"
             >
               <LogOut className="w-4 h-4" />
               Logout

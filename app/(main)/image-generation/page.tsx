@@ -23,7 +23,8 @@ import {
   User,
   Zap,
   Link2,
-  Trash2
+  Trash2,
+  XIcon
 } from "lucide-react";
 import { 
   WorkstationSelector, 
@@ -88,6 +89,7 @@ import {
   AlertDialogHeader, 
   AlertDialogTitle, 
 } from "@/components/ui/alert-dialog";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 interface GenerationWithImages {
   id: string;
@@ -103,7 +105,365 @@ interface GenerationWithImages {
   createdAt: Date;
 }
 
+interface WorkstationSidebarProps {
+  model: string;
+  setModel: (v: string) => void;
+  style: string;
+  setStyle: (v: string) => void;
+  ratio: string;
+  setRatio: (v: string) => void;
+  count: string;
+  setCount: (v: string) => void;
+  customWidth: string;
+  setCustomWidth: (v: string) => void;
+  customHeight: string;
+  setCustomHeight: (v: string) => void;
+  numInferenceSteps: number;
+  setNumInferenceSteps: (v: number) => void;
+  isLinked: boolean;
+  setIsLinked: (v: boolean) => void;
+  negativePrompt: string;
+  setNegativePrompt: (v: string) => void;
+  format: string;
+  setFormat: (v: string) => void;
+  resetDefaults: () => void;
+  className?: string;
+  onClose?: () => void;
+}
 
+function WorkstationSidebar({
+  model, setModel, style, setStyle, ratio, setRatio, count, setCount,
+  customWidth, setCustomWidth, customHeight, setCustomHeight,
+  numInferenceSteps, setNumInferenceSteps, isLinked, setIsLinked,
+  negativePrompt, setNegativePrompt, format, setFormat, resetDefaults,
+  className, onClose
+}: WorkstationSidebarProps) {
+  return (
+    <div className={cn("flex flex-col h-full bg-card/80 backdrop-blur-xl overflow-hidden relative", className)}>
+      {onClose && (
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 p-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <XIcon className="w-5 h-5" />
+        </button>
+      )}
+      <div className="flex-1 overflow-y-auto scrollbar-hide p-6 space-y-8">
+        {/* Model Selector */}
+        <div className="relative group">
+          <WorkstationSelector value={model} onValueChange={(v) => v && setModel(v)}>
+            <WorkstationSelectorTrigger asChild>
+              <button className="w-full h-11 bg-secondary/50 border-border border rounded-xl pl-10 pr-4 relative focus:ring-1 focus:ring-ring/10 transition-all flex flex-col items-start justify-center group/btn hover:bg-secondary">
+                <Box className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-hover/btn:text-foreground transition-colors" />
+                <div className="flex flex-col items-start gap-0.5 pointer-events-none">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono text-muted-foreground leading-none">Model</span>
+                    <Badge variant="outline" className="h-3 px-1 text-[7px] bg-green-500/10 text-green-400 border-green-500/20 rounded-sm">
+                      {model === "flux-1-schnell" ? "Recommended" : "Active"}
+                    </Badge>
+                  </div>
+                  <span className="text-[11px] text-foreground font-medium capitalize">
+                    {AI_MODELS.find(m => m.id === model)?.name || "Unknown Model"}
+                  </span>
+                </div>
+              </button>
+            </WorkstationSelectorTrigger>
+            <WorkstationSelectorContent>
+              <WorkstationSelectorInput placeholder="Search models..." />
+              <WorkstationSelectorList>
+                <WorkstationSelectorEmpty>No models found.</WorkstationSelectorEmpty>
+                <WorkstationSelectorGroup>
+                  {IMAGE_MODELS.map(m => (
+                    <WorkstationSelectorItem key={m.id} value={m.id} className="flex items-center gap-3">
+                       <div className="flex flex-col flex-1 min-w-0">
+                          <WorkstationSelectorName>{m.name}</WorkstationSelectorName>
+                          <WorkstationSelectorDescription className="truncate">{m.description}</WorkstationSelectorDescription>
+                       </div>
+                       {m.capabilities.imageToImage && (
+                          <ImageIcon className="w-4 h-4 text-muted-foreground shrink-0 ml-auto" />
+                       )}
+                    </WorkstationSelectorItem>
+                  ))}
+                </WorkstationSelectorGroup>
+              </WorkstationSelectorList>
+            </WorkstationSelectorContent>
+          </WorkstationSelector>
+        </div>
+
+        {/* Style Selector */}
+        <div className="relative group">
+           <WorkstationSelector value={style} onValueChange={(v) => v && setStyle(v)}>
+            <WorkstationSelectorTrigger asChild>
+              <button className="w-full h-11 bg-secondary/50 border-border border rounded-xl pl-10 pr-4 relative focus:ring-1 focus:ring-ring/10 transition-all flex flex-col items-start justify-center group/btn hover:bg-secondary">
+                <Paintbrush className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-hover/btn:text-foreground transition-colors" />
+                <div className="flex flex-col items-start gap-0.5 pointer-events-none">
+                   <span className="text-[10px] font-mono text-muted-foreground leading-none">Style</span>
+                   <span className="text-[11px] text-foreground font-medium capitalize">{style}</span>
+                </div>
+              </button>
+            </WorkstationSelectorTrigger>
+            <WorkstationSelectorContent>
+              <WorkstationSelectorInput placeholder="Search styles..." />
+              <WorkstationSelectorList>
+                <WorkstationSelectorEmpty>No styles found.</WorkstationSelectorEmpty>
+                <WorkstationSelectorGroup>
+                  {[
+                    { id: "none", name: "None", desc: "No specific style guidance", icon: <Circle /> },
+                    { id: "dynamic", name: "Dynamic", desc: "Bold and high-contrast", icon: <Zap /> },
+                    { id: "cinematic", name: "Cinematic", desc: "Movie-like lighting and depth", icon: <Activity /> },
+                    { id: "creative", name: "Creative", desc: "Artistic interpretation", icon: <Sparkle /> },
+                    { id: "fashion", name: "Fashion", desc: "Studio-style photography", icon: <User /> },
+                    { id: "portrait", name: "Portrait", desc: "Focus on subject details", icon: <User /> },
+                    { id: "stock", name: "Stock Photo", desc: "Clean and commercial", icon: <Globe /> },
+                    { id: "vibrant", name: "Vibrant", desc: "Saturated and alive", icon: <Zap /> },
+                  ].map(s => (
+                    <WorkstationSelectorItem key={s.id} value={s.id} className="flex items-center gap-3">
+                       <div className="flex flex-col flex-1 min-w-0">
+                          <WorkstationSelectorName>{s.name}</WorkstationSelectorName>
+                          <WorkstationSelectorDescription className="truncate">{s.desc}</WorkstationSelectorDescription>
+                       </div>
+                    </WorkstationSelectorItem>
+                  ))}
+                </WorkstationSelectorGroup>
+              </WorkstationSelectorList>
+            </WorkstationSelectorContent>
+          </WorkstationSelector>
+        </div>
+
+        {/* Image Dimensions */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <h3 className="text-xs font-heading font-medium text-foreground tracking-tight">Image Dimensions</h3>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <HelpCircle className="w-3 h-3 text-muted-foreground cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent>Select the output image proportions</TooltipContent>
+            </Tooltip>
+          </div>
+          <ToggleGroup 
+            type="single" 
+            value={ratio} 
+            onValueChange={(v) => v && setRatio(v)} 
+            variant="outline" 
+            className="w-full justify-start"
+          >
+            {[
+              { id: "2:3", label: "2:3", icon: <div className="w-3 h-5 border-[1.5px] border-current rounded-[2px]" /> },
+              { id: "1:1", label: "1:1", icon: <div className="w-4 h-4 border-[1.5px] border-current rounded-[2px]" /> },
+              { id: "16:9", label: "16:9", icon: <div className="w-6 h-3 border-[1.5px] border-current rounded-[2px]" /> },
+            ].map((item) => (
+              <ToggleGroupItem
+                key={item.id}
+                value={item.id}
+                className="flex flex-col items-center justify-center gap-2 h-auto aspect-square flex-1"
+              >
+                <div className="opacity-70">{item.icon}</div>
+                <span className="text-[10px] font-mono">{item.label}</span>
+              </ToggleGroupItem>
+            ))}
+            
+            <Popover>
+              <PopoverTrigger asChild>
+                <ToggleGroupItem
+                  value="custom"
+                  className="flex flex-col items-center justify-center gap-2 h-auto aspect-square flex-1"
+                >
+                  <div className="opacity-70"><Maximize className="w-4 h-4" /></div>
+                  <span className={cn("font-mono text-center", ratio === "custom" ? "text-[9px] tracking-tighter" : "text-[10px]")}>
+                    {ratio === "custom" ? `${customWidth}×${customHeight}` : "Custom"}
+                  </span>
+                </ToggleGroupItem>
+              </PopoverTrigger>
+              <PopoverContent side="right" sideOffset={16} className="w-64 bg-background border-border p-4 text-foreground rounded-xl shadow-2xl">
+                 <div className="space-y-4">
+                   <div className="flex items-center justify-between mb-2">
+                     <p className="text-sm font-medium text-foreground">Custom dimensions</p>
+                     <div className="flex items-center gap-1.5" title="Lock aspect ratio">
+                       <Switch checked={isLinked} onCheckedChange={setIsLinked} className="scale-75 data-[state=checked]:bg-green-500" />
+                     </div>
+                   </div>
+                   
+                   <div className="space-y-6">
+                     <div className="space-y-3">
+                       <div className="flex items-center justify-between">
+                         <span className="text-xs font-medium text-muted-foreground">Width</span>
+                          <input type="number" 
+                            value={customWidth} 
+                            min={256} 
+                            max={1024}
+                            onChange={e => {
+                              const val = Math.min(1024, Math.max(256, parseInt(e.target.value) || 256));
+                              setCustomWidth(val.toString());
+                              if (isLinked) setCustomHeight(val.toString());
+                            }} className="w-16 bg-muted border border-border rounded-md h-7 text-xs font-mono text-center focus:outline-none focus:border-accent transition-colors" />
+                       </div>
+                        <Slider 
+                          value={[parseInt(customWidth) || 1024]} 
+                          min={256} max={1024} step={64} 
+                         onValueChange={(v) => {
+                           setCustomWidth(v[0].toString());
+                           if (isLinked) setCustomHeight(v[0].toString());
+                         }} 
+                       />
+                     </div>
+
+                     <div className="space-y-3">
+                       <div className="flex items-center justify-between">
+                         <span className="text-xs font-medium text-muted-foreground">Height</span>
+                          <input type="number" 
+                            value={customHeight} 
+                            min={256} 
+                            max={1024}
+                            onChange={e => {
+                              const val = Math.min(1024, Math.max(256, parseInt(e.target.value) || 256));
+                              setCustomHeight(val.toString());
+                              if (isLinked) setCustomWidth(val.toString());
+                            }} className="w-16 bg-secondary border border-border rounded-md h-7 text-xs font-mono text-center focus:outline-none focus:border-accent transition-colors" />
+                       </div>
+                        <Slider 
+                          value={[parseInt(customHeight) || 1024]} 
+                          min={256} max={1024} step={64} 
+                         onValueChange={(v) => {
+                           setCustomHeight(v[0].toString());
+                           if (isLinked) setCustomWidth(v[0].toString());
+                         }} 
+                       />
+                     </div>
+                   </div>
+                 </div>
+              </PopoverContent>
+            </Popover>
+          </ToggleGroup>
+        </div>
+
+        {/* Number of Generations */}
+        <div className="space-y-4">
+           <div className="flex items-center gap-2">
+            <h3 className="text-xs font-heading font-medium text-foreground tracking-tight">Number of generations</h3>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <HelpCircle className="w-3 h-3 text-muted-foreground cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent>How many images to generate at once</TooltipContent>
+            </Tooltip>
+          </div>
+          <ToggleGroup 
+            type="single" 
+            value={count} 
+            onValueChange={(v) => v && setCount(v)} 
+            variant="outline" 
+            className="w-full"
+          >
+            {["1", "2", "3", "4"].map((num) => (
+              <ToggleGroupItem
+                key={num}
+                value={num}
+                className="flex-1 font-mono"
+              >
+                {num}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
+
+        <Separator className="bg-border" />
+
+        {/* Advanced Settings */}
+        <div className="space-y-6">
+          <div className="flex items-center gap-2">
+            <Settings2 className="w-4 h-4 text-muted-foreground" />
+            <h3 className="text-xs font-heading font-medium text-foreground tracking-tight uppercase">Advanced Settings</h3>
+          </div>
+
+          {/* Inference Steps */}           <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Label className="text-[11px] font-medium text-muted-foreground">Inference Steps</Label>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="w-3 h-3 text-muted-foreground cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent>More steps = higher quality but slower generation (max 8)</TooltipContent>
+                </Tooltip>
+              </div>
+              <span className="text-[10px] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">{numInferenceSteps}</span>
+            </div>
+            <Slider 
+              value={[numInferenceSteps]} 
+              onValueChange={(v) => setNumInferenceSteps(v[0])}
+              max={8}
+              min={1}
+              step={1}
+              className="[&_[role=slider]]:h-3 [&_[role=slider]]:w-3 [&_[role=slider]]:bg-foreground [&_[role=slider]]:border-none"
+            />
+          </div>
+
+
+          {/* Output Format */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Label className="text-[11px] font-medium text-muted-foreground">Output Format</Label>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <HelpCircle className="w-3 h-3 text-muted-foreground cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent>The file format of the generated image</TooltipContent>
+              </Tooltip>
+            </div>
+            <ToggleGroup 
+              type="single" 
+              value={format} 
+              onValueChange={(v) => v && setFormat(v)} 
+              variant="outline" 
+              className="w-full h-8"
+            >
+              {["png", "jpeg"].map((f) => (
+                <ToggleGroupItem
+                  key={f}
+                  value={f}
+                  className="flex-1 text-[10px] uppercase font-mono h-full"
+                >
+                  {f}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
+
+          {/* Negative Prompt */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Label className="text-[11px] font-medium text-muted-foreground">Negative Prompt</Label>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <HelpCircle className="w-3 h-3 text-muted-foreground cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent>Describe elements you want to exclude from the image</TooltipContent>
+              </Tooltip>
+            </div>
+            <Textarea 
+              placeholder="e.g. blurry, low quality, distorted..." 
+              value={negativePrompt}
+              onChange={(e) => setNegativePrompt(e.target.value)}
+              className="bg-muted/50 border-border text-foreground placeholder-muted-foreground text-[11px] min-h-[80px] focus-visible:ring-1 focus-visible:ring-ring/10 resize-none rounded-xl"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* SIDEBAR FOOTER */}
+      <div className="p-6 bg-muted/30">
+         <button 
+           onClick={resetDefaults}
+           className="flex items-center gap-2 text-[10px] font-mono font-bold text-muted-foreground hover:text-foreground transition-colors tracking-widest w-full justify-center group"
+         >
+            <RefreshCcw className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" />
+            Reset to Defaults
+         </button>
+      </div>
+    </div>
+  );
+}
 
 export default function ImageGenerationPage() {
   const [prompt, setPrompt] = useState("");
@@ -120,6 +480,7 @@ export default function ImageGenerationPage() {
   const [customCount, setCustomCount] = useState("10");
   const [isLinked, setIsLinked] = useState(false);
   const [generationToDelete, setGenerationToDelete] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // Real Data State
   const [results, setResults] = useState<GenerationWithImages[]>([]);
@@ -214,8 +575,8 @@ export default function ImageGenerationPage() {
     
     // 1. Create an Optimistic Generation object
     const tempId = `opt-${Date.now()}`;
-    const w = ratio === "custom" ? parseInt(customWidth) : (ratio === "1:1" ? 1024 : (ratio === "2:3" ? 682 : 1024));
-    const h = ratio === "custom" ? parseInt(customHeight) : (ratio === "1:1" ? 1024 : (ratio === "2:3" ? 1024 : 576));
+    const w = ratio === "custom" ? Math.min(1024, parseInt(customWidth)) : (ratio === "1:1" ? 1024 : (ratio === "2:3" ? 682 : 1024));
+    const h = ratio === "custom" ? Math.min(1024, parseInt(customHeight)) : (ratio === "1:1" ? 1024 : (ratio === "2:3" ? 1024 : 576));
     const imageCount = parseInt(count) || 1;
 
     const optimisticGeneration: GenerationWithImages = {
@@ -306,321 +667,48 @@ export default function ImageGenerationPage() {
           }}
         ></div>
 
-        {/* BESPOKE SIDEBAR WORKSTATION */}
+        {/* BESPOKE SIDEBAR WORKSTATION (Desktop) */}
         <aside 
-          className="w-80 border border-[#222] bg-[#0d0d0d]/80 backdrop-blur-xl z-20 flex flex-col rounded-3xl ml-6 my-6 h-[calc(100vh-112px)] overflow-hidden shadow-2xl relative"
+          className="hidden lg:flex w-80 border border-border bg-card/80 backdrop-blur-xl z-20 flex-col rounded-3xl ml-6 my-6 h-[calc(100vh-112px)] overflow-hidden shadow-2xl relative"
         >
-          <div className="flex-1 overflow-y-auto scrollbar-hide p-6 space-y-8">
-            
-            {/* Model Selector */}
-            <div className="relative group">
-              <WorkstationSelector value={model} onValueChange={(v) => v && setModel(v)}>
-                <WorkstationSelectorTrigger asChild>
-                  <button className="w-full h-11 bg-[#111] border-[#222] border rounded-xl pl-10 pr-4 relative focus:ring-1 focus:ring-white/10 transition-all flex flex-col items-start justify-center group/btn hover:bg-[#161616]">
-                    <Box className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#444] group-hover/btn:text-[#666] transition-colors" />
-                    <div className="flex flex-col items-start gap-0.5 pointer-events-none">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono text-[#555] leading-none">Model</span>
-                        <Badge variant="outline" className="h-3 px-1 text-[7px] bg-green-500/10 text-green-400 border-green-500/20 rounded-sm">
-                          {model === "flux-1-schnell" ? "Recommended" : "Active"}
-                        </Badge>
-                      </div>
-                      <span className="text-[11px] text-white/90 font-medium capitalize">
-                        {AI_MODELS.find(m => m.id === model)?.name || "Unknown Model"}
-                      </span>
-                    </div>
-                  </button>
-                </WorkstationSelectorTrigger>
-                <WorkstationSelectorContent>
-                  <WorkstationSelectorInput placeholder="Search models..." />
-                  <WorkstationSelectorList>
-                    <WorkstationSelectorEmpty>No models found.</WorkstationSelectorEmpty>
-                    <WorkstationSelectorGroup>
-                      {IMAGE_MODELS.map(m => (
-                        <WorkstationSelectorItem key={m.id} value={m.id} className="flex items-center gap-3">
-                           <div className="flex flex-col flex-1 min-w-0">
-                              <WorkstationSelectorName>{m.name}</WorkstationSelectorName>
-                              <WorkstationSelectorDescription className="truncate">{m.description}</WorkstationSelectorDescription>
-                           </div>
-                           {m.capabilities.imageToImage && (
-                              <ImageIcon className="w-4 h-4 text-[#555] shrink-0 ml-auto" />
-                           )}
-                        </WorkstationSelectorItem>
-                      ))}
-                    </WorkstationSelectorGroup>
-                  </WorkstationSelectorList>
-                </WorkstationSelectorContent>
-              </WorkstationSelector>
-            </div>
-
-            {/* Style Selector */}
-            <div className="relative group">
-               <WorkstationSelector value={style} onValueChange={(v) => v && setStyle(v)}>
-                <WorkstationSelectorTrigger asChild>
-                  <button className="w-full h-11 bg-[#111] border-[#222] border rounded-xl pl-10 pr-4 relative focus:ring-1 focus:ring-white/10 transition-all flex flex-col items-start justify-center group/btn hover:bg-[#161616]">
-                    <Paintbrush className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#444] group-hover/btn:text-[#666] transition-colors" />
-                    <div className="flex flex-col items-start gap-0.5 pointer-events-none">
-                       <span className="text-[10px] font-mono text-[#555] leading-none">Style</span>
-                       <span className="text-[11px] text-white/90 font-medium capitalize">{style}</span>
-                    </div>
-                  </button>
-                </WorkstationSelectorTrigger>
-                <WorkstationSelectorContent>
-                  <WorkstationSelectorInput placeholder="Search styles..." />
-                  <WorkstationSelectorList>
-                    <WorkstationSelectorEmpty>No styles found.</WorkstationSelectorEmpty>
-                    <WorkstationSelectorGroup>
-                      {[
-                        { id: "none", name: "None", desc: "No specific style guidance", icon: <Circle /> },
-                        { id: "dynamic", name: "Dynamic", desc: "Bold and high-contrast", icon: <Zap /> },
-                        { id: "cinematic", name: "Cinematic", desc: "Movie-like lighting and depth", icon: <Activity /> },
-                        { id: "creative", name: "Creative", desc: "Artistic interpretation", icon: <Sparkle /> },
-                        { id: "fashion", name: "Fashion", desc: "Studio-style photography", icon: <User /> },
-                        { id: "portrait", name: "Portrait", desc: "Focus on subject details", icon: <User /> },
-                        { id: "stock", name: "Stock Photo", desc: "Clean and commercial", icon: <Globe /> },
-                        { id: "vibrant", name: "Vibrant", desc: "Saturated and alive", icon: <Zap /> },
-                      ].map(s => (
-                        <WorkstationSelectorItem key={s.id} value={s.id} className="flex items-center gap-3">
-                           <div className="flex flex-col flex-1 min-w-0">
-                              <WorkstationSelectorName>{s.name}</WorkstationSelectorName>
-                              <WorkstationSelectorDescription className="truncate">{s.desc}</WorkstationSelectorDescription>
-                           </div>
-                        </WorkstationSelectorItem>
-                      ))}
-                    </WorkstationSelectorGroup>
-                  </WorkstationSelectorList>
-                </WorkstationSelectorContent>
-              </WorkstationSelector>
-            </div>
-
-            {/* Image Dimensions */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <h3 className="text-xs font-heading font-medium text-white tracking-tight">Image Dimensions</h3>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="w-3 h-3 text-[#333] cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>Select the output image proportions</TooltipContent>
-                </Tooltip>
-              </div>
-              <ToggleGroup 
-                type="single" 
-                value={ratio} 
-                onValueChange={(v) => v && setRatio(v)} 
-                variant="outline" 
-                className="w-full justify-start"
-              >
-                {[
-                  { id: "2:3", label: "2:3", icon: <div className="w-3 h-5 border-[1.5px] border-current rounded-[2px]" /> },
-                  { id: "1:1", label: "1:1", icon: <div className="w-4 h-4 border-[1.5px] border-current rounded-[2px]" /> },
-                  { id: "16:9", label: "16:9", icon: <div className="w-6 h-3 border-[1.5px] border-current rounded-[2px]" /> },
-                ].map((item) => (
-                  <ToggleGroupItem
-                    key={item.id}
-                    value={item.id}
-                    className="flex flex-col items-center justify-center gap-2 h-auto aspect-square flex-1"
-                  >
-                    <div className="opacity-70">{item.icon}</div>
-                    <span className="text-[10px] font-mono">{item.label}</span>
-                  </ToggleGroupItem>
-                ))}
-                
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <ToggleGroupItem
-                      value="custom"
-                      className="flex flex-col items-center justify-center gap-2 h-auto aspect-square flex-1"
-                    >
-                      <div className="opacity-70"><Maximize className="w-4 h-4" /></div>
-                      <span className={cn("font-mono text-center", ratio === "custom" ? "text-[9px] tracking-tighter" : "text-[10px]")}>
-                        {ratio === "custom" ? `${customWidth}×${customHeight}` : "Custom"}
-                      </span>
-                    </ToggleGroupItem>
-                  </PopoverTrigger>
-                  <PopoverContent side="right" sideOffset={16} className="w-64 bg-[#111] border-[#222] p-4 text-white rounded-xl shadow-2xl">
-                     <div className="space-y-4">
-                       <div className="flex items-center justify-between mb-2">
-                         <p className="text-sm font-medium text-[#eee]">Custom dimensions</p>
-                         <div className="flex items-center gap-1.5" title="Lock aspect ratio">
-                           <Link2 className={cn("w-3.5 h-3.5", isLinked ? "text-green-400" : "text-[#555]")} />
-                           <Switch checked={isLinked} onCheckedChange={setIsLinked} className="scale-75 data-[state=checked]:bg-green-500" />
-                         </div>
-                       </div>
-                       
-                       <div className="space-y-6">
-                         <div className="space-y-3">
-                           <div className="flex items-center justify-between">
-                             <span className="text-xs font-medium text-[#ccc]">Width</span>
-                             <input type="number" value={customWidth} onChange={e => {
-                               setCustomWidth(e.target.value);
-                               if (isLinked) setCustomHeight(e.target.value);
-                             }} className="w-16 bg-[#1a1a1a] border border-[#333] rounded-md h-7 text-xs font-mono text-center focus:outline-none focus:border-[#555] transition-colors" />
-                           </div>
-                           <Slider 
-                             value={[parseInt(customWidth) || 1024]} 
-                             min={256} max={2048} step={64} 
-                             onValueChange={(v) => {
-                               setCustomWidth(v[0].toString());
-                               if (isLinked) setCustomHeight(v[0].toString());
-                             }} 
-                           />
-                         </div>
-
-                         <div className="space-y-3">
-                           <div className="flex items-center justify-between">
-                             <span className="text-xs font-medium text-[#ccc]">Height</span>
-                             <input type="number" value={customHeight} onChange={e => {
-                               setCustomHeight(e.target.value);
-                               if (isLinked) setCustomWidth(e.target.value);
-                             }} className="w-16 bg-[#1a1a1a] border border-[#333] rounded-md h-7 text-xs font-mono text-center focus:outline-none focus:border-[#555] transition-colors" />
-                           </div>
-                           <Slider 
-                             value={[parseInt(customHeight) || 1024]} 
-                             min={256} max={2048} step={64} 
-                             onValueChange={(v) => {
-                               setCustomHeight(v[0].toString());
-                               if (isLinked) setCustomWidth(v[0].toString());
-                             }} 
-                           />
-                         </div>
-                       </div>
-                     </div>
-                  </PopoverContent>
-                </Popover>
-              </ToggleGroup>
-            </div>
-
-            {/* Number of Generations */}
-            <div className="space-y-4">
-               <div className="flex items-center gap-2">
-                <h3 className="text-xs font-heading font-medium text-white tracking-tight">Number of generations</h3>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="w-3 h-3 text-[#333] cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>How many images to generate at once</TooltipContent>
-                </Tooltip>
-              </div>
-              <ToggleGroup 
-                type="single" 
-                value={count} 
-                onValueChange={(v) => v && setCount(v)} 
-                variant="outline" 
-                className="w-full"
-              >
-                {["1", "2", "3", "4"].map((num) => (
-                  <ToggleGroupItem
-                    key={num}
-                    value={num}
-                    className="flex-1 font-mono"
-                  >
-                    {num}
-                  </ToggleGroupItem>
-                ))}
-
-
-              </ToggleGroup>
-            </div>
-
-            <Separator className="bg-[#222]" />
-
-            {/* Advanced Settings */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <Settings2 className="w-4 h-4 text-[#555]" />
-                <h3 className="text-xs font-heading font-medium text-white tracking-tight uppercase">Advanced Settings</h3>
-              </div>
-
-              {/* Inference Steps */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Label className="text-[11px] font-medium text-[#888]">Inference Steps</Label>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <HelpCircle className="w-3 h-3 text-[#333] cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>More steps = higher quality but slower generation (max 8)</TooltipContent>
-                    </Tooltip>
-                  </div>
-                  <span className="text-[10px] font-mono text-white/50 bg-[#111] px-1.5 py-0.5 rounded border border-[#222]">{numInferenceSteps}</span>
-                </div>
-                <Slider 
-                  value={[numInferenceSteps]} 
-                  onValueChange={(v) => setNumInferenceSteps(v[0])}
-                  max={8}
-                  min={1}
-                  step={1}
-                  className="[&_[role=slider]]:h-3 [&_[role=slider]]:w-3 [&_[role=slider]]:bg-white [&_[role=slider]]:border-none"
-                />
-              </div>
-
-              {/* Output Format */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Label className="text-[11px] font-medium text-[#888]">Output Format</Label>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <HelpCircle className="w-3 h-3 text-[#333] cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent>The file format of the generated image</TooltipContent>
-                  </Tooltip>
-                </div>
-                <ToggleGroup 
-                  type="single" 
-                  value={format} 
-                  onValueChange={(v) => v && setFormat(v)} 
-                  variant="outline" 
-                  className="w-full h-8"
-                >
-                  {["png", "jpeg"].map((f) => (
-                    <ToggleGroupItem
-                      key={f}
-                      value={f}
-                      className="flex-1 text-[10px] uppercase font-mono h-full"
-                    >
-                      {f}
-                    </ToggleGroupItem>
-                  ))}
-                </ToggleGroup>
-              </div>
-
-              {/* Negative Prompt */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Label className="text-[11px] font-medium text-[#888]">Negative Prompt</Label>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <HelpCircle className="w-3 h-3 text-[#333] cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent>Describe elements you want to exclude from the image</TooltipContent>
-                  </Tooltip>
-                </div>
-                <Textarea 
-                  placeholder="e.g. blurry, low quality, distorted..." 
-                  value={negativePrompt}
-                  onChange={(e) => setNegativePrompt(e.target.value)}
-                  className="bg-[#111] border-[#222] text-white placeholder-[#333] text-[11px] min-h-[80px] focus-visible:ring-1 focus-visible:ring-white/10 resize-none rounded-xl"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* SIDEBAR FOOTER */}
-          <div className="p-6 bg-[#111]/30">
-             <button 
-               onClick={resetDefaults}
-               className="flex items-center gap-2 text-[10px] font-mono font-bold text-[#555] hover:text-white transition-colors tracking-widest w-full justify-center group"
-             >
-                <RefreshCcw className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" />
-                Reset to Defaults
-             </button>
-          </div>
+          <WorkstationSidebar 
+            model={model} setModel={setModel}
+            style={style} setStyle={setStyle}
+            ratio={ratio} setRatio={setRatio}
+            count={count} setCount={setCount}
+            customWidth={customWidth} setCustomWidth={setCustomWidth}
+            customHeight={customHeight} setCustomHeight={setCustomHeight}
+            numInferenceSteps={numInferenceSteps} setNumInferenceSteps={setNumInferenceSteps}
+            isLinked={isLinked} setIsLinked={setIsLinked}
+            negativePrompt={negativePrompt} setNegativePrompt={setNegativePrompt}
+            format={format} setFormat={setFormat}
+            resetDefaults={resetDefaults}
+          />
         </aside>
 
+        {/* BESPOKE SIDEBAR WORKSTATION (Mobile) */}
+        <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+          <SheetContent side="left" className="p-4 bg-transparent border-none w-fit overflow-visible" showCloseButton={false}>
+            <WorkstationSidebar 
+              model={model} setModel={setModel}
+              style={style} setStyle={setStyle}
+              ratio={ratio} setRatio={setRatio}
+              count={count} setCount={setCount}
+              customWidth={customWidth} setCustomWidth={setCustomWidth}
+              customHeight={customHeight} setCustomHeight={setCustomHeight}
+              numInferenceSteps={numInferenceSteps} setNumInferenceSteps={setNumInferenceSteps}
+              isLinked={isLinked} setIsLinked={setIsLinked}
+              negativePrompt={negativePrompt} setNegativePrompt={setNegativePrompt}
+              format={format} setFormat={setFormat}
+              resetDefaults={resetDefaults}
+              className="h-[calc(100vh-32px)] w-80 rounded-3xl border border-border shadow-2xl relative"
+              onClose={() => setIsSidebarOpen(false)}
+            />
+          </SheetContent>
+        </Sheet>
+
         {/* MAIN CONTENT AREA */}
-        <main className="flex-1 z-10 p-12 overflow-y-auto scrollbar-hide">
+        <main className="flex-1 z-10 px-4 py-8 lg:p-12 overflow-y-auto scrollbar-hide">
           <div className="max-w-5xl mx-auto space-y-12">
             {/* TOP GENERATION BAR */}
             <div className="animate-fade-up">
@@ -630,7 +718,7 @@ export default function ImageGenerationPage() {
                     setPrompt(message.text);
                     handleGenerate(message.text);
                   }}
-                  className="p-2 rounded-3xl bg-[#111]/50 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                  className=""
                 >
                   <PromptInputAttachments>
                     {(attachment) => <PromptInputAttachment data={attachment} />}
@@ -638,7 +726,7 @@ export default function ImageGenerationPage() {
                   <PromptInputBody>
                     <PromptInputTextarea 
                       placeholder="Describe your visual concept..."
-                      className="bg-transparent border-none focus-visible:ring-0 text-white placeholder-[#444] min-h-[100px] p-4 text-sm"
+                      className="bg-transparent border-none focus-visible:ring-0 text-foreground placeholder-muted-foreground min-h-[100px] p-4 text-sm"
                     />
                   </PromptInputBody>
                   <PromptInputFooter className="px-4 pb-4">
@@ -651,12 +739,20 @@ export default function ImageGenerationPage() {
                       </PromptInputActionMenu>
                     </PromptInputTools>
                     <div className="flex items-center gap-2">
-                      <PromptInputRefine />
-                      <PromptInputSubmit 
-                        status={isGenerating ? "submitted" : undefined}
-                        className="bg-white text-black hover:bg-white/90"
-                      />
-                    </div>
+                       <button 
+                         type="button"
+                         onClick={() => setIsSidebarOpen(true)}
+                         className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+                         title="Workstation Settings"
+                       >
+                         <Settings2 className="size-4" />
+                       </button>
+                       <PromptInputRefine />
+                       <PromptInputSubmit 
+                         status={isGenerating ? "submitted" : undefined}
+                         className="bg-foreground text-background hover:bg-foreground/90 transition-all font-medium rounded-xl"
+                       />
+                     </div>
                   </PromptInputFooter>
                 </PromptInput>
               </PromptInputProvider>

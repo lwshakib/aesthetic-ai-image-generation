@@ -22,10 +22,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jakarta.variable} h-full antialiased dark`}
+      className={`${inter.variable} ${jakarta.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-[#050505] text-white">
+      <body className="min-h-full flex flex-col">
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"

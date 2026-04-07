@@ -53,11 +53,11 @@ const archetypes = [
 const HeroBackground = memo(() => {
   return (
     <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
-      <div className="w-full h-full bg-[#050505] relative">
+      <div className="w-full h-full bg-background relative transition-colors duration-500">
         {/* Layered CSS glows for a deep, high-end feel */}
-        <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-orange-500/10 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-500/10 blur-[100px] rounded-full"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] bg-amber-500/5 blur-[80px] rounded-full"></div>
+        <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-orange-500/10 dark:bg-orange-500/20 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-500/10 dark:bg-purple-500/20 blur-[100px] rounded-full"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] bg-amber-500/5 dark:bg-amber-500/10 blur-[80px] rounded-full"></div>
       </div>
     </div>
   );
@@ -71,25 +71,23 @@ export default function Home() {
   const prevSlide = () => setActiveIndex((prev) => (prev - 1 + archetypes.length) % archetypes.length);
 
   return (
-    <div className="selection:bg-white selection:text-black flex flex-col min-h-screen text-base relative bg-[#050505] text-white font-sans antialiased overflow-x-hidden">
-   
-
+    <div className="selection:bg-foreground selection:text-background flex flex-col min-h-screen text-base relative bg-background text-foreground font-sans antialiased overflow-x-hidden transition-colors duration-500">
       <HeroBackground />
 
       {/* Grid Background Pattern */}
-      <div className="fixed inset-0 pointer-events-none z-[-1]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "4rem 4rem", maskImage: "radial-gradient(circle at center, black, transparent 80%)", WebkitMaskImage: "radial-gradient(circle at center, black, transparent 80%)" }}></div>
+      <div className="fixed inset-0 pointer-events-none z-[-1]" style={{ backgroundImage: "linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)", backgroundSize: "4rem 4rem", maskImage: "radial-gradient(circle at center, black, transparent 80%)", WebkitMaskImage: "radial-gradient(circle at center, black, transparent 80%)", opacity: 0.03 }}></div>
 
       {/* Navigation */}
       <nav className="lg:px-8 flex animate-fade-up w-full h-24 max-w-7xl mr-auto ml-auto pr-6 pl-6 items-center justify-between z-50">
-        <div className="flex gap-2 text-xl text-white tracking-tight items-center font-heading font-medium">
-          <Logo className="md:w-9 md:h-9 w-8 h-8 text-white" />
+        <div className="flex gap-2 text-xl text-foreground tracking-tight items-center font-heading font-medium">
+          <Logo className="size-9 text-foreground" />
           Aesthetic AI
         </div>
-        <div className="hidden md:flex gap-8 text-sm text-[#888888] items-center font-mono">
-          <a href="#engine" className="hover:text-white transition-colors">Engine</a>
-          <a href="/image-generation" className="hover:text-white transition-colors">Gallery</a>
-          <a href="#models" className="hover:text-white transition-colors">Models</a>
-          <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+        <div className="hidden md:flex gap-8 text-sm text-muted-foreground items-center font-mono">
+          <a href="#engine" className="hover:text-foreground transition-colors">Engine</a>
+          <a href="/image-generation" className="hover:text-foreground transition-colors">Gallery</a>
+          <a href="#models" className="hover:text-foreground transition-colors">Models</a>
+          <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
         </div>
         
         <div className="btn-wrapper scale-90 md:scale-100">
@@ -111,16 +109,16 @@ export default function Home() {
         {/* Hero Section */}
         <section className="lg:px-8 lg:pt-32 lg:pb-40 flex flex-col lg:flex-row max-w-7xl mr-auto ml-auto pt-24 pr-6 pb-32 pl-6 items-center relative overflow-hidden">
           <div className="flex-1 lg:text-left z-10 text-center">
-            <div className="inline-flex gap-2 animate-fade-up uppercase text-[10px] font-medium text-[#888888] tracking-[0.2em] font-mono bg-[#111111] border-[#222222] border rounded-full mb-8 pt-1.5 pr-4 pb-1.5 pl-4 items-center">
+            <div className="inline-flex gap-2 animate-fade-up uppercase text-[10px] font-medium text-muted-foreground tracking-[0.2em] font-mono bg-muted border-border border rounded-full mb-8 pt-1.5 pr-4 pb-1.5 pl-4 items-center">
               FLUX.1 [schnell] Integration Live
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shadow-[0_0_8px_white]"></span>
+              <span className="size-1.5 rounded-full bg-foreground animate-pulse shadow-[0_0_8px_currentColor]"></span>
             </div>
             
-            <h1 className="md:text-6xl lg:text-7xl leading-[1.05] animate-fade-up delay-100 text-4xl font-medium text-white tracking-tight font-heading mb-6">
+            <h1 className="md:text-6xl lg:text-7xl leading-[1.05] animate-fade-up delay-100 text-4xl font-medium text-foreground tracking-tight font-heading mb-6">
               Synthesize the visual essence of your next masterpiece
             </h1>
             
-            <p className="md:text-xl lg:mx-0 leading-relaxed animate-fade-up delay-200 text-lg font-medium text-[#888888] font-heading max-w-2xl mr-auto mb-10 ml-auto translate-x-1">
+            <p className="md:text-xl lg:mx-0 leading-relaxed animate-fade-up delay-200 text-lg font-medium text-muted-foreground font-heading max-w-2xl mr-auto mb-10 ml-auto translate-x-1">
               The ultimate aesthetic engine for designers crafting sophisticated, high-fidelity AI imagery. Build complex prompts with advanced refinement and generate via FLUX ecosystem.
             </p>
 
@@ -138,21 +136,21 @@ export default function Home() {
                 <div className="line vertical left"></div>
                 <div className="line vertical right"></div>
               </div>
-              <span className="flex items-center gap-2 text-sm text-[#555555] font-mono group cursor-pointer hover:text-white transition-colors">
+              <span className="flex items-center gap-2 text-sm text-muted-foreground font-mono group cursor-pointer hover:text-foreground transition-colors">
                 See it in action
-                <PlayCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <PlayCircle className="size-5 group-hover:scale-110 transition-transform" />
               </span>
             </div>
           </div>
 
           <div className="flex-1 hidden lg:block animate-fade-up delay-200 w-full h-[600px] max-w-lg relative perspective-normal transform-style-preserve-3d mt-12 lg:mt-0">
             {/* Back right cover */}
-            <div className="aspect-[2/3] overflow-hidden book-float-2 opacity-40 w-64 z-10 border-[#333333] border rounded-2xl absolute top-10 right-4 shadow-2xl" style={{ maskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)", WebkitMaskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)" }}>
+            <div className="aspect-[2/3] overflow-hidden book-float-2 opacity-40 w-64 z-10 border-border border rounded-2xl absolute top-10 right-4 shadow-2xl" style={{ maskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)", WebkitMaskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)" }}>
               <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4d3f4658-ecfd-47b7-8318-ab5e0f7dba77_800w.webp" alt="Cover background" className="w-full h-full object-cover grayscale opacity-50" />
               <div className="z-10 bg-gradient-to-t from-black/10 via-black/0 to-black/10 absolute inset-0 translate-x-1"></div>
             </div>
             {/* Back left cover */}
-            <div className="aspect-[2/3] overflow-hidden book-float-1 opacity-60 w-64 border-[#333333] border rounded-2xl absolute top-20 left-0 shadow-2xl" style={{ maskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)", WebkitMaskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)" }}>
+            <div className="aspect-[2/3] overflow-hidden book-float-1 opacity-60 w-64 border-border border rounded-2xl absolute top-20 left-0 shadow-2xl" style={{ maskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)", WebkitMaskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)" }}>
               <div className="bg-gradient-to-t from-black via-black/40 to-transparent z-10 absolute inset-0"></div>
               <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/95719f33-05ac-4a57-b882-0015d0b8af8b_800w.webp" alt="Cover background" className="w-full h-full object-cover" />
               <div className="absolute bottom-6 left-4 right-4 z-20">
@@ -161,10 +159,10 @@ export default function Home() {
               </div>
             </div>
             {/* Main front cover */}
-            <div className="-translate-x-1/2 aspect-[2/3] overflow-hidden z-20 transition-transform duration-500 hover:scale-105 w-80 border-[#444444] border rounded-[2rem] absolute top-0 left-1/2 shadow-[0_20px_80px_rgba(0,0,0,1)]" style={{ maskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)", WebkitMaskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)" }}>
-              <div className="z-10 bg-gradient-to-t from-[#080808] via-black/20 to-transparent absolute inset-0"></div>
+            <div className="-translate-x-1/2 aspect-[2/3] overflow-hidden z-20 transition-transform duration-500 hover:scale-105 w-80 border-border/50 border rounded-[2rem] absolute top-0 left-1/2 shadow-2xl" style={{ maskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)", WebkitMaskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)" }}>
+              <div className="z-10 bg-gradient-to-t from-background/80 via-transparent to-transparent absolute inset-0"></div>
               <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c43265c1-3d68-44f0-b248-d7969e9fed75_800w.webp" alt="Cover background" className="w-full h-full object-cover" />
-              <div className="text-[0.65rem] uppercase font-semibold text-amber-600 tracking-wider font-mono bg-white/90 z-30 rounded-md py-1 px-3 absolute top-6 right-6">
+              <div className="text-[0.65rem] uppercase font-semibold text-primary tracking-wider font-mono bg-background/90 z-30 rounded-md py-1 px-3 absolute top-6 right-6 border border-border">
                 FLUX.1 Powered
               </div>
               <div className="absolute bottom-10 left-8 right-8 z-20">
@@ -179,123 +177,104 @@ export default function Home() {
         {/* Stats Grid */}
         <section className="lg:px-8 max-w-7xl mr-auto mb-32 ml-auto pr-6 pl-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] hover:-translate-y-1 transition-all group">
-              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">4.2s</h2>
-              <p className="text-xs text-[#888888] font-mono leading-relaxed">Average generation time powered by FLUX [schnell].</p>
+            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-foreground/20 hover:-translate-y-1 transition-all group">
+              <h2 className="text-4xl tracking-tighter text-foreground mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">4.2s</h2>
+              <p className="text-xs text-muted-foreground font-mono leading-relaxed">Average generation time powered by FLUX [schnell].</p>
             </div>
-            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] hover:-translate-y-1 transition-all group">
-              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">1.2M+</h2>
-              <p className="text-xs text-[#888888] font-mono leading-relaxed">Unique aesthetic masterworks generated daily.</p>
+            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-foreground/20 hover:-translate-y-1 transition-all group">
+              <h2 className="text-4xl tracking-tighter text-foreground mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">1.2M+</h2>
+              <p className="text-xs text-muted-foreground font-mono leading-relaxed">Unique aesthetic masterworks generated daily.</p>
             </div>
-            <div className="glass-panel flex flex-col text-white rounded-3xl p-8 relative overflow-hidden hover:border-[#444444] hover:-translate-y-1 transition-all group">
-              <div className="absolute inset-0 bg-purple-500/5 group-hover:bg-purple-500/10 transition-colors"></div>
-              <span className="text-[10px] font-bold tracking-widest uppercase mb-2 text-[#555] font-mono z-10">Output</span>
-              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-bold z-10">98%</h2>
-              <p className="text-xs text-[#888] font-mono font-medium z-10">Quality rating for complex prompt adherence.</p>
+            <div className="glass-panel flex flex-col text-foreground rounded-3xl p-8 relative overflow-hidden hover:border-foreground/20 hover:-translate-y-1 transition-all group">
+              <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors"></div>
+              <span className="text-[10px] font-bold tracking-widest uppercase mb-2 text-muted-foreground/60 font-mono z-10">Output</span>
+              <h2 className="text-4xl tracking-tighter text-foreground mb-2 font-heading font-bold z-10">98%</h2>
+              <p className="text-xs text-muted-foreground/80 font-mono font-medium z-10">Quality rating for complex prompt adherence.</p>
             </div>
-            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-[#444444] hover:-translate-y-1 transition-all group">
-              <h2 className="text-4xl tracking-tighter text-white mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">20+</h2>
-              <p className="text-xs text-[#888888] font-mono leading-relaxed">Pro-grade style frameworks for diverse aesthetics.</p>
+            <div className="glass-panel p-8 rounded-3xl flex flex-col hover:border-foreground/20 hover:-translate-y-1 transition-all group">
+              <h2 className="text-4xl tracking-tighter text-foreground mb-2 font-heading font-medium group-hover:scale-105 transition-transform origin-left">20+</h2>
+              <p className="text-xs text-muted-foreground font-mono leading-relaxed">Pro-grade style frameworks for diverse aesthetics.</p>
             </div>
           </div>
         </section>
 
         {/* Narrative Engine UI */}
-        <section className="border-y bg-[#0a0a0a] border-[#222222] py-32 relative overflow-hidden" id="engine">
-          {/* Subtle glow behind section */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/5 blur-[120px] rounded-full pointer-events-none will-change-transform"></div>
+        <section className="border-y bg-muted/30 border-border py-32 relative overflow-hidden" id="engine">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 blur-[120px] rounded-full pointer-events-none will-change-transform"></div>
 
           <div className="lg:px-8 max-w-6xl mr-auto ml-auto pr-6 pl-6">
             <div className="text-center mb-20 animate-fade-up">
-              <span className="text-[10px] font-medium tracking-[0.3em] text-[#888888] uppercase mb-4 block font-mono">The Core Workflow</span>
-              <h2 className="md:text-6xl text-4xl text-white tracking-tighter mb-6 font-heading font-medium">The Aesthetic Engine</h2>
-              <p className="text-lg text-[#888888] max-w-2xl mx-auto font-heading leading-relaxed">
+              <span className="text-[10px] font-medium tracking-[0.3em] text-muted-foreground uppercase mb-4 block font-mono">The Core Workflow</span>
+              <h2 className="md:text-6xl text-4xl text-foreground tracking-tighter mb-6 font-heading font-medium">The Aesthetic Engine</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-heading leading-relaxed">
                 Intelligent prompt refinement for high-fidelity synthesis with the FLUX ecosystem.
               </p>
             </div>
 
-            {/* Main UI Dashboard Container */}
-            <div className="glass-panel bg-[#111] rounded-3xl p-1 relative shadow-[0_40px_100px_rgba(0,0,0,0.8)] overflow-hidden">
-              {/* Dashboard header mock */}
-              <div className="flex bg-[#181818] h-12 border-b border-[#222] px-6 gap-3 items-center">
+            <div className="glass-panel bg-card/50 rounded-3xl p-1 relative shadow-2xl overflow-hidden">
+              <div className="flex bg-muted/50 h-12 border-b border-border px-6 gap-3 items-center">
                 <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#333]"></div>
-                  <div className="w-3 h-3 rounded-full bg-[#333]"></div>
-                  <div className="w-3 h-3 rounded-full bg-[#333]"></div>
+                  <div className="size-3 rounded-full bg-border"></div>
+                  <div className="size-3 rounded-full bg-border"></div>
+                  <div className="size-3 rounded-full bg-border"></div>
                 </div>
                 <div className="flex-1 flex justify-center">
-                  <div className="bg-[#050505] rounded-full px-4 py-1 border border-[#222] text-[10px] text-[#555] font-mono tracking-wide">
+                  <div className="bg-background rounded-full px-4 py-1 border border-border text-[10px] text-muted-foreground font-mono tracking-wide">
                     app.storielle.com/engine
                   </div>
                 </div>
               </div>
 
-              <div className="md:p-12 p-6 grid grid-cols-1 lg:grid-cols-12 gap-12 bg-[#0a0a0a] relative overflow-hidden">
-                {/* Decorative background for dashboard */}
+              <div className="md:p-12 p-6 grid grid-cols-1 lg:grid-cols-12 gap-12 bg-card/30 relative overflow-hidden">
                 <div className="absolute inset-0 opacity-20 pointer-events-none">
-                  <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-amber-500/10 blur-[80px] rounded-full"></div>
-                  <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-500/10 blur-[60px] rounded-full"></div>
+                  <div className="absolute top-0 right-0 size-[400px] bg-orange-500/10 blur-[80px] rounded-full"></div>
+                  <div className="absolute bottom-0 left-0 size-[300px] bg-primary/10 blur-[60px] rounded-full"></div>
                 </div>
 
-                {/* Left Column: Settings */}
                 <div className="lg:col-span-4 space-y-8 z-10">
                   <div>
                     <div className="flex items-center gap-3 mb-6">
-                      <Map className="w-5 h-5 text-white" />
-                      <h3 className="font-semibold text-lg text-white tracking-tight font-heading">Environments</h3>
+                      <Map className="size-5 text-foreground" />
+                      <h3 className="font-semibold text-lg text-foreground tracking-tight font-heading">Environments</h3>
                     </div>
 
                     <div className="space-y-3">
                       {["Dystopian Megacity", "Isolated Space Station", "Neo-Victorian London", "Underground Syndicate"].map((env, i) => (
-                        <label key={env} className="flex items-center gap-4 p-4 border border-[#222] rounded-2xl cursor-pointer hover:border-white/20 hover:bg-white/[0.02] transition-all group">
+                        <label key={env} className="flex items-center gap-4 p-4 border border-border rounded-2xl cursor-pointer hover:border-foreground/20 hover:bg-foreground/[0.02] transition-all group">
                           <input type="checkbox" className="tech-checkbox" defaultChecked={i === 0 || i === 3} />
-                          <span className="text-xs font-semibold text-[#888888] group-hover:text-white transition-colors tracking-wide font-mono uppercase">{env}</span>
+                          <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors tracking-wide font-mono uppercase">{env}</span>
                         </label>
                       ))}
                     </div>
                   </div>
 
                   <div className="pt-4">
-                    <button className="w-full bg-white text-black py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(255,255,255,0.1)]">
+                    <button className="w-full bg-foreground text-background py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl">
                       Generate Structure
                     </button>
-                    <p className="text-center text-[10px] text-[#555] mt-4 font-mono uppercase tracking-tighter">Draft 12.4 • image_seed_8122</p>
+                    <p className="text-center text-[10px] text-muted-foreground/60 mt-4 font-mono uppercase tracking-tighter">Draft 12.4 • image_seed_8122</p>
                   </div>
                 </div>
 
-                {/* Middle Column: Archetypes Grid */}
                 <div className="lg:col-span-8 flex flex-col z-10">
                   <div className="flex mb-8 gap-3 items-center">
-                    <Logo className="w-6 h-6 text-white" />
-                    <h3 className="text-xl font-semibold text-white tracking-tight font-heading">Styles & Archetypes</h3>
+                    <Logo className="size-6 text-foreground" />
+                    <h3 className="text-xl font-semibold text-foreground tracking-tight font-heading">Styles & Archetypes</h3>
                   </div>
 
-                  <div className="bg-[#050505]/80 w-full h-[520px] border border-[#222] rounded-3xl relative flex items-center justify-center perspective-distant overflow-hidden">
-                    
-                    {/* Navigation Buttons */}
+                  <div className="bg-background/80 w-full h-[520px] border border-border rounded-3xl relative flex items-center justify-center perspective-distant overflow-hidden">
                     <div className="absolute inset-x-6 flex justify-between z-50 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <button 
-                        onClick={prevSlide}
-                        className="w-12 h-12 rounded-full bg-black/40 border border-white/10 text-white flex items-center justify-center backdrop-blur-xl pointer-events-auto hover:bg-white hover:text-black transition-all hover:scale-110 shadow-2xl"
-                      >
-                        <ChevronLeft className="w-6 h-6" />
+                      <button onClick={prevSlide} className="size-12 rounded-full bg-card/40 border border-border text-foreground flex items-center justify-center backdrop-blur-xl pointer-events-auto hover:bg-foreground hover:text-background transition-all hover:scale-110 shadow-2xl">
+                        <ChevronLeft className="size-6" />
                       </button>
-                      <button 
-                        onClick={nextSlide}
-                        className="w-12 h-12 rounded-full bg-black/40 border border-white/10 text-white flex items-center justify-center backdrop-blur-xl pointer-events-auto hover:bg-white hover:text-black transition-all hover:scale-110 shadow-2xl"
-                      >
-                        <ChevronRight className="w-6 h-6" />
+                      <button onClick={nextSlide} className="size-12 rounded-full bg-card/40 border border-border text-foreground flex items-center justify-center backdrop-blur-xl pointer-events-auto hover:bg-foreground hover:text-background transition-all hover:scale-110 shadow-2xl">
+                        <ChevronRight className="size-6" />
                       </button>
                     </div>
 
-                    {/* Deck Carousel */}
                     <div className="relative w-[280px] h-[400px] transform-style-preserve-3d flex items-center justify-center">
                       {archetypes.map((archetype, index) => {
-                        // Calculate offset from current active index
                         const offset = (index - activeIndex + archetypes.length) % archetypes.length;
-                        
-                        // Positioning logic for "deck" stack
-                        // 0 is front, 1 is right, 2 is far right, length-1 is behind-left
                         let transform = "";
                         let opacity = 0;
                         let zIndex = 0;
@@ -325,12 +304,8 @@ export default function Home() {
                         }
 
                         return (
-                          <div 
-                            key={archetype.id}
-                            className="absolute inset-0 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group will-change-transform"
-                            style={{ transform, opacity, zIndex, pointerEvents: pointerEvents as any }}
-                          >
-                            <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-[#111] shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-[#222] group-hover:border-[#444] transition-all">
+                          <div key={archetype.id} className="absolute inset-0 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group will-change-transform" style={{ transform, opacity, zIndex, pointerEvents: pointerEvents as any }}>
+                            <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-card shadow-2xl border border-border group-hover:border-foreground/20 transition-all">
                               <img src={archetype.image} className="w-full h-full object-cover brightness-[0.6] group-hover:brightness-90 transition-all duration-500 scale-105 group-hover:scale-100" />
                               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                               <div className="absolute bottom-0 inset-x-0 p-8 pt-24 bg-gradient-to-t from-black via-black/80 to-transparent">
@@ -338,7 +313,7 @@ export default function Home() {
                                 <p className="text-xs text-white/60 leading-relaxed font-mono font-medium line-clamp-2">{archetype.description}</p>
                               </div>
                               {offset === 0 && (
-                                <div className="absolute top-6 right-6 w-3 h-3 bg-white rounded-full shadow-[0_0_20px_white]"></div>
+                                <div className="absolute top-6 right-6 size-3 bg-white rounded-full shadow-[0_0_20px_white]"></div>
                               )}
                             </div>
                           </div>
@@ -346,18 +321,9 @@ export default function Home() {
                       })}
                     </div>
 
-                    {/* Pagination Dots */}
                     <div className="absolute bottom-10 flex gap-3 z-50">
                       {archetypes.map((_, i) => (
-                        <div 
-                          key={i}
-                          onClick={() => setActiveIndex(i)}
-                          className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
-                            i === activeIndex 
-                              ? "w-8 bg-white shadow-[0_0_10px_white]" 
-                              : "w-1.5 bg-white/20 hover:bg-white/40"
-                          }`}
-                        />
+                        <div key={i} onClick={() => setActiveIndex(i)} className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${i === activeIndex ? "w-8 bg-foreground shadow-[0_0_10px_currentColor]" : "w-1.5 bg-foreground/20 hover:bg-foreground/40"}`} />
                       ))}
                     </div>
                   </div>
@@ -370,213 +336,139 @@ export default function Home() {
         {/* Pricing Section */}
         <section className="lg:px-8 py-32 max-w-7xl mx-auto px-6 relative z-10" id="pricing">
           <div className="text-center mb-20 animate-fade-up">
-            <span className="uppercase block text-[10px] font-bold text-[#888888] tracking-[0.4em] mb-4 font-mono">Investment</span>
-            <h2 className="md:text-5xl text-3xl text-white tracking-tight mb-4 font-heading font-medium">Plans for every creator.</h2>
-            <p className="text-lg text-[#888888] max-w-2xl mx-auto font-heading font-medium">
-              Start prototyping for free, or unlock the full power of the Aesthetic Engine to master your craft.
+            <span className="uppercase block text-[10px] font-bold text-muted-foreground tracking-[0.4em] mb-4 font-mono">Investment</span>
+            <h2 className="md:text-5xl text-3xl text-foreground tracking-tight mb-4 font-heading font-medium">Plans for every creator.</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-heading font-medium">
+              Start prototyping for free, or unlock the full power of the Aesthetic Engine.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch w-full max-w-6xl mx-auto">
-            {/* Sketchbook Plan */}
-            <div className="glass-panel flex flex-col p-10 rounded-[2.5rem] border-[#222] hover:border-[#333] transition-colors relative group">
+            {/* Creator Plan */}
+            <div className="glass-panel flex flex-col p-10 rounded-[2.5rem] border-border hover:border-foreground/20 transition-colors relative group">
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 rounded-2xl border border-[#222] bg-[#111] flex items-center justify-center text-[#888]">
-                  <BookOpen className="w-6 h-6" />
+                <div className="size-12 rounded-2xl border border-border bg-muted flex items-center justify-center text-muted-foreground">
+                  <BookOpen className="size-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl text-white font-bold tracking-tight font-heading">The Creator</h3>
-                  <p className="text-[10px] text-[#555] font-mono uppercase tracking-widest font-bold">Entry level</p>
+                  <h3 className="text-xl text-foreground font-bold tracking-tight font-heading">The Creator</h3>
+                  <p className="text-[10px] text-muted-foreground/60 font-mono uppercase tracking-widest font-bold">Entry level</p>
                 </div>
               </div>
-              
               <div className="mb-10">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl tracking-tighter text-white font-heading font-bold">$0</span>
-                  <span className="text-xs text-[#888] font-mono uppercase">Images Incl.</span>
+                  <span className="text-5xl tracking-tighter text-foreground font-heading font-bold">$0</span>
+                  <span className="text-xs text-muted-foreground font-mono uppercase">Images Incl.</span>
                 </div>
               </div>
-
-               <ul className="space-y-4 mb-auto text-sm text-[#888] font-mono font-medium">
-                <li className="flex gap-3 items-center">
-                  <Check className="w-4 h-4 text-white" />
-                  <span>100 Generations / mo</span>
-                </li>
-                <li className="flex gap-3 items-center">
-                  <Check className="w-4 h-4 text-white" />
-                  <span>Base-model access (Schnell)</span>
-                </li>
-                <li className="flex gap-3 items-center">
-                  <Check className="w-4 h-4 text-white" />
-                  <span>Standard History (7 days)</span>
-                </li>
+               <ul className="space-y-4 mb-auto text-sm text-muted-foreground font-mono font-medium">
+                <li className="flex gap-3 items-center"><Check className="size-4 text-primary" /><span>100 Generations / mo</span></li>
+                <li className="flex gap-3 items-center"><Check className="size-4 text-primary" /><span>Base-model access</span></li>
+                <li className="flex gap-3 items-center"><Check className="size-4 text-primary" /><span>Standard History</span></li>
               </ul>
-
-              <button className="w-full mt-12 py-4 rounded-2xl border border-white/10 hover:border-white/40 transition-all font-bold text-xs uppercase tracking-widest text-[#888] hover:text-white group-hover:bg-white/[0.02]">
-                Start Creating
-              </button>
+              <button className="w-full mt-12 py-4 rounded-2xl border border-border hover:border-foreground/40 transition-all font-bold text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">Start Creating</button>
             </div>
 
-            {/* Architect Plan */}
-            <div className="relative group rounded-[2.5rem] p-[2px] overflow-hidden shadow-[0_0_80px_rgba(147,51,234,0.15)] flex flex-col">
-              <div className="absolute inset-0 bg-[#222] z-0">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[12rem] bg-gradient-to-b from-transparent via-purple-500 to-transparent opacity-60 animate-[rotatePlan_10s_linear_infinite]" style={{ transformOrigin: "center center" }}></div>
+            {/* Pro Plan */}
+            <div className="relative group rounded-[2.5rem] p-[2px] overflow-hidden shadow-2xl flex flex-col">
+              <div className="absolute inset-0 bg-muted z-0">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[12rem] bg-gradient-to-b from-transparent via-primary/30 to-transparent opacity-60 animate-[rotatePlan_10s_linear_infinite]" style={{ transformOrigin: "center center" }}></div>
               </div>
-
-              <div className="flex flex-col flex-1 bg-[#0a0a0a] rounded-[2.4rem] p-10 relative z-10 border-white/[0.02] border-inset">
+              <div className="flex flex-col flex-1 bg-card rounded-[2.4rem] p-10 relative z-10 border border-border">
                 <div className="absolute top-0 right-10 -translate-y-1/2">
-                  <span className="text-[10px] font-bold text-white tracking-[0.2em] bg-gradient-to-r from-purple-600 to-fuchsia-600 rounded-full py-1.5 px-5 shadow-[0_10px_20px_rgba(147,51,234,0.3)] font-mono uppercase">Popular</span>
+                   <span className="text-[10px] font-bold text-white tracking-[0.2em] bg-primary rounded-full py-1.5 px-5 shadow-xl font-mono uppercase">Popular</span>
                 </div>
-
-                 <div className="flex items-center gap-4 mb-8">
-                  <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                    <Sparkle className="w-6 h-6" />
-                  </div>
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="size-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center text-primary"><Sparkle className="size-6" /></div>
                   <div>
-                    <h3 className="text-xl text-white font-bold tracking-tight font-heading">Pro Designer</h3>
-                    <p className="text-[10px] text-purple-400/70 font-mono uppercase tracking-widest font-bold">High-fidelity output</p>
+                    <h3 className="text-xl text-foreground font-bold tracking-tight font-heading">Pro Designer</h3>
+                    <p className="text-[10px] text-primary/70 font-mono uppercase tracking-widest font-bold">High-fidelity</p>
                   </div>
                 </div>
-                
                 <div className="mb-10">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-5xl tracking-tighter text-white font-heading font-bold">$12</span>
-                    <span className="text-xs text-[#888] font-mono uppercase">/ month</span>
+                    <span className="text-5xl tracking-tighter text-foreground font-heading font-bold">$12</span>
+                    <span className="text-xs text-muted-foreground font-mono uppercase">/ month</span>
                   </div>
-                  <p className="text-[10px] text-[#555] mt-2 font-mono uppercase font-bold">Infinite synthesis</p>
                 </div>
-
-                 <ul className="space-y-4 mb-auto text-sm text-[#ddd] font-mono font-medium">
-                  <li className="flex gap-3 items-center">
-                    <div className="w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-black" />
-                    </div>
-                    <span>Unlimited Generations</span>
-                  </li>
-                  <li className="flex gap-3 items-center">
-                    <div className="w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-black" />
-                    </div>
-                    <span>Prompt Refinement (GLM)</span>
-                  </li>
-                  <li className="flex gap-3 items-center">
-                    <div className="w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-black" />
-                    </div>
-                    <span>Full History & Deletion Control</span>
-                  </li>
+                <ul className="space-y-4 mb-auto text-sm text-foreground/80 font-mono font-medium">
+                  <li className="flex gap-3 items-center"><Check className="size-4 text-primary" /><span>Unlimited Generations</span></li>
+                  <li className="flex gap-3 items-center"><Check className="size-4 text-primary" /><span>Prompt Refinement</span></li>
+                  <li className="flex gap-3 items-center"><Check className="size-4 text-primary" /><span>Full Control</span></li>
                 </ul>
-
-                <button className="w-full mt-12 py-5 rounded-2xl bg-white text-black font-bold text-xs uppercase tracking-widest shadow-[0_20px_40px_rgba(255,255,255,0.1)] hover:scale-[1.02] active:scale-[0.98] transition-all">
-                  Get Full Access
-                </button>
+                <button className="w-full mt-12 py-5 rounded-2xl bg-foreground text-background font-bold text-xs uppercase tracking-widest shadow-xl">Get Full Access</button>
               </div>
             </div>
 
-            {/* Collective Plan */}
-             <div className="glass-panel flex flex-col p-10 rounded-[2.5rem] border-[#222] hover:border-[#333] transition-colors relative group">
+            {/* Studio Plan */}
+            <div className="glass-panel flex flex-col p-10 rounded-[2.5rem] border-border hover:border-foreground/20 transition-colors relative group">
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 rounded-2xl border border-[#222] bg-[#111] flex items-center justify-center text-white">
-                  <Users className="w-6 h-6" />
-                </div>
+                <div className="size-12 rounded-2xl border border-border bg-muted flex items-center justify-center text-foreground"><Users className="size-6" /></div>
                 <div>
-                  <h3 className="text-xl text-white font-bold tracking-tight font-heading">The Studio</h3>
-                  <p className="text-[10px] text-[#555] font-mono uppercase tracking-widest font-bold">For creative agencies</p>
+                  <h3 className="text-xl text-foreground font-bold tracking-tight font-heading">The Studio</h3>
+                  <p className="text-[10px] text-muted-foreground/60 font-mono uppercase tracking-widest font-bold">For agencies</p>
                 </div>
               </div>
-              
               <div className="mb-10">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl tracking-tighter text-white font-heading font-bold">$29</span>
-                  <span className="text-xs text-[#888] font-mono uppercase">/ month</span>
+                  <span className="text-5xl tracking-tighter text-foreground font-heading font-bold">$29</span>
+                  <span className="text-xs text-muted-foreground font-mono uppercase">/ month</span>
                 </div>
               </div>
-
-               <ul className="space-y-4 mb-auto text-sm text-[#888] font-mono font-medium">
-                <li className="flex gap-3 items-center">
-                  <Check className="w-4 h-4 text-white" />
-                  <span className="text-white">Everything in Pro Designer</span>
-                </li>
-                <li className="flex gap-3 items-center">
-                  <Check className="w-4 h-4 text-white" />
-                  <span>Team-shared asset history</span>
-                </li>
-                <li className="flex gap-3 items-center">
-                  <Check className="w-4 h-4 text-white" />
-                  <span>Custom style-tuned models</span>
-                </li>
+              <ul className="space-y-4 mb-auto text-sm text-muted-foreground font-mono font-medium">
+                <li className="flex gap-3 items-center"><Check className="size-4 text-foreground" /><span>Everything in Pro</span></li>
+                <li className="flex gap-3 items-center"><Check className="size-4 text-foreground" /><span>Team Assets</span></li>
+                <li className="flex gap-3 items-center"><Check className="size-4 text-foreground" /><span>Tuned Models</span></li>
               </ul>
-
-              <button className="w-full mt-12 py-4 rounded-2xl border border-[#333] hover:border-[#555] transition-all font-bold text-xs uppercase tracking-widest text-[#888] hover:text-white">
-                Contact for Teams
-              </button>
+              <button className="w-full mt-12 py-4 rounded-2xl border border-border hover:border-foreground/20 transition-all font-bold text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">Contact for Teams</button>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-[#222] pt-32 pb-20 bg-[#050505] relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-        
+      <footer className="border-t border-border pt-32 pb-20 bg-background relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8 mb-20">
-          {/* Brand Column */}
           <div className="space-y-8">
-            <div className="flex gap-2 text-2xl text-white tracking-tight items-center font-heading font-medium">
-              <Logo className="w-8 h-8 text-white" />
+            <div className="flex gap-2 text-2xl text-foreground tracking-tight items-center font-heading font-medium">
+              <Logo className="size-8 text-foreground" />
               Aesthetic AI
             </div>
-            <p className="text-sm text-[#888888] font-heading leading-relaxed max-w-xs">
-              Synthesize your next aesthetic masterpiece with high-fidelity AI models and advanced prompt refinement. Build the visual essence of your future projects today.
-            </p>
-            <div className="flex gap-5 text-[#555]">
-              <Send className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
-              <MessageSquare className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
-              <Camera className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+            <p className="text-sm text-muted-foreground font-heading leading-relaxed max-w-xs">Synthesize your next aesthetic masterpiece with high-fidelity AI models.</p>
+            <div className="flex gap-5 text-muted-foreground/60">
+              <Send className="size-5 cursor-pointer hover:text-foreground" />
+              <MessageSquare className="size-5 cursor-pointer hover:text-foreground" />
+              <Camera className="size-5 cursor-pointer hover:text-foreground" />
             </div>
           </div>
-
-          {/* Engine Column */}
           <div className="space-y-8">
-            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono">Synthesis Engine</h4>
-            <ul className="space-y-4 text-sm text-[#888888] font-mono">
-              <li className="hover:text-white transition-colors cursor-pointer">Core Synthesis</li>
-              <li className="hover:text-white transition-colors cursor-pointer">Style Library</li>
-              <li className="hover:text-white transition-colors cursor-pointer">Prompt Refinement</li>
-              <li className="hover:text-white transition-colors cursor-pointer">Custom Tuning</li>
+            <h4 className="text-[10px] font-bold text-foreground uppercase tracking-[0.2em] font-mono">Synthesis Engine</h4>
+            <ul className="space-y-4 text-sm text-muted-foreground font-mono">
+              <li className="hover:text-foreground cursor-pointer">Core Synthesis</li>
+              <li className="hover:text-foreground cursor-pointer">Style Library</li>
+              <li className="hover:text-foreground cursor-pointer">Prompt Refinement</li>
             </ul>
           </div>
-
-          {/* Platform Column */}
           <div className="space-y-8">
-            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono">Platform</h4>
-            <ul className="space-y-4 text-sm text-[#888888] font-mono">
-              <li className="hover:text-white transition-colors cursor-pointer"><a href="/image-generation">Gallery Explorer</a></li>
-              <li className="hover:text-white transition-colors cursor-pointer"><a href="#pricing">Creator Plans</a></li>
-              <li className="hover:text-white transition-colors cursor-pointer">Studio API</li>
-              <li className="hover:text-white transition-colors cursor-pointer">Asset History</li>
+            <h4 className="text-[10px] font-bold text-foreground uppercase tracking-[0.2em] font-mono">Platform</h4>
+            <ul className="space-y-4 text-sm text-muted-foreground font-mono">
+              <li className="hover:text-foreground cursor-pointer"><a href="/image-generation">Gallery Explorer</a></li>
+              <li className="hover:text-foreground cursor-pointer"><a href="#pricing">Creator Plans</a></li>
             </ul>
           </div>
-
-          {/* Support Column */}
           <div className="space-y-8">
-            <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono">Ethos & Support</h4>
-            <ul className="space-y-4 text-sm text-[#888888] font-mono">
-              <li className="hover:text-white transition-colors cursor-pointer">Documentation</li>
-              <li className="hover:text-white transition-colors cursor-pointer">AI Ethics Policy</li>
-              <li className="hover:text-white transition-colors cursor-pointer">Status Dashboard</li>
-              <li className="hover:text-white transition-colors cursor-pointer">Help Center</li>
+            <h4 className="text-[10px] font-bold text-foreground uppercase tracking-[0.2em] font-mono">Ethos</h4>
+            <ul className="space-y-4 text-sm text-muted-foreground font-mono">
+              <li className="hover:text-foreground cursor-pointer">Documentation</li>
+              <li className="hover:text-foreground cursor-pointer">AI Ethics Policy</li>
             </ul>
           </div>
         </div>
-
-        <div className="max-w-7xl mx-auto px-6 pt-12 border-t border-[#111] flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[#444] text-[10px] font-mono uppercase tracking-[0.3em]">
-            © 2026 Aesthetic AI. All rights reserved. Built for creators.
-          </p>
-          <div className="flex gap-8 text-[10px] text-[#444] font-mono uppercase tracking-widest">
-            <span className="hover:text-white transition-colors cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Terms of Service</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Legal Notice</span>
+        <div className="max-w-7xl mx-auto px-6 pt-12 border-t border-border/10 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-muted-foreground/40 text-[10px] font-mono uppercase tracking-[0.3em]">© 2026 Aesthetic AI. All rights reserved.</p>
+          <div className="flex gap-8 text-[10px] text-muted-foreground/40 font-mono uppercase tracking-widest">
+            <span className="hover:text-foreground cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-foreground cursor-pointer">Terms of Service</span>
           </div>
         </div>
       </footer>

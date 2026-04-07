@@ -82,13 +82,13 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* Storielle Colors */
-  --bg-color: #050505;
-  --card-bg: #111111;
-  --text-main: #ffffff;
-  --text-dim: #888888;
-  --border-color: #222222;
-  --accent: #ffffff;
+  /* Aesthetic AI Colors (Light) */
+  --bg-color: #f9f9f9;
+  --card-bg: #ffffff;
+  --text-main: #111111;
+  --text-dim: #666666;
+  --border-color: #e5e5e5;
+  --accent: #000000;
 }
 
 .dark {
@@ -123,6 +123,14 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Aesthetic AI Colors (Dark) */
+  --bg-color: #050505;
+  --card-bg: #111111;
+  --text-main: #ffffff;
+  --text-dim: #888888;
+  --border-color: #222222;
+  --accent: #ffffff;
 }
 
 @layer base {
@@ -192,9 +200,7 @@
 }
 
 .glass-panel {
-  background: rgba(17, 17, 17, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
+  @apply bg-card/60 backdrop-blur-xl border border-border;
   transform: translateZ(0);
   will-change: backdrop-filter;
 }
@@ -203,9 +209,8 @@
   appearance: none;
   width: 1.25rem;
   height: 1.25rem;
-  border: 1px solid var(--border-color);
+  @apply border border-border bg-muted/30;
   border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.03);
   cursor: pointer;
   position: relative;
   display: inline-flex;
@@ -215,15 +220,14 @@
 }
 
 .tech-checkbox:checked {
-  border-color: var(--accent);
-  background-color: var(--accent);
+  @apply border-primary bg-primary;
 }
 
 .tech-checkbox:checked::after {
   content: '';
   width: 0.5rem;
   height: 0.5rem;
-  background-color: #000;
+  @apply bg-primary-foreground;
   border-radius: 1px;
 }
 
@@ -287,9 +291,9 @@
   --line-weight: 1px;
   --line-distance: 0.8rem 1rem;
   --animation-speed: 0.35s;
-  --dot-color: #fffa;
-  --line-color: #fffa;
-  --grid-color: rgba(255, 255, 255, 0.1);
+  --dot-color: currentColor;
+  --line-color: currentColor;
+  --grid-color: var(--border);
   position: relative;
   display: inline-flex;
   justify-content: center;
@@ -327,9 +331,8 @@
   justify-content: center;
   align-items: center;
   padding: 0.8rem 1.5rem;
-  background-color: #fff0;
-  border: 1px solid var(--grid-color);
-  color: rgba(255, 255, 255, 0.9);
+  background-color: transparent;
+  @apply border border-border text-foreground/90 transition-all duration-200;
   font-family: inherit;
   letter-spacing: -0.01em;
   font-size: 0.875rem;
@@ -337,12 +340,10 @@
   text-transform: capitalize;
   border-radius: 6px;
   cursor: pointer;
-  transition: transform .2s ease-in-out, letter-spacing .2s ease-in-out;
 }
 
 .btn-wrapper .btn:hover {
-  background-color: #ffffff;
-  color: #000000;
+  @apply bg-foreground text-background;
   transform: scale(1.02);
   letter-spacing: .02em;
 }
@@ -474,13 +475,13 @@ body::after {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  @apply bg-muted-foreground/30;
   border-radius: 10px;
   transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  @apply bg-muted-foreground/50;
 }
 
 /* Firefox Support */
