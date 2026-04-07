@@ -1,23 +1,33 @@
 ---
-name: 🧐 Questions & Support
-about: Ask a question about Timbre AI or request support.
+name: ❓ Question
+about: Ask a question or seek help with Aesthetic AI
 title: '[Q] '
 labels: ['question']
 assignees: []
 ---
 
-## 🧐 Question Description
+## ❓ Question
 
-<!-- A clear and concise description of the question you would like to ask. -->
+<!-- A clear and concise question or topic you would like to discuss. -->
 
-## 🛠️ Topic
+## 🛠️ Feature Area (if applicable)
 
-<!-- Is this related to Synthesis, Cloning, or Registry? -->
+- [ ] Image Generation (FLUX)
+- [ ] Prompt Expansion (GLM-4)
+- [ ] UI/UX Components (Workstation)
+- [ ] Authentication & Workspaces
+- [ ] API & Server Actions
+- [ ] Storage (R2/S3)
+- [ ] Other: **\_\_**
 
-## 🧐 Technical Context (If any)
+## 📋 Context
 
-<!-- A clear and concise description of the problem you're having. -->
+<!-- Add any context that will help us answer your question (e.g. your use case, current setup). -->
 
-## 📋 Additional Context
+## 🧐 What have you tried?
 
-<!-- Any additional information you think is relevant for the Timbre AI community. -->
+<!-- If you're seeking help with an issue, what steps have you already taken? -->
+
+## 📋 Additional Information
+
+<!-- Any other information you think is relevant. -->

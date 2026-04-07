@@ -1,6 +1,6 @@
 ---
 name: 📖 Documentation Improvements
-about: Suggest improvements or report issues with Timbre AI documentation
+about: Suggest improvements or report issues with Aesthetic AI documentation
 title: '[DOC] '
 labels: ['documentation']
 assignees: []
@@ -16,7 +16,7 @@ assignees: []
 
 ## 🧐 Why?
 
-<!-- Why is this documentation change necessary for the Timbre AI community? -->
+<!-- Why is this documentation change necessary for the Aesthetic AI community? -->
 
 ## 📋 Additional Context
 

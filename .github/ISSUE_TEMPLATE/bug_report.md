@@ -1,6 +1,6 @@
 ---
 name: 🐛 Bug Report
-about: Create a report to help us improve Timbre AI
+about: Create a report to help us improve Aesthetic AI
 title: '[BUG] '
 labels: ['bug']
 assignees: []
@@ -12,19 +12,19 @@ assignees: []
 
 ## 🛠️ Feature Area
 
-- [ ] Synthesis Engine
-- [ ] Voice Cloning Alpha
-- [ ] Model Registry
-- [ ] UI/UX Components
-- [ ] Authentication & Security
+- [ ] Image Generation (FLUX)
+- [ ] Prompt Expansion (GLM-4)
+- [ ] UI/UX Components (Workstation)
+- [ ] Authentication & Workspaces
 - [ ] API & Server Actions
+- [ ] Storage (R2/S3)
 - [ ] Other: **\_\_**
 
 ## 🔁 Reproduction Steps
 
 <!-- Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '...'
+1. Go to '/image-generation'
+2. Click on 'Generate'
 3. Scroll down to '...'
 4. See error
 -->
@@ -42,7 +42,7 @@ assignees: []
 
 - **OS:** [e.g. Windows 11, macOS Sequoia]
 - **Browser:** [e.g. Chrome 120, Safari 17]
-- **Version:** [e.g. v2.4.0]
+- **Version:** [e.g. v0.1.0]
 
 ## 📋 Additional Context
 

@@ -88,7 +88,7 @@
   --text-main: #111111;
   --text-dim: #666666;
   --border-color: #e5e5e5;
-  --accent: #000000;
+  --brand-accent: #000000;
 }
 
 .dark {
@@ -130,7 +130,7 @@
   --text-main: #ffffff;
   --text-dim: #888888;
   --border-color: #222222;
-  --accent: #ffffff;
+  --brand-accent: #ffffff;
 }
 
 @layer base {

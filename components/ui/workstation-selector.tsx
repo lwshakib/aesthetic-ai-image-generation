@@ -142,7 +142,7 @@ export const WorkstationSelectorContent = ({
 
   return (
     <PopoverContent 
-      className={cn("p-0 bg-[#0d0d0d] border-[#222] backdrop-blur-2xl shadow-2xl overflow-hidden rounded-xl", className)} 
+      className={cn("p-0 bg-popover border-border backdrop-blur-2xl shadow-2xl overflow-hidden rounded-xl", className)} 
       style={{ width }} 
       align="start"
       {...popoverOptions}
@@ -172,13 +172,13 @@ export const WorkstationSelectorList = ({ className, ...props }: WorkstationSele
 export type WorkstationSelectorEmptyProps = ComponentProps<typeof CommandEmpty>
 
 export const WorkstationSelectorEmpty = ({ className, ...props }: WorkstationSelectorEmptyProps) => (
-  <CommandEmpty className={cn("py-6 text-center text-xs text-[#555]", className)} {...props} />
+  <CommandEmpty className={cn("py-6 text-center text-xs text-muted-foreground", className)} {...props} />
 )
 
 export type WorkstationSelectorGroupProps = ComponentProps<typeof CommandGroup>
 
 export const WorkstationSelectorGroup = ({ className, ...props }: WorkstationSelectorGroupProps) => (
-  <CommandGroup className={cn("px-2 py-1.5 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-[#555] [&_[cmdk-group-heading]]:tracking-widest", className)} {...props} />
+  <CommandGroup className={cn("px-2 py-1.5 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group-heading]]:tracking-widest", className)} {...props} />
 )
 
 export type WorkstationSelectorItemProps = ComponentProps<typeof CommandItem>
@@ -194,7 +194,7 @@ export const WorkstationSelectorItem = ({ className, onSelect, value, ...props }
         onOpenChange?.(false)
         onSelect?.(currentValue)
       }}
-      className={cn("px-3 py-2 rounded-xl cursor-default transition-all aria-selected:bg-white/5", className)} 
+      className={cn("px-3 py-2 rounded-xl cursor-default transition-all aria-selected:bg-secondary aria-selected:text-secondary-foreground", className)} 
       {...props} 
     />
   )
@@ -203,13 +203,13 @@ export const WorkstationSelectorItem = ({ className, onSelect, value, ...props }
 export type WorkstationSelectorSeparatorProps = ComponentProps<typeof CommandSeparator>
 
 export const WorkstationSelectorSeparator = (props: WorkstationSelectorSeparatorProps) => (
-  <CommandSeparator className="bg-[#222]" {...props} />
+  <CommandSeparator className="bg-border" {...props} />
 )
 
 export type WorkstationSelectorNameProps = ComponentProps<"span">
 
 export const WorkstationSelectorName = ({ className, ...props }: WorkstationSelectorNameProps) => (
-  <span className={cn("flex-1 truncate text-left font-medium text-[11px] text-white/90", className)} {...props} />
+  <span className={cn("flex-1 truncate text-left font-medium text-[11px] text-foreground", className)} {...props} />
 )
 
 export type WorkstationSelectorDescriptionProps = ComponentProps<"span">

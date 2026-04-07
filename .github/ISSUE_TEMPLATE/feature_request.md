@@ -1,23 +1,38 @@
 ---
-name: 💡 Feature Request
-about: Suggest a new feature for Timbre AI
+name: ✨ Feature Request
+about: Suggest an idea for Aesthetic AI
 title: '[FEAT] '
-labels: ['feature']
+labels: ['enhancement']
 assignees: []
 ---
 
-## 💡 Feature Description
+## 🚀 Feature Description
 
-<!-- What functionality would you like to see for the Timbre AI community? -->
+<!-- A clear and concise description of what you want to happen. -->
 
-## 🛠️ Benefit
+## 🛠️ Feature Area
 
-<!-- How would this change benefit the synthesis engine or user workflow? -->
+- [ ] Image Generation (FLUX)
+- [ ] Prompt Expansion (GLM-4)
+- [ ] UI/UX Components (Workstation)
+- [ ] Authentication & Workspaces
+- [ ] API & Server Actions
+- [ ] Storage (R2/S3)
+- [ ] Other: **\_\_**
 
-## 🧐 Technical Approach (If any)
+## 💡 Rationale
 
-<!-- A clear and concise description of how to implement this change. -->
+<!-- Why is this feature necessary? What problem does it solve? -->
+
+## 🧐 Proposed Implementation
+
+<!-- A clear and concise description of what you've considered. -->
+
+## 📸 Mockups (if applicable)
+
+<!-- If applicable, add screenshots to help explain your problem. -->
+<!-- Use screenshots from the UI to demonstrate the issue. -->
 
 ## 📋 Additional Context
 
-<!-- Any additional information you think is relevant for the Timbre AI community. -->
+<!-- Add any other context about the feature request here. -->
