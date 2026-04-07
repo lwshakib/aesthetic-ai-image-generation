@@ -28,7 +28,7 @@ export const apiAuthPrefix = '/api/auth';
  * The default redirect path after logging in
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT = '/dashboard';
+export const DEFAULT_LOGIN_REDIRECT = '/image-generation';
 
 /**
  * Proxy function that acts as middleware to handle route protection and session handling.

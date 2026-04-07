@@ -1,7 +1,6 @@
 'use client'
 import { useState, memo } from "react";
 import { 
-  Sparkles, 
   PlayCircle, 
   Map, 
   Users, 
@@ -14,6 +13,7 @@ import {
   Sparkle,
   Camera
 } from "lucide-react";
+import { Logo } from "@/components/logo";
 
 // Define the archetypes for the carousel
 const archetypes = [
@@ -82,7 +82,7 @@ export default function Home() {
       {/* Navigation */}
       <nav className="lg:px-8 flex animate-fade-up w-full h-24 max-w-7xl mr-auto ml-auto pr-6 pl-6 items-center justify-between z-50">
         <div className="flex gap-2 text-xl text-white tracking-tight items-center font-heading font-medium">
-          <Sparkles className="md:w-9 md:h-9 w-8 h-8 text-white" />
+          <Logo className="md:w-9 md:h-9 w-8 h-8 text-white" />
           Aesthetic AI
         </div>
         <div className="hidden md:flex gap-8 text-sm text-[#888888] items-center font-mono">
@@ -250,7 +250,7 @@ export default function Home() {
                 {/* Middle Column: Archetypes Grid */}
                 <div className="lg:col-span-8 flex flex-col z-10">
                   <div className="flex mb-8 gap-3 items-center">
-                    <Sparkles className="w-6 h-6 text-white" />
+                    <Logo className="w-6 h-6 text-white" />
                     <h3 className="text-xl font-semibold text-white tracking-tight font-heading">Styles & Archetypes</h3>
                   </div>
 
@@ -502,7 +502,7 @@ export default function Home() {
       <footer className="border-t border-[#222] py-20 bg-[#050505]">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
            <div className="flex gap-2 text-xl text-white tracking-tight items-center font-heading font-medium">
-            <Sparkles className="w-7 h-7 text-white" />
+            <Logo className="w-7 h-7 text-white" />
             Aesthetic AI
           </div>
           <p className="text-[#555] text-[10px] font-mono uppercase tracking-widest">
