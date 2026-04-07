@@ -22,6 +22,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  generations   Generation[]
 
   @@unique([email])
   @@map("user")
@@ -73,4 +74,39 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Generation {
+  id                 String   @id @default(cuid())
+  prompt             String
+  negativePrompt     String?
+  numInferenceSteps  Int      @default(25)
+  model              String
+  style              String
+  width              Int
+  height             Int
+  count              Int
+  format             String   @default("png")
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  images             Image[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([userId])
+  @@map("generation")
+}
+
+model Image {
+  id           String     @id @default(cuid())
+  path         String
+  prompt       String
+  format       String     @default("png")
+  generationId String
+  generation   Generation @relation(fields: [generationId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([generationId])
+  @@map("image")
 }
