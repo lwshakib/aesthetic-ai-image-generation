@@ -33,7 +33,6 @@ export async function POST(req: NextRequest) {
     }
 
     const imageCount = parseInt(count) || 4;
-    const results: { path: string, prompt: string, format: string }[] = [];
 
     // 1. Generate Prompt Variations using GLM-4.7-Flash Structured Output
     const variationMessages = [
@@ -86,25 +85,7 @@ export async function POST(req: NextRequest) {
       variations = [...variations, ...Array(imageCount - variations.length).fill(prompt)];
     }
 
-    // 2. Generate Images and Upload to S3
-    for (let i = 0; i < imageCount; i++) {
-      const currentPrompt = variations[i];
-      const { buffer, format: detectedFormat } = await aiService.generateImage({
-        prompt: negativePrompt ? `${currentPrompt} [Negative: ${negativePrompt}]` : currentPrompt,
-        model: model || "flux-1-schnell",
-        num_steps: numInferenceSteps || 25,
-        width: width || 1024,
-        height: height || 1024,
-        format: format || "png",
-      });
-
-      const extension = detectedFormat === "jpeg" ? "jpg" : detectedFormat;
-      const fileName = `generations/${session.user.id}/${nanoid()}.${extension}`;
-      await s3Service.uploadFile(buffer, fileName, `image/${detectedFormat}`);
-      results.push({ path: fileName, prompt: currentPrompt, format: detectedFormat });
-    }
-
-    // 3. Save to database
+    // 2. Create the Generation record first (before streaming)
     const generation = await prisma.generation.create({
       data: {
         prompt,
@@ -115,25 +96,76 @@ export async function POST(req: NextRequest) {
         width: width || 1024,
         height: height || 1024,
         count: imageCount,
-        format: results[0]?.format || "png",
+        format: format || "png",
         userId: session.user.id,
-        images: {
-          create: results.map((r) => ({
-            path: r.path,
-            prompt: r.prompt,
-            format: r.format,
-          })),
-        },
-      },
-      include: {
-        images: true,
       },
     });
 
-    return NextResponse.json({ 
-      id: generation.id, 
-      images: generation.images 
+    // 3. Setup Streaming Response
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          // Send the primary generation ID so the frontend can associate results
+          controller.enqueue(encoder.encode(JSON.stringify({ type: "generation_id", id: generation.id }) + "\n"));
+
+          for (let i = 0; i < imageCount; i++) {
+            const currentPrompt = variations[i];
+            
+            // Generate Image via AI Service
+            const { buffer, format: detectedFormat } = await aiService.generateImage({
+              prompt: negativePrompt ? `${currentPrompt} [Negative: ${negativePrompt}]` : currentPrompt,
+              model: model || "flux-1-schnell",
+              num_steps: numInferenceSteps || 25,
+              width: width || 1024,
+              height: height || 1024,
+              format: format || "png",
+            });
+
+            // Upload buffer to S3
+            const extension = detectedFormat === "jpeg" ? "jpg" : detectedFormat;
+            const fileName = `generations/${session.user.id}/${nanoid()}.${extension}`;
+            await s3Service.uploadFile(buffer, fileName, `image/${detectedFormat}`);
+
+            // Save individual Image record to DB
+            const imageRecord = await prisma.image.create({
+              data: {
+                path: fileName,
+                prompt: currentPrompt,
+                format: detectedFormat,
+                generationId: generation.id,
+              },
+            });
+
+            // Stream the image metadata back to the client immediately
+            const imageDelta = {
+              type: "image",
+              image: {
+                id: imageRecord.id,
+                path: imageRecord.path,
+                prompt: imageRecord.prompt,
+              },
+            };
+            controller.enqueue(encoder.encode(JSON.stringify(imageDelta) + "\n"));
+          }
+          
+          controller.close();
+        } catch (error: any) {
+          console.error("Streaming error:", error);
+          controller.enqueue(encoder.encode(JSON.stringify({ type: "error", message: error.message }) + "\n"));
+          controller.close();
+        }
+      },
     });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "application/x-ndjson",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+      },
+    });
+
   } catch (error: any) {
     console.error("Generation error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

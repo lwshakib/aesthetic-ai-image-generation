@@ -592,6 +592,9 @@ export default function ImageGenerationPage() {
     // Prepend the optimistic result to the list immediately
     setResults((prev) => [optimisticGeneration, ...prev]);
 
+    let currentGenerationId = tempId;
+    let receivedImagesCount = 0;
+
     try {
       const res = await fetch("/api/ai/generate", {
         method: "POST",
@@ -609,30 +612,87 @@ export default function ImageGenerationPage() {
         }),
       });
 
-      const data = await res.json();
-      if (data.images) {
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Failed to generate: ${res.statusText}`);
+      }
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error("No reader available for streaming.");
+
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        // Keep the last partial line in the buffer
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const data = JSON.parse(line);
+
+            if (data.type === "generation_id") {
+              const realId = data.id;
+              currentGenerationId = realId;
+              setResults((prev) => 
+                prev.map((gen) => 
+                  gen.id === tempId ? { ...gen, id: realId } : gen
+                )
+              );
+            } else if (data.type === "image") {
+              const newImage = data.image;
+              setResults((prev) => 
+                prev.map((gen) => {
+                  if (gen.id === currentGenerationId) {
+                    const newImages = [...gen.images];
+                    // Replace the first "placeholder" image (one with id: "")
+                    const placeholderIndex = newImages.findIndex(img => img.id === "");
+                    if (placeholderIndex !== -1) {
+                      newImages[placeholderIndex] = newImage;
+                    }
+                    return { ...gen, images: newImages };
+                  }
+                  return gen;
+                })
+              );
+              receivedImagesCount++;
+            } else if (data.type === "error") {
+              throw new Error(data.message);
+            }
+          } catch (e) {
+            console.error("Error parsing NDJSON chunk:", e);
+          }
+        }
+      }
+
+      // Mark as finished generating
+      setResults((prev) => 
+        prev.map((gen) => 
+          gen.id === currentGenerationId ? { ...gen, isGenerating: false } : gen
+        )
+      );
+      toast.success("Masterpiece generated!");
+
+    } catch (error: any) {
+      console.error("Generation error:", error);
+      // Remove the optimistic item on error if no images were received
+      if (receivedImagesCount === 0) {
+        setResults((prev) => prev.filter((gen) => gen.id !== tempId && gen.id !== currentGenerationId));
+      } else {
+        // Just turn off generating state
         setResults((prev) => 
           prev.map((gen) => 
-            gen.id === tempId 
-              ? { 
-                  ...gen, 
-                  id: data.id, 
-                  images: data.images, 
-                  isGenerating: false 
-                } 
-              : gen
+            (gen.id === tempId || gen.id === currentGenerationId) ? { ...gen, isGenerating: false } : gen
           )
         );
-        toast.success("Masterpiece generated!");
-      } else if (data.error) {
-        // Remove the optimistic item on error
-        setResults((prev) => prev.filter((gen) => gen.id !== tempId));
-        toast.error(data.error);
       }
-    } catch (error) {
-      // Remove the optimistic item on fetch error
-      setResults((prev) => prev.filter((gen) => gen.id !== tempId));
-      toast.error("Generation failed. Please try again.");
+      toast.error(error.message || "Generation failed. Please try again.");
     } finally {
       setIsGenerating(false);
     }
@@ -709,7 +769,7 @@ export default function ImageGenerationPage() {
 
         {/* MAIN CONTENT AREA */}
         <main className="flex-1 z-10 px-4 py-8 lg:p-12 overflow-y-auto scrollbar-hide">
-          <div className="max-w-5xl mx-auto space-y-12">
+          <div className="max-w-7xl mx-auto space-y-12">
             {/* TOP GENERATION BAR */}
             <div className="animate-fade-up">
               <PromptInputProvider initialInput={prompt}>
@@ -790,90 +850,82 @@ export default function ImageGenerationPage() {
                       </div>
                       
                        <div className={cn(
-                         "grid gap-6",
-                         gen.images.length === 1 ? "grid-cols-1 max-w-sm mx-auto" : 
-                         gen.images.length === 2 ? "grid-cols-1 sm:grid-cols-2 max-w-xl mx-auto" : 
-                         gen.images.length === 3 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-3xl mx-auto" : 
-                         "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-4xl mx-auto"
+                         "grid gap-8",
+                         gen.images.length === 1 ? "grid-cols-1 max-w-2xl mx-auto" : 
+                         gen.images.length === 2 ? "grid-cols-1 sm:grid-cols-2 max-w-5xl mx-auto" : 
+                         gen.images.length === 3 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto" : 
+                         "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full"
                        )}>
-                        {gen.isGenerating ? (
-                          gen.images.map((_, i) => (
-                            <div 
-                              key={`skeleton-${gen.id}-${i}`} 
-                              className="relative rounded-2xl overflow-hidden bg-[#111] border border-[#222] shadow-xl"
-                              style={{ aspectRatio: `${gen.width}/${gen.height}` }}
-                            >
-                               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent flex items-center justify-center" />
-                            </div>
-                          ))
-                        ) : (
-                          gen.images.map((img) => (
-                            <GenerationResult 
-                              key={img.id} 
-                              id={img.id}
-                              imagePath={img.path} 
-                              prompt={img.prompt} 
-                              width={gen.width}
-                              height={gen.height}
-                              onDelete={(id) => handleDeleteImage(id, gen.id)}
-                            />
-                          ))
-                        )}
+                        {gen.images.map((img, i) => (
+                          <GenerationResult 
+                            key={img.id || `loading-${gen.id}-${i}`}
+                            id={img.id}
+                            imagePath={img.path}
+                            prompt={img.prompt}
+                            width={gen.width}
+                            height={gen.height}
+                            isGenerating={img.id === ""}
+                            onDelete={() => handleDeleteImage(img.id, gen.id)}
+                          />
+                        ))}
                       </div>
                     </div>
                   ))}
                 </div>
-
-                {/* INFINITE SCROLL TARGET */}
-                <div ref={ref} className="h-20 flex items-center justify-center">
-                  {isLoadingMore && (
-                    <div className="flex flex-col items-center gap-3 animate-fade-in">
-                       <Loader2 className="w-5 h-5 text-[#333] animate-spin" />
-                       <span className="text-[10px] font-mono text-[#444] tracking-widest">LOADING MORE...</span>
-                    </div>
-                  )}
-                  {!hasMore && results.length > 0 && (
-                    <div className="flex flex-col items-center gap-2">
-                       <div className="w-1 h-1 rounded-full bg-[#222]" />
-                       <span className="text-[9px] font-mono text-[#333] tracking-widest">END OF GALLERY</span>
-                    </div>
-                  )}
-                </div>
+                
+                 {/* Infinite scroll ref */}
+                 <div ref={ref} className="h-10 w-full flex items-center justify-center">
+                   {isLoadingMore && <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />}
+                 </div>
               </div>
             )}
 
-            {results.length === 0 && !isGenerating && !isLoadingMore && (
-               <div className="flex flex-col items-center justify-center py-40 animate-fade-in">
-                  <Layers className="w-12 h-12 text-[#1a1a1a] mb-6" />
-                  <h3 className="text-sm font-medium text-white/50 mb-2">No generations yet</h3>
-                  <p className="text-[11px] text-[#444] text-center max-w-xs">
-                    Start by describing your visual concept in the prompt bar above to create your first masterpiece.
-                  </p>
-               </div>
+            {/* Empty State */}
+            {results.length === 0 && !isGenerating && (
+              <div className="flex flex-col items-center justify-center py-40 text-center animate-fade-up">
+                <div className="size-20 rounded-[2.5rem] bg-muted/50 border border-border flex items-center justify-center mb-8">
+                  <ImageIcon className="w-8 h-8 text-muted-foreground/50" />
+                </div>
+                <h3 className="text-2xl font-bold tracking-tight text-foreground mb-3 font-heading">No masterpieces yet</h3>
+                <p className="text-muted-foreground max-w-sm font-heading font-medium leading-relaxed">
+                  Start your creative journey by entering a prompt above. The Aesthetic Engine is ready for your concepts.
+                </p>
+              </div>
             )}
           </div>
         </main>
-      </div>
 
-      <AlertDialog open={!!generationToDelete} onOpenChange={(open) => !open && setGenerationToDelete(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Generation</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to permanently delete this entire generation group from your history and storage? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={() => generationToDelete && handleDeleteGeneration(generationToDelete)}
-              className="bg-red-500 hover:bg-red-600 text-white border-none"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        {/* Delete Dialog */}
+        <AlertDialog open={!!generationToDelete} onOpenChange={() => setGenerationToDelete(null)}>
+          <AlertDialogContent className="rounded-2xl border-border bg-card/80 backdrop-blur-xl">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="font-heading">Delete Generation?</AlertDialogTitle>
+              <AlertDialogDescription className="font-heading">
+                This will permanently remove the generation and all associated images.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="rounded-xl border-border">Cancel</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={() => generationToDelete && handleDeleteGeneration(generationToDelete)}
+                className="rounded-xl bg-red-500 text-white hover:bg-red-600 border-none"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        
+        {/* Global Loading Overlay (for initial first generate state if needed) */}
+        {isGenerating && results.length === 0 && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/20 backdrop-blur-sm animate-fade-in">
+             <div className="flex flex-col items-center gap-4">
+                <Loader2 className="w-10 h-10 animate-spin text-primary" />
+                <p className="text-xs font-mono tracking-widest uppercase text-muted-foreground animate-pulse">Initializing Synthesis...</p>
+             </div>
+          </div>
+        )}
+      </div>
     </TooltipProvider>
   );
 }

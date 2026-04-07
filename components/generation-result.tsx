@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Download, Share2, Maximize2, ExternalLink, Loader2, Trash2 } from "lucide-react";
+import { Download, Share2, Maximize2, ExternalLink, Loader2, Trash2, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -16,10 +17,11 @@ import {
 
 interface GenerationResultProps {
   id?: string;
-  imagePath: string;
+  imagePath?: string;
   prompt?: string;
   width?: number;
   height?: number;
+  isGenerating?: boolean;
   onDelete?: (id: string) => void;
 }
 
@@ -29,12 +31,19 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
   prompt, 
   width = 1024, 
   height = 1024,
+  isGenerating = false,
   onDelete 
 }) => {
   const [url, setUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isGenerating || !imagePath) {
+      setLoading(true);
+      setUrl(null);
+      return;
+    }
+
     // If imagePath is already a full URL (e.g. mock data or external image)
     if (imagePath.startsWith("http") || imagePath.startsWith("blob:")) {
       setUrl(imagePath);
@@ -43,6 +52,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
     }
 
     const fetchSignedUrl = async () => {
+      setLoading(true);
       try {
         const res = await fetch(`/api/s3/signed-url?key=${encodeURIComponent(imagePath)}`);
         const data = await res.json();
@@ -57,11 +67,11 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
     };
 
     fetchSignedUrl();
-  }, [imagePath]);
+  }, [imagePath, isGenerating]);
 
   const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!url) return;
+    if (!url || !imagePath) return;
     try {
       const res = await fetch(url);
       const blob = await res.blob();
@@ -87,7 +97,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
 
   const handlePerformDelete = async () => {
     if (!id || !onDelete) {
-      if (imagePath.startsWith("blob:")) {
+      if (imagePath?.startsWith("blob:")) {
         onDelete?.(id || "");
         return;
       }
@@ -107,14 +117,21 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
     }
   };
 
+  const isActuallyGenerating = isGenerating || loading;
+
   return (
     <div 
-      className="group relative rounded-2xl overflow-hidden bg-[#111] border border-[#222] shadow-xl transition-all hover:scale-[1.02] hover:border-[#333]"
+      className={cn(
+        "group relative rounded-lg overflow-hidden bg-card border border-border shadow-xl transition-all hover:scale-[1.02]",
+        isActuallyGenerating && "animate-pulse"
+      )}
       style={{ aspectRatio: `${width}/${height}` }}
     >
-      {loading ? (
-        <div className="flex items-center justify-center h-full">
-          <Loader2 className="w-8 h-8 text-[#444] animate-spin" />
+      {isActuallyGenerating ? (
+        <div className="flex flex-col items-center justify-center h-full gap-3 bg-muted/30">
+          <Sparkles className="w-6 h-6 text-muted-foreground animate-pulse" />
+          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">Synthesizing...</span>
+          <Loader2 className="w-4 h-4 text-primary animate-spin" />
         </div>
       ) : url ? (
         <>
@@ -163,21 +180,21 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
                     <Trash2 className="w-5 h-5 text-red-500 group-hover/del:text-white" />
                   </button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent className="rounded-2xl bg-card border-border backdrop-blur-xl">
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Image</AlertDialogTitle>
-                    <AlertDialogDescription>
+                    <AlertDialogTitle className="font-heading">Delete Image</AlertDialogTitle>
+                    <AlertDialogDescription className="font-heading">
                       Are you sure you want to permanently delete this image from your history and storage? This action cannot be undone.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel onClick={(e) => e.stopPropagation()}>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel onClick={(e) => e.stopPropagation()} className="rounded-xl border-border">Cancel</AlertDialogCancel>
                     <AlertDialogAction 
                       onClick={(e) => {
                         e.stopPropagation();
                         handlePerformDelete();
                       }}
-                      className="bg-red-500 hover:bg-red-600 text-white border-none"
+                      className="rounded-xl bg-red-500 hover:bg-red-600 text-white border-none"
                     >
                       Delete
                     </AlertDialogAction>
@@ -188,8 +205,8 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
           </div>
         </>
       ) : (
-        <div className="flex items-center justify-center h-full text-red-500/50">
-          <p className="text-xs">Failed to load image</p>
+        <div className="flex items-center justify-center h-full text-red-500/50 bg-red-500/5">
+          <p className="text-[10px] font-mono tracking-widest uppercase">Failed to load</p>
         </div>
       )}
     </div>
