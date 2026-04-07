@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "Create stunning, high-fidelity AI imagery with advanced aesthetic controls.",
 };
 
+import { Toaster } from "@/components/ui/sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +32,10 @@ export default function RootLayout({
             enableSystem={false}
             disableTransitionOnChange
           >
-        <TooltipProvider>{children}</TooltipProvider>
+        <TooltipProvider>
+          {children}
+          <Toaster position="bottom-right"/>
+        </TooltipProvider>
           </ThemeProvider>
       </body>
     </html>
