@@ -34,8 +34,8 @@ export async function POST(req: NextRequest) {
 
     // Return the relative path (key) which will be stored in the User model later
     return NextResponse.json({ url: fileName });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[Upload API] Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
   }
 }

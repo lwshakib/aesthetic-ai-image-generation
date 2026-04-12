@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { ChevronLeft, LogOut, Settings, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { ModeToggle } from "./mode-toggle";
@@ -34,7 +33,7 @@ export function MainHeader() {
           },
         }
       });
-    } catch (error) {
+    } catch {
       toast.error("Failed to sign out.");
     }
   };

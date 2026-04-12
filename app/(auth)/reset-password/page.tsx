@@ -49,7 +49,7 @@ function ResetPasswordForm() {
           },
         }
       );
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);

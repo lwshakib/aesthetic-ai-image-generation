@@ -6,7 +6,6 @@ import {
   Heading,
   Hr,
   Html,
-  Img,
   Preview,
   Section,
   Text,
@@ -19,7 +18,7 @@ interface AuthEmailTemplateProps {
   userName?: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
 
 export const AuthEmailTemplate = ({
   type,
@@ -65,7 +64,7 @@ export const AuthEmailTemplate = ({
             </Button>
           </Section>
           <Text style={text}>
-            If you didn't request this, you can safely ignore this email.
+            If you didn&apos;t request this, you can safely ignore this email.
           </Text>
           <Hr style={hr} />
           <Text style={footer}>

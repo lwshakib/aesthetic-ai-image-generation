@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Download, Share2, Maximize2, ExternalLink, Loader2, Trash2, Sparkles } from "lucide-react";
+import { Download, Share2, ExternalLink, Loader2, Trash2, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -83,7 +83,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(blobUrl);
-    } catch (error) {
+    } catch {
       toast.error("Failed to download image");
     }
   };
@@ -112,7 +112,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
       } else {
         toast.error("Failed to delete image");
       }
-    } catch (error) {
+    } catch {
       toast.error("Error deleting image");
     }
   };

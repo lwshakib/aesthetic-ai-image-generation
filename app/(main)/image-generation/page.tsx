@@ -6,12 +6,9 @@ import { cn } from "@/lib/utils";
 import { 
   Sparkle, 
   Image as ImageIcon, 
-  Layers, 
   Maximize, 
   Settings2, 
-  Send, 
   Loader2,
-  Check,
   RefreshCcw,
   HelpCircle,
   Box,
@@ -19,10 +16,8 @@ import {
   Globe,
   Circle,
   Activity,
-  MoreHorizontal,
   User,
   Zap,
-  Link2,
   Trash2,
   XIcon
 } from "lucide-react";
@@ -46,23 +41,13 @@ import {
   PromptInputTextarea, 
   PromptInputFooter, 
   PromptInputTools, 
-  PromptInputActionMenu,
-  PromptInputActionMenuTrigger,
-  PromptInputActionMenuContent,
-  PromptInputActionAddAttachments, 
   PromptInputSubmit,
   PromptInputRefine,
   PromptInputProvider,
   PromptInputAddDirect
 } from "@/components/ai/prompt-input";
 import { toast } from "sonner";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
+
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
@@ -76,7 +61,6 @@ import {
 } from "@/components/ui/tooltip";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AI_MODELS, IMAGE_MODELS } from "@/lib/models";
 import { GenerationResult } from "@/components/generation-result";
@@ -492,7 +476,6 @@ export default function ImageGenerationPage() {
   const [numInferenceSteps, setNumInferenceSteps] = useState(4);
   const [negativePrompt, setNegativePrompt] = useState("");
   const [format, setFormat] = useState("png");
-  const [customCount, setCustomCount] = useState("10");
   const [isLinked, setIsLinked] = useState(false);
   const [generationToDelete, setGenerationToDelete] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -524,7 +507,7 @@ export default function ImageGenerationPage() {
         setResults((prev) => {
           // Prevent duplicates by checking IDs
           const existingIds = new Set(prev.map(g => g.id));
-          const newItems = data.generations.filter((g: any) => !existingIds.has(g.id));
+          const newItems = data.generations.filter((g: GenerationWithImages) => !existingIds.has(g.id));
           return [...prev, ...newItems];
         });
         setCursor(data.nextCursor);
@@ -542,13 +525,14 @@ export default function ImageGenerationPage() {
   useEffect(() => {
     fetchGenerations();
     refreshCredits();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const refreshCredits = async () => {
     try {
       const c = await getCredits();
       setAvailableCredits(c);
-    } catch (e) {}
+    } catch { /* silently handle credit fetch errors */ }
   };
 
   // Auto-clear attachments on model change if unsupported
@@ -576,7 +560,7 @@ export default function ImageGenerationPage() {
       } else {
         toast.error("Failed to delete generation");
       }
-    } catch (error) {
+    } catch {
       toast.error("Error deleting generation");
     } finally {
       setGenerationToDelete(null);
@@ -595,7 +579,7 @@ export default function ImageGenerationPage() {
     }).filter(g => g.images.length > 0)); 
   };
 
-  const handleGenerate = async (overridePrompt?: string, attachmentFiles: any[] = []) => {
+  const handleGenerate = async (overridePrompt?: string, attachmentFiles: { url: string }[] = []) => {
     const activePrompt = overridePrompt || prompt;
     
     if (!activePrompt.trim()) {
@@ -746,7 +730,7 @@ export default function ImageGenerationPage() {
       window.dispatchEvent(new CustomEvent("refresh-credits"));
       refreshCredits();
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Generation error:", error);
       // Remove the optimistic item on error if no images were received
       if (receivedImagesCount === 0) {
@@ -759,7 +743,7 @@ export default function ImageGenerationPage() {
           )
         );
       }
-      toast.error(error.message || "Generation failed. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Generation failed. Please try again.");
     } finally {
       setIsGenerating(false);
       // Clear attachments after successful trigger

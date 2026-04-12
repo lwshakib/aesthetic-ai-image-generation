@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
           },
         }
       );
-    } catch (error) {
+    } catch {
       toast.error("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -53,9 +53,9 @@ export default function ForgotPasswordPage() {
           </div>
           
           <p className="text-sm text-muted-foreground font-mono leading-relaxed">
-            We've sent a password reset link to <span className="text-foreground font-medium">{email}</span>. 
+            We&apos;ve sent a password reset link to <span className="text-foreground font-medium">{email}</span>. 
             <br /><br />
-            If you don't see it in your inbox, please check your spam folder.
+            If you don&apos;t see it in your inbox, please check your spam folder.
           </p>
 
           <div className="flex flex-col w-full gap-4 pt-4">

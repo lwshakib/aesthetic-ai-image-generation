@@ -1,4 +1,4 @@
-import { aiService } from "@/services/ai.services";
+import { aiService, type AIChatMessage } from "@/services/ai.services";
 import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -29,11 +29,11 @@ export async function POST(req: NextRequest) {
       },
     ];
 
-    const refinedPrompt = await aiService.generateText(messages as any);
+    const refinedPrompt = await aiService.generateText(messages as AIChatMessage[]);
 
     return NextResponse.json({ refinedPrompt });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Refinement error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
   }
 }

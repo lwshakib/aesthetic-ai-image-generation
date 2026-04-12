@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Loader2, CheckCircle2, Mail, ArrowRight } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 
 export default function SignUpPage() {
   const [name, setName] = useState("");
@@ -40,7 +40,7 @@ export default function SignUpPage() {
           },
         }
       );
-    } catch (error) {
+    } catch {
       toast.error("Failed to create account. Please try again.");
     } finally {
       setIsLoading(false);
@@ -54,7 +54,7 @@ export default function SignUpPage() {
         provider: "google",
         callbackURL: "/image-generation",
       });
-    } catch (error) {
+    } catch {
       toast.error("Failed to sign in with Google.");
       setIsGoogleLoading(false);
     }
@@ -74,7 +74,7 @@ export default function SignUpPage() {
           <p className="text-sm text-muted-foreground font-mono leading-relaxed">
             An email with verification instructions has been sent to <span className="text-foreground font-medium">{email}</span>. 
             <br /><br />
-            Please verify your email to activate your account. You won't be able to sign in until this step is complete.
+            Please verify your email to activate your account. You won&apos;t be able to sign in until this step is complete.
           </p>
 
           <div className="flex flex-col w-full gap-4 pt-4">

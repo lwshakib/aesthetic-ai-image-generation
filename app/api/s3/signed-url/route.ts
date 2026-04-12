@@ -12,8 +12,8 @@ export async function GET(req: NextRequest) {
   try {
     const url = await s3Service.getSignedUrl(key);
     return NextResponse.json({ url });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Signed URL error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
   }
 }

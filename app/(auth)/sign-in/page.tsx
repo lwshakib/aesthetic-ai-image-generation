@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Loader2, Mail } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -39,7 +39,7 @@ export default function SignInPage() {
           },
         }
       );
-    } catch (error) {
+    } catch {
       toast.error("Failed to sign in. Please check your credentials.");
     } finally {
       setIsLoading(false);
@@ -53,7 +53,7 @@ export default function SignInPage() {
         provider: "google",
         callbackURL: "/image-generation",
       });
-    } catch (error) {
+    } catch {
       toast.error("Failed to sign in with Google.");
       setIsGoogleLoading(false);
     }
@@ -156,7 +156,7 @@ export default function SignInPage() {
 
       <div className="mt-8 text-center">
         <p className="text-xs text-muted-foreground font-mono leading-relaxed">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link
             href="/sign-up"
             className="text-foreground hover:underline transition-all"

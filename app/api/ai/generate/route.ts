@@ -172,9 +172,9 @@ export async function POST(req: NextRequest) {
           }
           
           controller.close();
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error("Streaming error:", error);
-          controller.enqueue(encoder.encode(JSON.stringify({ type: "error", message: error.message }) + "\n"));
+          controller.enqueue(encoder.encode(JSON.stringify({ type: "error", message: error instanceof Error ? error.message : "Unknown error" }) + "\n"));
           controller.close();
         }
       },
@@ -188,8 +188,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Generation error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
   }
 }
