@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { nanoid } from "nanoid";
 import { getCredits } from "@/app/actions/user.actions";
 import { DAILY_CREDIT_LIMIT } from "@/lib/constants";
+import { roundToMultipleOf8 } from "@/lib/utils";
 
 export async function POST(req: NextRequest) {
   const session = await auth.api.getSession({
@@ -36,6 +37,13 @@ export async function POST(req: NextRequest) {
     }
 
     const imageCount = Math.max(1, Math.min(DAILY_CREDIT_LIMIT, parseInt(count) || 1));
+
+    const safeWidth = roundToMultipleOf8(
+      typeof width === "number" ? width : parseInt(String(width), 10) || 1024,
+    );
+    const safeHeight = roundToMultipleOf8(
+      typeof height === "number" ? height : parseInt(String(height), 10) || 1024,
+    );
 
     // Credit Check
     const availableCredits = await getCredits();
@@ -104,8 +112,8 @@ export async function POST(req: NextRequest) {
         numInferenceSteps: numInferenceSteps || 25,
         model: model || "unknown",
         style: style || "none",
-        width: width || 1024,
-        height: height || 1024,
+        width: safeWidth,
+        height: safeHeight,
         count: imageCount,
         format: format || "png",
         userId: session.user.id,
@@ -138,8 +146,8 @@ export async function POST(req: NextRequest) {
               prompt: negativePrompt ? `${finalPrompt} [Negative: ${negativePrompt}]` : finalPrompt,
               model: model || "flux-1-schnell",
               num_steps: numInferenceSteps || 25,
-              width: width || 1024,
-              height: height || 1024,
+              width: safeWidth,
+              height: safeHeight,
               format: format || "png",
               images: images,
             });

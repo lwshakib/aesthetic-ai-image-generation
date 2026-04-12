@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useInView } from "react-intersection-observer";
-import { cn } from "@/lib/utils";
+import { cn, roundToMultipleOf8 } from "@/lib/utils";
 import {
   Sparkle,
   Image as ImageIcon,
@@ -655,6 +655,33 @@ function WorkstationSidebar({
   );
 }
 
+/** Portrait outputs (e.g. 2:3) get a narrower grid so the preview is not overly tall. */
+function generationResultsGridClass(
+  imageCount: number,
+  width: number,
+  height: number,
+): string {
+  const portrait = height > width;
+  switch (imageCount) {
+    case 1:
+      return portrait
+        ? "grid-cols-1 max-w-xs"
+        : "grid-cols-1 max-w-lg";
+    case 2:
+      return portrait
+        ? "grid-cols-1 sm:grid-cols-2 max-w-2xl sm:max-w-3xl"
+        : "grid-cols-1 sm:grid-cols-2 max-w-5xl";
+    case 3:
+      return portrait
+        ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-3xl sm:max-w-4xl"
+        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl";
+    default:
+      return portrait
+        ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-4xl lg:max-w-5xl"
+        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full";
+  }
+}
+
 export default function ImageGenerationPage() {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -776,20 +803,18 @@ export default function ImageGenerationPage() {
   };
   const handleDeleteImage = (imageId: string, generationId: string) => {
     setResults((prev) =>
-      prev
-        .map((g) => {
-          if (g.id === generationId) {
-            const remainingImages = g.images.filter(
-              (img) => img.id !== imageId,
-            );
-            return {
-              ...g,
-              images: remainingImages,
-            };
-          }
-          return g;
-        })
-        .filter((g) => g.images.length > 0),
+      prev.map((g) => {
+        if (g.id === generationId) {
+          const remainingImages = g.images.filter(
+            (img) => img.id !== imageId,
+          );
+          return {
+            ...g,
+            images: remainingImages,
+          };
+        }
+        return g;
+      }),
     );
   };
 
@@ -832,22 +857,24 @@ export default function ImageGenerationPage() {
 
     // 1. Create an Optimistic Generation object
     const tempId = `opt-${Date.now()}`;
-    const w =
+    const rawW =
       ratio === "custom"
-        ? Math.min(1024, parseInt(customWidth))
+        ? parseInt(customWidth, 10) || 1024
         : ratio === "1:1"
           ? 1024
           : ratio === "2:3"
-            ? 682
+            ? 672
             : 1024;
-    const h =
+    const rawH =
       ratio === "custom"
-        ? Math.min(1024, parseInt(customHeight))
+        ? parseInt(customHeight, 10) || 1024
         : ratio === "1:1"
           ? 1024
           : ratio === "2:3"
-            ? 1024
+            ? 1008
             : 576;
+    const w = roundToMultipleOf8(rawW);
+    const h = roundToMultipleOf8(rawH);
 
     const optimisticGeneration: GenerationWithImages = {
       id: tempId,
@@ -1180,7 +1207,12 @@ export default function ImageGenerationPage() {
                                 e.stopPropagation();
                                 setGenerationToDelete(gen.id);
                               }}
-                              className="p-1 rounded-md hover:bg-red-500/10 text-[#222] hover:text-red-500 transition-all opacity-0 group-hover/gen:opacity-100"
+                              className={cn(
+                                "p-1 rounded-md hover:bg-red-500/10 text-[#222] hover:text-red-500 transition-all",
+                                gen.images.length === 0
+                                  ? "opacity-100"
+                                  : "opacity-0 group-hover/gen:opacity-100",
+                              )}
                               title="Delete Generation"
                             >
                               <Trash2 className="w-3 h-3" />
@@ -1190,31 +1222,54 @@ export default function ImageGenerationPage() {
                         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#222] to-transparent" />
                       </div>
 
-                      <div
-                        className={cn(
-                          "grid gap-8",
-                          gen.images.length === 1
-                            ? "grid-cols-1 max-w-lg mx-auto"
-                            : gen.images.length === 2
-                              ? "grid-cols-1 sm:grid-cols-2 max-w-5xl mx-auto"
-                              : gen.images.length === 3
-                                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto"
-                                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full",
-                        )}
-                      >
-                        {gen.images.map((img, i) => (
-                          <GenerationResult
-                            key={img.id || `loading-${gen.id}-${i}`}
-                            id={img.id}
-                            imagePath={img.path}
-                            prompt={img.prompt}
-                            width={gen.width}
-                            height={gen.height}
-                            isGenerating={img.id === ""}
-                            onDelete={() => handleDeleteImage(img.id, gen.id)}
-                          />
-                        ))}
-                      </div>
+                      {gen.images.length === 0 ? (
+                        gen.isGenerating ? (
+                          <div className="rounded-xl border border-border bg-muted/20 px-6 py-10 text-center animate-pulse">
+                            <p className="text-xs font-mono text-muted-foreground tracking-wide">
+                              Preparing images…
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="rounded-xl border border-dashed border-border bg-muted/20 px-6 py-8 space-y-4">
+                            <p className="text-sm text-muted-foreground font-heading leading-relaxed max-w-md">
+                              This generation doesn&apos;t have any images. Delete
+                              it to remove it from your history.
+                            </p>
+                            <button
+                              type="button"
+                              onClick={() => setGenerationToDelete(gen.id)}
+                              className="inline-flex items-center gap-2 rounded-xl border border-border bg-secondary/80 px-4 py-2 text-xs font-medium text-foreground hover:bg-secondary transition-colors"
+                            >
+                              <Trash2 className="size-3.5 text-red-500/80" />
+                              Delete generation
+                            </button>
+                          </div>
+                        )
+                      ) : (
+                        <div
+                          className={cn(
+                            "grid w-full justify-items-stretch gap-8",
+                            generationResultsGridClass(
+                              gen.images.length,
+                              gen.width,
+                              gen.height,
+                            ),
+                          )}
+                        >
+                          {gen.images.map((img, i) => (
+                            <GenerationResult
+                              key={img.id || `loading-${gen.id}-${i}`}
+                              id={img.id}
+                              imagePath={img.path}
+                              prompt={img.prompt}
+                              width={gen.width}
+                              height={gen.height}
+                              isGenerating={img.id === ""}
+                              onDelete={() => handleDeleteImage(img.id, gen.id)}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
