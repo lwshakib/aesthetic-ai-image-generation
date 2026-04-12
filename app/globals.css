@@ -214,41 +214,10 @@
   100% { bottom: calc(var(--dot-size) * -0.5); left: calc(var(--dot-size) * -0.5); opacity: 1; }
 }
 
-@keyframes rotatePlan {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
 .glass-panel {
   @apply bg-card/60 backdrop-blur-xl border border-border;
   transform: translateZ(0);
   will-change: backdrop-filter;
-}
-
-.tech-checkbox {
-  appearance: none;
-  width: 1.25rem;
-  height: 1.25rem;
-  @apply border border-border bg-muted/30;
-  border-radius: 4px;
-  cursor: pointer;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.tech-checkbox:checked {
-  @apply border-primary bg-primary;
-}
-
-.tech-checkbox:checked::after {
-  content: '';
-  width: 0.5rem;
-  height: 0.5rem;
-  @apply bg-primary-foreground;
-  border-radius: 1px;
 }
 
 @utility scrollbar-hide {
