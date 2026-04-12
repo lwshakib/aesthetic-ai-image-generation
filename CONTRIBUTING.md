@@ -69,12 +69,19 @@ git push origin feature/your-awesome-feature
 - Click **Compare & pull request**.
 - Provide a clear description of your changes and link any related issues.
 
-## 📋 Code Standards
-
-- **TypeScript**: Ensure your code is type-safe.
-- **Components**: Use existing UI components from `@/components/ui` where possible.
-- **Linting**: Run `bun run lint` before committing.
-- **Documentation**: Update the README if you add new features or change setup steps.
+## 📋 Code & Design Standards
+ 
+ ### 1. Aesthetic Guidelines
+ To maintain our premium, minimalist feel, all contributions must adhere to these design principles:
+ - **Sentence-case only**: Use standard sentence-case for all headings, labels, and buttons (e.g., "Number of generations" instead of "NUMBER OF GENERATIONS"). Avoid `uppercase` or `tracking-widest` utility classes.
+ - **No redundant clutter**: Avoid decorative elements that don't serve a functional purpose. Stick to clean grids and meaningful whitespace.
+ - **High-fidelity feedback**: Ensure all interactive elements have subtle micro-animations (e.g., hover scaling, smooth transitions) and loading states.
+ 
+ ### 2. Technical Standards
+ - **TypeScript**: Ensure your code is type-safe and avoids `any`.
+ - **Components**: Use existing UI components from `@/components/ui`. Customize them via `cn()` if necessary, but keep the core style consistent.
+ - **State management**: Prefer `authClient` for session data and local state for simple UI toggles.
+ - **Documentation**: Always update the [README](README.md) if you contribute a new feature.
 
 ## 🐛 Reporting Bugs
 - Use the **Bug Report** issue template.

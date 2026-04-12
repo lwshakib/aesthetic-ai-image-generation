@@ -4,18 +4,35 @@
 
 # Aesthetic AI - Advanced Image Generation
 
-A professional-grade AI image generation platform built with **Next.js 16**, **React 19**, and **Cloudflare AI Gateway**. Create stunning, high-fidelity imagery with advanced aesthetic controls, real-time streaming, and prompt expansion.
+A professional-grade AI image generation platform built with **Next.js 16**, **React 19**, and **Cloudflare AI Gateway**. Create stunning, high-fidelity imagery with advanced aesthetic controls, multi-reference image-to-image synthesis, and real-time streaming results.
 
 ![App Demo](public/app-demo.png)
 
 ## ✨ Features
 
-- **🎨 Advanced Workstation**: Precise control over aspect ratios (1:1, 2:3, 16:9, or custom), inference steps, and artistic styles.
-- **⚡ Real-time Streaming**: Watch your images come to life with NDJSON streaming responses directly from the AI engine.
-- **🤖 Prompt Intelligence**: Automatically expand simple ideas into detailed, high-quality prompts using **GLM-4.7-Flash**.
-- **🚀 Multi-Batch Generation**: Generate multiple variations in a single request, each with unique prompt refinements.
-- **🔐 Professional Auth**: Secure, multi-tenant workspace management powered by **Better Auth**.
-- **📦 Distributed Storage**: Persistent image hosting on **Cloudflare R2** via S3-compatible APIs.
+- **🎨 Advanced workstation**: Precise control over aspect ratios (1:1, 2:3, 16:9, or custom), inference steps, and curated artistic styles.
+- **🖼️ Image-to-image synthesis**: Use up to 2 reference images to guide your generations with structure and composition.
+- **⚡ Real-time streaming**: Watch your images come to life with NDJSON streaming responses directly from the AI engine.
+- **🤖 Prompt intelligence**: Automatically expand simple ideas into detailed, high-quality prompts using **GLM-4.7-Flash**.
+- **🖌️ Style adherence**: Integrated aesthetic keywords ensure generated prompts match your chosen workstation style (Cinematic, Vibrant, etc).
+- **🔐 Minimalist dashboard**: A jargon-free settings and billing interface for clean account management.
+- **📦 Reliable storage**: Persistent image hosting on **Cloudflare R2** with prompt and metadata history.
+
+## 🤖 Supported Models
+
+Aesthetic AI leverages a diverse lineup of professional-grade models:
+- **FLUX.1 [schnell]**: Recommended for lightning-fast preview generations.
+- **FLUX.2 [dev]**: High-fidelity synthesis with full image-to-image and multi-reference support.
+- **FLUX.2 [klein] (4B/9B)**: Optimized distilled models for speed-to-quality balance.
+- **Leonardo Phoenix**: Superior prompt adherence for complex textual descriptions.
+
+## 💳 Credits & Usage
+
+To ensure fair access and sustainable generation, the platform uses a daily credit system:
+- **Daily limit**: Every user receives 4 credits per day.
+- **Cost**: 1 credit per individual image generated.
+- **Batching**: If you generate a batch of 4 images, it will consume your full daily quota.
+- **Reset**: Credits are reset automatically every 24 hours.
 
 ## 🛠️ Technology Stack
 
