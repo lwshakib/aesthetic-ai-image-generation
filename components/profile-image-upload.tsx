@@ -112,7 +112,7 @@ export function ProfileImageUpload({ onSuccess }: ProfileImageUploadProps) {
                 )} 
               />
             ) : (
-              <span className="text-3xl font-bold text-muted-foreground select-none uppercase">
+              <span className="text-3xl font-bold text-muted-foreground select-none">
                 {session?.user?.name ? session.user.name.charAt(0) : <User className="w-12 h-12 text-muted-foreground/40" />}
               </span>
             )}

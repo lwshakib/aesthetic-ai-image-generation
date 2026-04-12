@@ -59,7 +59,7 @@ export function UserAvatar({ image, name, className, fallbackClassName }: UserAv
           )} 
         />
       ) : (
-        <div className={cn("w-full h-full flex items-center justify-center bg-accent/5 text-muted-foreground font-medium select-none uppercase", fallbackClassName)}>
+        <div className={cn("w-full h-full flex items-center justify-center bg-accent/5 text-muted-foreground font-medium select-none", fallbackClassName)}>
           {name ? name.charAt(0) : <User className="w-[40%] h-[40%] text-muted-foreground/50" />}
         </div>
       )}

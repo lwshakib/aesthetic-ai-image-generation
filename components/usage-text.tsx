@@ -49,7 +49,7 @@ export function UsageText({ className }: { className?: string }) {
   return (
     <div className={cn("space-y-3 group", className)}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-foreground/70 tracking-[0.15em] uppercase">
+        <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-foreground/70 tracking-tight">
           <div className={cn(
             "p-1 rounded-md transition-all duration-500",
             credits && credits > 0 
@@ -102,7 +102,7 @@ export function UsageText({ className }: { className?: string }) {
             ? "Daily allocation exhausted." 
             : `Available iterations: ${credits}`}
         </p>
-        <span className="text-[8px] font-mono text-muted-foreground/40 uppercase">Reset 24h</span>
+        <span className="text-[8px] font-mono text-muted-foreground/40 italic">Daily reset</span>
       </div>
     </div>
   );

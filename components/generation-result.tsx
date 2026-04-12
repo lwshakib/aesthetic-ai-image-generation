@@ -130,7 +130,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
       {isActuallyGenerating ? (
         <div className="flex flex-col items-center justify-center h-full gap-3 bg-muted/30">
           <Sparkles className="w-6 h-6 text-muted-foreground animate-pulse" />
-          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">Synthesizing...</span>
+          <span className="text-[10px] font-mono text-muted-foreground/60 italic">Synthesizing...</span>
           <Loader2 className="w-4 h-4 text-primary animate-spin" />
         </div>
       ) : url ? (
@@ -206,7 +206,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
         </>
       ) : (
         <div className="flex items-center justify-center h-full text-red-500/50 bg-red-500/5">
-          <p className="text-[10px] font-mono tracking-widest uppercase">Failed to load</p>
+          <p className="text-[10px] font-mono font-medium text-red-500/50">Failed to load</p>
         </div>
       )}
     </div>

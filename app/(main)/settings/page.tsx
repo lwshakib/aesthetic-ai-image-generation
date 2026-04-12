@@ -265,7 +265,7 @@ export default function SettingsPage() {
                         <div className="flex items-center gap-3 shrink-0">
                           {isGoogleLinked ? (
                             <>
-                              <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground bg-muted px-2 py-1 rounded">
+                              <span className="flex items-center gap-1.5 text-[10px] font-bold tracking-tight text-muted-foreground bg-muted px-2 py-1 rounded">
                                 Connected
                               </span>
                               <Button
@@ -302,7 +302,7 @@ export default function SettingsPage() {
                             <p className="text-xs text-muted-foreground">Standard Credentials</p>
                           </div>
                         </div>
-                        <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground bg-muted px-2 py-1 rounded shrink-0">
+                        <span className="flex items-center gap-1.5 text-[10px] font-bold tracking-tight text-muted-foreground bg-muted px-2 py-1 rounded shrink-0">
                           Primary
                         </span>
                       </div>
@@ -345,7 +345,7 @@ export default function SettingsPage() {
                               <p className="text-sm font-semibold truncate flex items-center gap-2">
                                 {sess.userAgent?.split(')')[0].split('(')[1] || 'Desktop Browse'}
                                 {sess.token === session.session.token && (
-                                  <span className="shrink-0 text-[9px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full font-bold uppercase tracking-tighter border">
+                                  <span className="shrink-0 text-[9px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full font-bold tracking-tight border">
                                     Current
                                   </span>
                                 )}

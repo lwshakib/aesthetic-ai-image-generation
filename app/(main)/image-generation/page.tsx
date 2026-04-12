@@ -376,7 +376,7 @@ function WorkstationSidebar({
         <div className="space-y-6">
           <div className="flex items-center gap-2">
             <Settings2 className="w-4 h-4 text-muted-foreground" />
-            <h3 className="text-xs font-heading font-medium text-foreground tracking-tight uppercase">Advanced Settings</h3>
+            <h3 className="text-xs font-heading font-semibold text-foreground tracking-tight">Advanced Settings</h3>
           </div>
 
           {/* Inference Steps */}           <div className="space-y-4">
@@ -425,7 +425,7 @@ function WorkstationSidebar({
                 <ToggleGroupItem
                   key={f}
                   value={f}
-                  className="flex-1 text-[10px] uppercase font-mono h-full"
+                  className="flex-1 text-[10px] font-mono h-full"
                 >
                   {f}
                 </ToggleGroupItem>
@@ -460,10 +460,10 @@ function WorkstationSidebar({
          
          <button 
            onClick={resetDefaults}
-           className="flex items-center gap-2 text-[10px] font-mono font-bold text-muted-foreground hover:text-foreground transition-colors tracking-widest w-full justify-center group"
+           className="flex items-center gap-2 text-[10px] font-mono font-bold text-muted-foreground hover:text-foreground transition-colors tracking-tight w-full justify-center group"
          >
             <RefreshCcw className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" />
-            Reset to Defaults
+            Reset settings
          </button>
       </div>
     </div>
@@ -555,7 +555,7 @@ export default function ImageGenerationPage() {
       setGenerationToDelete(null);
     }
   };
-  const handleDeleteImage = (imageId: string, generationId: string) => {
+  const handleDeleteImage = (imageId: string, generationId: string) => {
     setResults(prev => prev.map(g => {
       if (g.id === generationId) {
         const remainingImages = g.images.filter(img => img.id !== imageId);
@@ -942,7 +942,7 @@ export default function ImageGenerationPage() {
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/20 backdrop-blur-sm animate-fade-in">
              <div className="flex flex-col items-center gap-4">
                 <Loader2 className="w-10 h-10 animate-spin text-primary" />
-                <p className="text-xs font-mono tracking-widest uppercase text-muted-foreground animate-pulse">Initializing Synthesis...</p>
+                <p className="text-xs font-mono font-medium text-muted-foreground animate-pulse">Initializing synthesis...</p>
              </div>
           </div>
         )}

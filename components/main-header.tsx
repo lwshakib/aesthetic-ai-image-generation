@@ -22,7 +22,7 @@ export function MainHeader() {
   const pathname = usePathname();
   const { data: session } = authClient.useSession();
   
-  const isSettingsPage = pathname === "/settings";
+  const isAltPage = pathname === "/settings" || pathname === "/billing";
 
   const handleSignOut = async () => {
     try {
@@ -42,7 +42,7 @@ export function MainHeader() {
   return (
     <header className="h-16 border-b border-border bg-background/95 backdrop-blur-md sticky top-0 z-50 px-6 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        {isSettingsPage ? (
+        {isAltPage ? (
           <Link 
             href="/image-generation" 
             className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
