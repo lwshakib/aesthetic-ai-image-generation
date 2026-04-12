@@ -7,11 +7,15 @@ import { updateProfile } from "@/app/actions/user.actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+interface ProfileImageUploadProps {
+  onSuccess?: () => void;
+}
+
 /**
  * A premium profile image upload component.
  * Handles S3 uploads and profile metadata updates with real-time preview and signed URL support.
  */
-export function ProfileImageUpload() {
+export function ProfileImageUpload({ onSuccess }: ProfileImageUploadProps) {
   const { data: session } = authClient.useSession();
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -76,6 +80,7 @@ export function ProfileImageUpload() {
       // 2. Persist in Profile
       await updateProfile({ image: s3Key });
       
+      onSuccess?.();
       toast.success("Identity updated successfully.");
     } catch (error: any) {
       toast.error(error.message || "Synchronization failed.");
@@ -107,7 +112,9 @@ export function ProfileImageUpload() {
                 )} 
               />
             ) : (
-              <User className="w-12 h-12 text-muted-foreground/40" />
+              <span className="text-3xl font-bold text-muted-foreground select-none uppercase">
+                {session?.user?.name ? session.user.name.charAt(0) : <User className="w-12 h-12 text-muted-foreground/40" />}
+              </span>
             )}
 
             {/* Status Overlays */}
@@ -119,8 +126,7 @@ export function ProfileImageUpload() {
                 <Loader2 className="w-8 h-8 text-white animate-spin" />
               ) : (
                 <>
-                  <Camera className="w-7 h-7 text-white mb-1.5 drop-shadow-lg" />
-                  <span className="text-[10px] text-white font-bold uppercase tracking-[0.2em] drop-shadow-md">Modify</span>
+                  <Camera className="w-8 h-8 text-white drop-shadow-lg" />
                 </>
               )}
             </div>
@@ -135,11 +141,6 @@ export function ProfileImageUpload() {
         className="hidden" 
         accept="image/*"
       />
-      
-      <div className="text-center space-y-1">
-        <h3 className="text-sm font-semibold text-foreground tracking-tight">{session?.user?.name || "Anonymous User"}</h3>
-        <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-widest">{session?.user?.email}</p>
-      </div>
     </div>
   );
 }

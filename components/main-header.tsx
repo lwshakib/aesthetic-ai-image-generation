@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Logo } from "./logo";
 import { 
@@ -12,14 +12,17 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { User, LogOut, Settings, CreditCard, ChevronDown } from "lucide-react";
+import { ChevronLeft, LogOut, Settings, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { ModeToggle } from "./mode-toggle";
 import { UserAvatar } from "./user-avatar";
 
 export function MainHeader() {
   const router = useRouter();
+  const pathname = usePathname();
   const { data: session } = authClient.useSession();
+  
+  const isSettingsPage = pathname === "/settings";
 
   const handleSignOut = async () => {
     try {
@@ -37,13 +40,25 @@ export function MainHeader() {
   };
 
   return (
-    <header className="h-16 border-b border-border bg-background/50 backdrop-blur-md sticky top-0 z-50 px-6 flex items-center justify-between">
-      <Link href="/image-generation" className="flex items-center gap-2 group">
-        <Logo className="w-8 h-8 text-foreground group-hover:scale-110 transition-transform" />
-        <span className="text-lg font-heading font-medium tracking-tight text-foreground">
-          Aesthetic AI
-        </span>
-      </Link>
+    <header className="h-16 border-b border-border bg-background/95 backdrop-blur-md sticky top-0 z-50 px-6 flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        {isSettingsPage ? (
+          <Link 
+            href="/image-generation" 
+            className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+          >
+            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+            <span>Back to Imagination</span>
+          </Link>
+        ) : (
+          <Link href="/image-generation" className="flex items-center gap-2 group">
+            <Logo className="w-8 h-8 text-foreground group-hover:scale-110 transition-transform" />
+            <span className="text-lg font-heading font-medium tracking-tight text-foreground">
+              Aesthetic AI
+            </span>
+          </Link>
+        )}
+      </div>
 
       <div className="flex items-center gap-4">
         <ModeToggle />
