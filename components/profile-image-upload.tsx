@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
 import { User, Camera, Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -82,8 +83,10 @@ export function ProfileImageUpload({ onSuccess }: ProfileImageUploadProps) {
       
       onSuccess?.();
       toast.success("Identity updated successfully.");
-    } catch (error: any) {
-      toast.error(error.message || "Synchronization failed.");
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Synchronization failed.";
+      toast.error(message);
       setPreviewUrl(session?.user?.image || null);
     } finally {
       setIsUploading(false);
@@ -101,15 +104,20 @@ export function ProfileImageUpload({ onSuccess }: ProfileImageUploadProps) {
         <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-orange-500/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
         <div className="relative w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-border via-border to-accent/20">
-          <div className="w-full h-full rounded-full overflow-hidden bg-card border border-border flex items-center justify-center relative">
+          <div className="relative w-full h-full rounded-full overflow-hidden bg-card border border-border flex items-center justify-center">
             {previewUrl ? (
-              <img 
-                src={previewUrl} 
-                alt="Profile" 
+              <Image
+                src={previewUrl}
+                alt="Profile"
+                fill
                 className={cn(
-                  "w-full h-full object-cover transition-all duration-700",
-                  (isUploading || isLoadingUrl) && "scale-110 blur-sm brightness-50"
-                )} 
+                  "object-cover transition-all duration-700",
+                  (isUploading || isLoadingUrl) && "scale-110 blur-sm brightness-50",
+                )}
+                sizes="128px"
+                unoptimized={
+                  previewUrl.startsWith("blob:") || previewUrl.startsWith("data:")
+                }
               />
             ) : (
               <span className="text-3xl font-bold text-muted-foreground select-none">

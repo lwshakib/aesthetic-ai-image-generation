@@ -127,7 +127,7 @@ class AIService {
   /**
    * Generate a structured object using GLM-4.7-Flash via Cloudflare AI Gateway
    */
-  async generateObject<T>(messages: AIChatMessage[], schema: any): Promise<T> {
+  async generateObject<T>(messages: AIChatMessage[], schema: Record<string, unknown>): Promise<T> {
     if (!this.endpoint || !this.apiKey) {
       throw new Error("Cloudflare AI Gateway configuration is missing.");
     }
@@ -163,7 +163,7 @@ class AIService {
     try {
       // The AI should return valid JSON string in message.content
       return JSON.parse(content) as T;
-    } catch (e) {
+    } catch {
       console.error("Failed to parse structured output:", content);
       throw new Error("Failed to parse AI response as valid JSON.");
     }

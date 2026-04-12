@@ -35,6 +35,7 @@ import {
   useRef,
   useState,
 } from "react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
   Command,
@@ -184,7 +185,10 @@ export function PromptInputProvider({
 
   // Keep a ref to attachments for cleanup on unmount (avoids stale closure)
   const attachmentsRef = useRef(attachmentFiles)
-  attachmentsRef.current = attachmentFiles
+
+  useEffect(() => {
+    attachmentsRef.current = attachmentFiles
+  }, [attachmentFiles])
 
   // Cleanup blob URLs on unmount to prevent memory leaks
   useEffect(() => {
@@ -291,11 +295,12 @@ export function PromptInputAttachment({ data, className, ...props }: PromptInput
           <div className="relative size-5 shrink-0">
             <div className="absolute inset-0 flex size-5 items-center justify-center overflow-hidden rounded bg-background transition-opacity group-hover:opacity-0">
               {isImage ? (
-                <img
+                <Image
                   alt={filename || "attachment"}
                   className="size-5 object-cover"
                   height={20}
                   src={data.url}
+                  unoptimized
                   width={20}
                 />
               ) : (
@@ -325,13 +330,14 @@ export function PromptInputAttachment({ data, className, ...props }: PromptInput
       <PromptInputHoverCardContent className="w-auto p-2">
         <div className="w-auto space-y-3">
           {isImage && (
-            <div className="flex max-h-96 w-96 items-center justify-center overflow-hidden rounded-md border">
-              <img
+            <div className="relative flex max-h-96 w-96 min-h-[12rem] items-center justify-center overflow-hidden rounded-md border">
+              <Image
                 alt={filename || "attachment preview"}
-                className="max-h-full max-w-full object-contain"
-                height={384}
+                className="object-contain"
+                fill
+                sizes="384px"
                 src={data.url}
-                width={448}
+                unoptimized
               />
             </div>
           )}
@@ -444,7 +450,10 @@ export const PromptInput = ({
 
   // Keep a ref to files for cleanup on unmount (avoids stale closure)
   const filesRef = useRef(files)
-  filesRef.current = files
+
+  useEffect(() => {
+    filesRef.current = files
+  }, [files])
 
   const openFileDialogLocal = useCallback(() => {
     inputRef.current?.click()
@@ -632,7 +641,6 @@ export const PromptInput = ({
         }
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- cleanup only on unmount; filesRef always current
     [usingProvider],
   )
 
@@ -691,6 +699,7 @@ export const PromptInput = ({
     // Convert blob URLs to data URLs asynchronously
     Promise.all(
       files.map(async ({ id, ...item }) => {
+        void id
         if (item.url?.startsWith("blob:")) {
           const dataUrl = await convertBlobUrlToDataUrl(item.url)
           // If conversion failed, keep the original blob URL
@@ -1035,10 +1044,10 @@ interface SpeechRecognition extends EventTarget {
   lang: string
   start(): void
   stop(): void
-  onstart: ((this: SpeechRecognition, ev: Event) => any) | null
-  onend: ((this: SpeechRecognition, ev: Event) => any) | null
-  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null
-  onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => any) | null
+  onstart: ((this: SpeechRecognition, ev: Event) => void) | null
+  onend: ((this: SpeechRecognition, ev: Event) => void) | null
+  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => void) | null
+  onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => void) | null
 }
 
 interface SpeechRecognitionEvent extends Event {
@@ -1141,7 +1150,9 @@ export const PromptInputSpeechButton = ({
       }
 
       recognitionRef.current = speechRecognition
-      setRecognition(speechRecognition)
+      queueMicrotask(() => {
+        setRecognition(speechRecognition)
+      })
     }
 
     return () => {

@@ -92,6 +92,7 @@ export type WorkstationSelectorTriggerProps = ComponentProps<typeof PopoverTrigg
 
 export const WorkstationSelectorTrigger = forwardRef<HTMLElement, WorkstationSelectorTriggerProps>(
   ({ asChild, children, ...props }, forwardedRef) => {
+    void asChild
     const { setWidth } = useContext(WorkstationSelectorContext)
     const innerRef = useRef<HTMLElement | null>(null)
 

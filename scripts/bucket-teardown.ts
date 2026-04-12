@@ -39,8 +39,9 @@ async function teardown() {
     // 2. Delete bucket
     await client.send(new DeleteBucketCommand({ Bucket: bucketName }));
     console.log("Bucket deleted successfully.");
-  } catch (error: any) {
-    if (error.name === "NotFound" || error.$metadata?.httpStatusCode === 404) {
+  } catch (error: unknown) {
+    const e = error as { name?: string; $metadata?: { httpStatusCode?: number } };
+    if (e.name === "NotFound" || e.$metadata?.httpStatusCode === 404) {
       console.log("Bucket does not exist.");
     } else {
       console.error("Error tearing down bucket:", error);

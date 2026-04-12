@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { User, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -47,16 +48,23 @@ export function UserAvatar({ image, name, className, fallbackClassName }: UserAv
     fetchUrl();
   }, [image]);
 
+  const unoptimized =
+    Boolean(url) &&
+    (url!.startsWith("blob:") || url!.startsWith("data:"));
+
   return (
     <div className={cn("relative overflow-hidden rounded-full border border-border/50 bg-muted/30", className)}>
       {url ? (
-        <img 
-          src={url} 
-          alt={name || "User"} 
+        <Image
+          src={url}
+          alt={name || "User"}
+          fill
           className={cn(
-            "w-full h-full object-cover transition-all duration-500", 
-            loading ? "opacity-0 scale-110 blur-sm" : "opacity-100 scale-100 blur-0"
-          )} 
+            "object-cover transition-all duration-500",
+            loading ? "opacity-0 scale-110 blur-sm" : "opacity-100 scale-100 blur-0",
+          )}
+          sizes="128px"
+          unoptimized={unoptimized}
         />
       ) : (
         <div className={cn("w-full h-full flex items-center justify-center bg-accent/5 text-muted-foreground font-medium select-none", fallbackClassName)}>
