@@ -356,11 +356,19 @@ function WorkstationSidebar({
           <ToggleGroup 
             type="single" 
             value={count} 
-            onValueChange={(v) => v && setCount(v)} 
+            onValueChange={(v) => {
+              if (!v) return;
+              const requested = parseInt(v);
+              if (availableCredits !== null && requested > availableCredits) {
+                toast.error(`Insufficient credits. You only have ${availableCredits} remaining.`);
+                return;
+              }
+              setCount(v);
+            }} 
             variant="outline" 
             className="w-full"
           >
-            {Array.from({ length: Math.min(availableCredits ?? DAILY_CREDIT_LIMIT, DAILY_CREDIT_LIMIT) }, (_, i) => (i + 1).toString()).map((num) => (
+            {Array.from({ length: DAILY_CREDIT_LIMIT }, (_, i) => (i + 1).toString()).map((num) => (
               <ToggleGroupItem
                 key={num}
                 value={num}
@@ -543,6 +551,14 @@ export default function ImageGenerationPage() {
     } catch (e) {}
   };
 
+  // Auto-clear attachments on model change if unsupported
+  useEffect(() => {
+    const currentModelObj = IMAGE_MODELS.find(m => m.id === model);
+    if (currentModelObj && !currentModelObj.capabilities?.imageToImage) {
+      window.dispatchEvent(new CustomEvent("clear-attachments"));
+    }
+  }, [model]);
+
   // Load more on scroll
   useEffect(() => {
     if (inView && hasMore && !isLoadingMore && results.length > 0) {
@@ -579,13 +595,28 @@ export default function ImageGenerationPage() {
     }).filter(g => g.images.length > 0)); 
   };
 
-  const handleGenerate = async (overridePrompt?: string) => {
+  const handleGenerate = async (overridePrompt?: string, attachmentFiles: any[] = []) => {
     const activePrompt = overridePrompt || prompt;
     
     if (!activePrompt.trim()) {
       toast.error("Please enter a prompt first.");
       return;
     }
+
+    // Utility to convert File/blob to base64
+    const fileToBase64 = (url: string): Promise<string> => {
+      return new Promise((resolve, reject) => {
+        fetch(url)
+          .then(res => res.blob())
+          .then(blob => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          })
+          .catch(reject);
+      });
+    };
 
     // 0. Client-side Credit Check
     const imageCount = parseInt(count) || 1;
@@ -619,19 +650,28 @@ export default function ImageGenerationPage() {
     let receivedImagesCount = 0;
 
     try {
+      setIsGenerating(true);
+
+      // Convert attachments to base64
+      const base64Images = await Promise.all(
+        attachmentFiles.map(file => fileToBase64(file.url))
+      );
+
       const res = await fetch("/api/ai/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: activePrompt,
           model,
-          negativePrompt,
-          numInferenceSteps,
+          style,
+          ratio,
+          count,
           width: w,
           height: h,
-          count,
-          style,
+          numInferenceSteps,
+          negativePrompt,
           format,
+          images: base64Images
         }),
       });
 
@@ -809,7 +849,7 @@ export default function ImageGenerationPage() {
                   accept="image/*"
                   onSubmit={(message) => {
                     setPrompt(message.text);
-                    handleGenerate(message.text);
+                    handleGenerate(message.text, message.files);
                   }}
                   className=""
                 >
@@ -824,7 +864,12 @@ export default function ImageGenerationPage() {
                   </PromptInputBody>
                   <PromptInputFooter className="px-4 pb-4">
                     <PromptInputTools>
-                       <PromptInputAddDirect />
+                       <PromptInputAddDirect 
+                         disabledReason={!IMAGE_MODELS.find(m => m.id === model)?.capabilities.imageToImage 
+                           ? "Selected model doesn't support image-to-image" 
+                           : undefined
+                         } 
+                       />
                     </PromptInputTools>
                     <div className="flex items-center gap-2">
                        <button 
@@ -879,7 +924,7 @@ export default function ImageGenerationPage() {
                       
                        <div className={cn(
                          "grid gap-8",
-                         gen.images.length === 1 ? "grid-cols-1 max-w-2xl mx-auto" : 
+                         gen.images.length === 1 ? "grid-cols-1 max-w-lg mx-auto" : 
                          gen.images.length === 2 ? "grid-cols-1 sm:grid-cols-2 max-w-5xl mx-auto" : 
                          gen.images.length === 3 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto" : 
                          "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full"

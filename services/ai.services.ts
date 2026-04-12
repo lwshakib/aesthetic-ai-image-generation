@@ -6,6 +6,7 @@ export interface GenerateImageParams {
   height?: number;
   guidance?: number;
   format?: string; // requested format
+  images?: string[]; // base64 strings or URLs
 }
 
 export interface AIChatMessage {
@@ -50,6 +51,9 @@ class AIService {
         width: params.width || 1024,
         height: params.height || 1024,
         guidance: params.guidance || 7.5,
+        // Optional images for image-to-image or multi-reference
+        images: params.images,
+        image: params.images?.[0], // Fallback for models expecting a single image
         // Some providers might support this convention:
         response_format: params.format === "jpeg" ? "jpeg" : "png" 
       }),

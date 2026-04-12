@@ -27,7 +27,8 @@ export async function POST(req: NextRequest) {
       height, 
       count,
       style,
-      format
+      format,
+      images
     } = body;
 
     if (!prompt) {
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
         
         Guidelines for variations:
         1. Keep the core subject and intent of the original prompt the same.
-        2. Vary the artistic style, camera angle, lighting condition, or atmospheric mood for each variation.
+        2. ${style && style !== 'none' ? `Adhere strictly to a ${style} aesthetic.` : "Vary the artistic style, camera angle, lighting condition, or atmospheric mood for each variation."}
         3. Use descriptive, evocative language suitable for high-end image generation models like FLUX.
         4. Do NOT include any conversational filler or meta-commentary.
         
@@ -129,13 +130,18 @@ export async function POST(req: NextRequest) {
             const currentPrompt = variations[i];
             
             // Generate Image via AI Service
+            const finalPrompt = style && style !== 'none' 
+              ? `${currentPrompt}, in ${style} style` 
+              : currentPrompt;
+
             const { buffer, format: detectedFormat } = await aiService.generateImage({
-              prompt: negativePrompt ? `${currentPrompt} [Negative: ${negativePrompt}]` : currentPrompt,
+              prompt: negativePrompt ? `${finalPrompt} [Negative: ${negativePrompt}]` : finalPrompt,
               model: model || "flux-1-schnell",
               num_steps: numInferenceSteps || 25,
               width: width || 1024,
               height: height || 1024,
               format: format || "png",
+              images: images,
             });
 
             // Upload buffer to S3

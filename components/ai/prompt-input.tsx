@@ -67,6 +67,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 // ============================================================================
 // Provider Context & Types
@@ -412,29 +417,46 @@ export const PromptInputActionAddAttachments = ({
   )
 }
 
-export type PromptInputAddDirectProps = ComponentProps<typeof Button>
+export type PromptInputAddDirectProps = ComponentProps<typeof Button> & {
+  disabledReason?: string
+}
 
 export const PromptInputAddDirect = ({
   className,
+  disabledReason,
   ...props
 }: PromptInputAddDirectProps) => {
   const attachments = usePromptInputAttachments()
   const maxReached = attachments.files.length >= 2
+  const isDisabled = !!disabledReason || maxReached
 
-  return (
+  const content = (
     <Button
       type="button"
       variant="ghost"
       size="icon"
       className={cn("size-8 rounded-full", className)}
       onClick={attachments.openFileDialog}
-      disabled={maxReached}
+      disabled={isDisabled}
       {...props}
     >
       <PlusIcon className="size-4" />
       <span className="sr-only">Add photos</span>
     </Button>
   )
+
+  if (disabledReason) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="cursor-not-allowed">{content}</div>
+        </TooltipTrigger>
+        <TooltipContent side="top">{disabledReason}</TooltipContent>
+      </Tooltip>
+    )
+  }
+
+  return content
 }
 
 export interface PromptInputMessage {
