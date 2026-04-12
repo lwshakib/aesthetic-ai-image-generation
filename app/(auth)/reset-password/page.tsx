@@ -62,13 +62,13 @@ function ResetPasswordForm() {
         <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 mx-auto mb-4">
             <KeyRound className="w-8 h-8" />
         </div>
-        <p className="text-sm text-[#888] font-mono leading-relaxed">
+        <p className="text-sm text-muted-foreground font-mono leading-relaxed">
           The reset password token is missing or has expired. Please request a new link.
         </p>
         <Button 
           variant="outline"
           onClick={() => router.push("/forgot-password")}
-          className="w-full border-[#222] hover:bg-white/[0.02] h-12 rounded-xl text-xs font-mono uppercase tracking-widest text-[#888]"
+          className="w-full border-border hover:bg-accent/50 h-12 rounded-xl text-xs font-mono uppercase tracking-widest text-muted-foreground"
         >
           Request New Link
         </Button>
@@ -79,7 +79,7 @@ function ResetPasswordForm() {
   return (
     <form onSubmit={handleResetPassword} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-xs font-mono text-[#888]">
+        <Label htmlFor="password" className="text-xs font-mono text-muted-foreground">
           New password
         </Label>
         <Input
@@ -89,11 +89,11 @@ function ResetPasswordForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="bg-[#050505]/50 border-[#222] focus:border-white/20 transition-all rounded-xl h-12"
+          className="bg-secondary/50 border-border focus:border-primary/20 transition-all rounded-xl h-12"
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="confirmPassword" className="text-xs font-mono text-[#888]">
+        <Label htmlFor="confirmPassword" className="text-xs font-mono text-muted-foreground">
           Confirm password
         </Label>
         <Input
@@ -103,14 +103,14 @@ function ResetPasswordForm() {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
-          className="bg-[#050505]/50 border-[#222] focus:border-white/20 transition-all rounded-xl h-12"
+          className="bg-secondary/50 border-border focus:border-primary/20 transition-all rounded-xl h-12"
         />
       </div>
       
       <Button 
         type="submit" 
         disabled={isLoading}
-        className="w-full bg-white text-black hover:bg-white/90 h-12 rounded-xl font-bold text-xs tracking-widest shadow-[0_10px_30px_rgba(255,255,255,0.1)] transition-all"
+        className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 rounded-xl font-bold text-xs tracking-widest shadow-xl transition-all"
       >
         {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Reset password"}
       </Button>
@@ -124,7 +124,7 @@ export default function ResetPasswordPage() {
       title="Reset Password" 
       description="Enter your new password below."
     >
-      <Suspense fallback={<div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-[#333]" /></div>}>
+      <Suspense fallback={<div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>}>
         <ResetPasswordForm />
       </Suspense>
     </AuthCard>

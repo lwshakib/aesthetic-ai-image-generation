@@ -67,12 +67,12 @@ export default function SignUpPage() {
         description="We've sent a verification link to your email address."
       >
         <div className="flex flex-col items-center text-center space-y-6 pt-4">
-          <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white mb-2">
+          <div className="w-16 h-16 rounded-full bg-accent/50 border border-border flex items-center justify-center text-foreground mb-2">
             <Mail className="w-8 h-8" />
           </div>
           
-          <p className="text-sm text-[#888] font-mono leading-relaxed">
-            An email with verification instructions has been sent to <span className="text-white font-medium">{email}</span>. 
+          <p className="text-sm text-muted-foreground font-mono leading-relaxed">
+            An email with verification instructions has been sent to <span className="text-foreground font-medium">{email}</span>. 
             <br /><br />
             Please verify your email to activate your account. You won't be able to sign in until this step is complete.
           </p>
@@ -80,7 +80,7 @@ export default function SignUpPage() {
           <div className="flex flex-col w-full gap-4 pt-4">
             <Button 
               asChild
-              className="w-full bg-white text-black hover:bg-white/90 h-12 rounded-xl font-bold text-xs shadow-[0_10px_30px_rgba(255,255,255,0.1)] transition-all"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 rounded-xl font-bold text-xs shadow-xl transition-all"
             >
               <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer">
                 Go to Gmail
@@ -90,7 +90,7 @@ export default function SignUpPage() {
             <Button 
               variant="outline"
               asChild
-              className="w-full border-[#222] hover:bg-white/[0.02] hover:border-[#333] h-12 rounded-xl text-xs font-mono text-[#888] transition-all"
+              className="w-full border-border hover:bg-accent/50 hover:border-border h-12 rounded-xl text-xs font-mono text-muted-foreground transition-all"
             >
               <Link href="/sign-in">
                 Back to Login
@@ -109,7 +109,7 @@ export default function SignUpPage() {
     >
       <form onSubmit={handleSignUp} className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="name" className="text-xs font-mono text-[#888]">
+          <Label htmlFor="name" className="text-xs font-mono text-muted-foreground">
             Full name
           </Label>
           <Input
@@ -119,11 +119,11 @@ export default function SignUpPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="bg-[#050505]/50 border-[#222] focus:border-white/20 transition-all rounded-xl h-12"
+            className="bg-secondary/50 border-border focus:border-primary/20 transition-all rounded-xl h-12"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-xs font-mono text-[#888]">
+          <Label htmlFor="email" className="text-xs font-mono text-muted-foreground">
             Email address
           </Label>
           <Input
@@ -133,11 +133,11 @@ export default function SignUpPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="bg-[#050505]/50 border-[#222] focus:border-white/20 transition-all rounded-xl h-12"
+            className="bg-secondary/50 border-border focus:border-primary/20 transition-all rounded-xl h-12"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-xs font-mono text-[#888]">
+          <Label htmlFor="password" className="text-xs font-mono text-muted-foreground">
             Password
           </Label>
           <Input
@@ -147,14 +147,14 @@ export default function SignUpPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="bg-[#050505]/50 border-[#222] focus:border-white/20 transition-all rounded-xl h-12"
+            className="bg-secondary/50 border-border focus:border-primary/20 transition-all rounded-xl h-12"
           />
         </div>
         
         <Button 
           type="submit" 
           disabled={isLoading}
-          className="w-full bg-white text-black hover:bg-white/90 h-12 rounded-xl font-bold text-xs tracking-widest shadow-[0_10px_30px_rgba(255,255,255,0.1)] transition-all"
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 rounded-xl font-bold text-xs tracking-widest shadow-xl transition-all"
         >
           {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create account"}
         </Button>
@@ -162,10 +162,10 @@ export default function SignUpPage() {
 
       <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-[#222]" />
+          <span className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-[10px]">
-          <span className="bg-[#111] px-4 text-[#444] font-mono">Or continue with</span>
+          <span className="bg-card px-4 text-muted-foreground font-mono">Or continue with</span>
         </div>
       </div>
 
@@ -174,7 +174,7 @@ export default function SignUpPage() {
         type="button"
         disabled={isGoogleLoading}
         onClick={handleGoogleSignIn}
-        className="w-full border-[#222] hover:bg-white/5 hover:border-[#333] hover:text-white h-12 rounded-xl text-xs font-mono text-[#888] transition-all"
+        className="w-full border-border hover:bg-accent hover:text-accent-foreground h-12 rounded-xl text-xs font-mono text-muted-foreground transition-all"
       >
         {isGoogleLoading ? (
           <Loader2 className="w-4 h-4 animate-spin" />
@@ -204,11 +204,11 @@ export default function SignUpPage() {
       </Button>
 
       <div className="mt-10 text-center">
-        <p className="text-xs text-[#555] font-mono leading-relaxed">
+        <p className="text-xs text-muted-foreground font-mono leading-relaxed">
           Already have an account?{" "}
           <Link
             href="/sign-in"
-            className="text-white hover:underline transition-all"
+            className="text-foreground hover:underline transition-all"
           >
             Sign in
           </Link>

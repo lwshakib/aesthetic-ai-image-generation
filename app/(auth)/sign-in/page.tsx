@@ -66,7 +66,7 @@ export default function SignInPage() {
     >
       <form onSubmit={handleSignIn} className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-xs font-mono text-[#888]">
+          <Label htmlFor="email" className="text-xs font-mono text-muted-foreground">
             Email address
           </Label>
           <Input
@@ -76,7 +76,7 @@ export default function SignInPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="bg-[#050505]/50 border-[#222] focus:border-white/20 transition-all rounded-xl h-12"
+            className="bg-secondary/50 border-border focus:border-primary/20 transition-all rounded-xl h-12"
           />
         </div>
         <div className="space-y-2">
@@ -86,7 +86,7 @@ export default function SignInPage() {
             </Label>
             <Link
               href="/forgot-password"
-              className="text-[10px] font-mono text-[#555] hover:text-white transition-colors"
+              className="text-[10px] font-mono text-muted-foreground hover:text-foreground transition-colors"
             >
               Forgot?
             </Link>
@@ -98,14 +98,14 @@ export default function SignInPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="bg-[#050505]/50 border-[#222] focus:border-white/20 transition-all rounded-xl h-12"
+            className="bg-secondary/50 border-border focus:border-primary/20 transition-all rounded-xl h-12"
           />
         </div>
         
         <Button 
           type="submit" 
           disabled={isLoading}
-          className="w-full bg-white text-black hover:bg-white/90 h-12 rounded-xl font-bold text-xs tracking-widest shadow-[0_10px_30px_rgba(255,255,255,0.1)] transition-all"
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 rounded-xl font-bold text-xs tracking-widest shadow-xl transition-all"
         >
           {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign in"}
         </Button>
@@ -113,10 +113,10 @@ export default function SignInPage() {
 
       <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-[#222]" />
+          <span className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-[10px]">
-          <span className="bg-[#111] px-4 text-[#444] font-mono">Or continue with</span>
+          <span className="bg-card px-4 text-muted-foreground font-mono">Or continue with</span>
         </div>
       </div>
 
@@ -125,7 +125,7 @@ export default function SignInPage() {
         type="button"
         disabled={isGoogleLoading}
         onClick={handleGoogleSignIn}
-        className="w-full border-[#222] hover:bg-white/5 hover:border-[#333] hover:text-white h-12 rounded-xl text-xs font-mono text-[#888] transition-all"
+        className="w-full border-border hover:bg-accent hover:text-accent-foreground h-12 rounded-xl text-xs font-mono text-muted-foreground transition-all"
       >
         {isGoogleLoading ? (
           <Loader2 className="w-4 h-4 animate-spin" />
@@ -155,11 +155,11 @@ export default function SignInPage() {
       </Button>
 
       <div className="mt-8 text-center">
-        <p className="text-xs text-[#555] font-mono leading-relaxed">
+        <p className="text-xs text-muted-foreground font-mono leading-relaxed">
           Don't have an account?{" "}
           <Link
             href="/sign-up"
-            className="text-white hover:underline transition-all"
+            className="text-foreground hover:underline transition-all"
           >
             Create account
           </Link>
