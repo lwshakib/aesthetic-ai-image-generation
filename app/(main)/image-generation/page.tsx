@@ -3,11 +3,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useInView } from "react-intersection-observer";
 import { cn } from "@/lib/utils";
-import { 
-  Sparkle, 
-  Image as ImageIcon, 
-  Maximize, 
-  Settings2, 
+import {
+  Sparkle,
+  Image as ImageIcon,
+  Maximize,
+  Settings2,
   Loader2,
   RefreshCcw,
   HelpCircle,
@@ -19,32 +19,32 @@ import {
   User,
   Zap,
   Trash2,
-  XIcon
+  XIcon,
 } from "lucide-react";
-import { 
-  WorkstationSelector, 
-  WorkstationSelectorTrigger, 
-  WorkstationSelectorContent, 
-  WorkstationSelectorInput, 
-  WorkstationSelectorList, 
-  WorkstationSelectorEmpty, 
-  WorkstationSelectorGroup, 
-  WorkstationSelectorItem, 
-  WorkstationSelectorName, 
-  WorkstationSelectorDescription
+import {
+  WorkstationSelector,
+  WorkstationSelectorTrigger,
+  WorkstationSelectorContent,
+  WorkstationSelectorInput,
+  WorkstationSelectorList,
+  WorkstationSelectorEmpty,
+  WorkstationSelectorGroup,
+  WorkstationSelectorItem,
+  WorkstationSelectorName,
+  WorkstationSelectorDescription,
 } from "@/components/ui/workstation-selector";
-import { 
-  PromptInput, 
-  PromptInputAttachments, 
-  PromptInputAttachment, 
-  PromptInputBody, 
-  PromptInputTextarea, 
-  PromptInputFooter, 
-  PromptInputTools, 
+import {
+  PromptInput,
+  PromptInputAttachments,
+  PromptInputAttachment,
+  PromptInputBody,
+  PromptInputTextarea,
+  PromptInputFooter,
+  PromptInputTools,
   PromptInputSubmit,
   PromptInputRefine,
   PromptInputProvider,
-  PromptInputAddDirect
+  PromptInputAddDirect,
 } from "@/components/ai/prompt-input";
 import { toast } from "sonner";
 
@@ -52,27 +52,31 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { AI_MODELS, IMAGE_MODELS } from "@/lib/models";
 import { GenerationResult } from "@/components/generation-result";
-import { 
-  AlertDialog, 
-  AlertDialogAction, 
-  AlertDialogCancel, 
-  AlertDialogContent, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogHeader, 
-  AlertDialogTitle, 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { UsageText } from "@/components/usage-text";
@@ -121,16 +125,40 @@ interface WorkstationSidebarProps {
 }
 
 function WorkstationSidebar({
-  model, setModel, style, setStyle, ratio, setRatio, count, setCount,
-  customWidth, setCustomWidth, customHeight, setCustomHeight,
-  numInferenceSteps, setNumInferenceSteps, isLinked, setIsLinked,
-  negativePrompt, setNegativePrompt, format, setFormat, resetDefaults,
-  availableCredits, className, onClose
+  model,
+  setModel,
+  style,
+  setStyle,
+  ratio,
+  setRatio,
+  count,
+  setCount,
+  customWidth,
+  setCustomWidth,
+  customHeight,
+  setCustomHeight,
+  numInferenceSteps,
+  setNumInferenceSteps,
+  isLinked,
+  setIsLinked,
+  negativePrompt,
+  setNegativePrompt,
+  format,
+  setFormat,
+  resetDefaults,
+  availableCredits,
+  className,
+  onClose,
 }: WorkstationSidebarProps) {
   return (
-    <div className={cn("flex flex-col h-full bg-card/80 backdrop-blur-xl overflow-hidden relative", className)}>
+    <div
+      className={cn(
+        "flex flex-col h-full bg-card/80 backdrop-blur-xl overflow-hidden relative",
+        className,
+      )}
+    >
       {onClose && (
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-4 right-4 z-50 p-2 text-muted-foreground hover:text-foreground transition-colors"
         >
@@ -140,19 +168,28 @@ function WorkstationSidebar({
       <div className="flex-1 overflow-y-auto scrollbar-hide p-6 space-y-8">
         {/* Model Selector */}
         <div className="relative group">
-          <WorkstationSelector value={model} onValueChange={(v) => v && setModel(v)}>
+          <WorkstationSelector
+            value={model}
+            onValueChange={(v) => v && setModel(v)}
+          >
             <WorkstationSelectorTrigger asChild>
               <button className="w-full h-11 bg-secondary/50 border-border border rounded-xl pl-10 pr-4 relative focus:ring-1 focus:ring-ring/10 transition-all flex flex-col items-start justify-center group/btn hover:bg-secondary">
                 <Box className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-hover/btn:text-foreground transition-colors" />
                 <div className="flex flex-col items-start gap-0.5 pointer-events-none">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono text-muted-foreground leading-none">Model</span>
-                    <Badge variant="outline" className="h-3 px-1 text-[7px] bg-green-500/10 text-green-400 border-green-500/20 rounded-sm">
+                    <span className="text-[10px] font-mono text-muted-foreground leading-none">
+                      Model
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="h-3 px-1 text-[7px] bg-green-500/10 text-green-400 border-green-500/20 rounded-sm"
+                    >
                       {model === "flux-1-schnell" ? "Recommended" : "Active"}
                     </Badge>
                   </div>
                   <span className="text-[11px] text-foreground font-medium capitalize">
-                    {AI_MODELS.find(m => m.id === model)?.name || "Unknown Model"}
+                    {AI_MODELS.find((m) => m.id === model)?.name ||
+                      "Unknown Model"}
                   </span>
                 </div>
               </button>
@@ -160,17 +197,27 @@ function WorkstationSidebar({
             <WorkstationSelectorContent>
               <WorkstationSelectorInput placeholder="Search models..." />
               <WorkstationSelectorList>
-                <WorkstationSelectorEmpty>No models found.</WorkstationSelectorEmpty>
+                <WorkstationSelectorEmpty>
+                  No models found.
+                </WorkstationSelectorEmpty>
                 <WorkstationSelectorGroup>
-                  {IMAGE_MODELS.map(m => (
-                    <WorkstationSelectorItem key={m.id} value={m.id} className="flex items-center gap-3">
-                       <div className="flex flex-col flex-1 min-w-0">
-                          <WorkstationSelectorName>{m.name}</WorkstationSelectorName>
-                          <WorkstationSelectorDescription className="truncate">{m.description}</WorkstationSelectorDescription>
-                       </div>
-                       {m.capabilities.imageToImage && (
-                          <ImageIcon className="w-4 h-4 text-muted-foreground shrink-0 ml-auto" />
-                       )}
+                  {IMAGE_MODELS.map((m) => (
+                    <WorkstationSelectorItem
+                      key={m.id}
+                      value={m.id}
+                      className="flex items-center gap-3"
+                    >
+                      <div className="flex flex-col flex-1 min-w-0">
+                        <WorkstationSelectorName>
+                          {m.name}
+                        </WorkstationSelectorName>
+                        <WorkstationSelectorDescription className="truncate">
+                          {m.description}
+                        </WorkstationSelectorDescription>
+                      </div>
+                      {m.capabilities.imageToImage && (
+                        <ImageIcon className="w-4 h-4 text-muted-foreground shrink-0 ml-auto" />
+                      )}
                     </WorkstationSelectorItem>
                   ))}
                 </WorkstationSelectorGroup>
@@ -181,36 +228,93 @@ function WorkstationSidebar({
 
         {/* Style Selector */}
         <div className="relative group">
-           <WorkstationSelector value={style} onValueChange={(v) => v && setStyle(v)}>
+          <WorkstationSelector
+            value={style}
+            onValueChange={(v) => v && setStyle(v)}
+          >
             <WorkstationSelectorTrigger asChild>
               <button className="w-full h-11 bg-secondary/50 border-border border rounded-xl pl-10 pr-4 relative focus:ring-1 focus:ring-ring/10 transition-all flex flex-col items-start justify-center group/btn hover:bg-secondary">
                 <Paintbrush className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-hover/btn:text-foreground transition-colors" />
                 <div className="flex flex-col items-start gap-0.5 pointer-events-none">
-                   <span className="text-[10px] font-mono text-muted-foreground leading-none">Style</span>
-                   <span className="text-[11px] text-foreground font-medium capitalize">{style}</span>
+                  <span className="text-[10px] font-mono text-muted-foreground leading-none">
+                    Style
+                  </span>
+                  <span className="text-[11px] text-foreground font-medium capitalize">
+                    {style}
+                  </span>
                 </div>
               </button>
             </WorkstationSelectorTrigger>
             <WorkstationSelectorContent>
               <WorkstationSelectorInput placeholder="Search styles..." />
               <WorkstationSelectorList>
-                <WorkstationSelectorEmpty>No styles found.</WorkstationSelectorEmpty>
+                <WorkstationSelectorEmpty>
+                  No styles found.
+                </WorkstationSelectorEmpty>
                 <WorkstationSelectorGroup>
                   {[
-                    { id: "none", name: "None", desc: "No specific style guidance", icon: <Circle /> },
-                    { id: "dynamic", name: "Dynamic", desc: "Bold and high-contrast", icon: <Zap /> },
-                    { id: "cinematic", name: "Cinematic", desc: "Movie-like lighting and depth", icon: <Activity /> },
-                    { id: "creative", name: "Creative", desc: "Artistic interpretation", icon: <Sparkle /> },
-                    { id: "fashion", name: "Fashion", desc: "Studio-style photography", icon: <User /> },
-                    { id: "portrait", name: "Portrait", desc: "Focus on subject details", icon: <User /> },
-                    { id: "stock", name: "Stock Photo", desc: "Clean and commercial", icon: <Globe /> },
-                    { id: "vibrant", name: "Vibrant", desc: "Saturated and alive", icon: <Zap /> },
-                  ].map(s => (
-                    <WorkstationSelectorItem key={s.id} value={s.id} className="flex items-center gap-3">
-                       <div className="flex flex-col flex-1 min-w-0">
-                          <WorkstationSelectorName>{s.name}</WorkstationSelectorName>
-                          <WorkstationSelectorDescription className="truncate">{s.desc}</WorkstationSelectorDescription>
-                       </div>
+                    {
+                      id: "none",
+                      name: "None",
+                      desc: "No specific style guidance",
+                      icon: <Circle />,
+                    },
+                    {
+                      id: "dynamic",
+                      name: "Dynamic",
+                      desc: "Bold and high-contrast",
+                      icon: <Zap />,
+                    },
+                    {
+                      id: "cinematic",
+                      name: "Cinematic",
+                      desc: "Movie-like lighting and depth",
+                      icon: <Activity />,
+                    },
+                    {
+                      id: "creative",
+                      name: "Creative",
+                      desc: "Artistic interpretation",
+                      icon: <Sparkle />,
+                    },
+                    {
+                      id: "fashion",
+                      name: "Fashion",
+                      desc: "Studio-style photography",
+                      icon: <User />,
+                    },
+                    {
+                      id: "portrait",
+                      name: "Portrait",
+                      desc: "Focus on subject details",
+                      icon: <User />,
+                    },
+                    {
+                      id: "stock",
+                      name: "Stock Photo",
+                      desc: "Clean and commercial",
+                      icon: <Globe />,
+                    },
+                    {
+                      id: "vibrant",
+                      name: "Vibrant",
+                      desc: "Saturated and alive",
+                      icon: <Zap />,
+                    },
+                  ].map((s) => (
+                    <WorkstationSelectorItem
+                      key={s.id}
+                      value={s.id}
+                      className="flex items-center gap-3"
+                    >
+                      <div className="flex flex-col flex-1 min-w-0">
+                        <WorkstationSelectorName>
+                          {s.name}
+                        </WorkstationSelectorName>
+                        <WorkstationSelectorDescription className="truncate">
+                          {s.desc}
+                        </WorkstationSelectorDescription>
+                      </div>
                     </WorkstationSelectorItem>
                   ))}
                 </WorkstationSelectorGroup>
@@ -222,25 +326,47 @@ function WorkstationSidebar({
         {/* Image Dimensions */}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <h3 className="text-xs font-heading font-medium text-foreground tracking-tight">Image Dimensions</h3>
+            <h3 className="text-xs font-heading font-medium text-foreground tracking-tight">
+              Image Dimensions
+            </h3>
             <Tooltip>
               <TooltipTrigger asChild>
                 <HelpCircle className="w-3 h-3 text-muted-foreground cursor-help" />
               </TooltipTrigger>
-              <TooltipContent>Select the output image proportions</TooltipContent>
+              <TooltipContent>
+                Select the output image proportions
+              </TooltipContent>
             </Tooltip>
           </div>
-          <ToggleGroup 
-            type="single" 
-            value={ratio} 
-            onValueChange={(v) => v && setRatio(v)} 
-            variant="outline" 
+          <ToggleGroup
+            type="single"
+            value={ratio}
+            onValueChange={(v) => v && setRatio(v)}
+            variant="outline"
             className="w-full justify-start"
           >
             {[
-              { id: "2:3", label: "2:3", icon: <div className="w-3 h-5 border-[1.5px] border-current rounded-[2px]" /> },
-              { id: "1:1", label: "1:1", icon: <div className="w-4 h-4 border-[1.5px] border-current rounded-[2px]" /> },
-              { id: "16:9", label: "16:9", icon: <div className="w-6 h-3 border-[1.5px] border-current rounded-[2px]" /> },
+              {
+                id: "2:3",
+                label: "2:3",
+                icon: (
+                  <div className="w-3 h-5 border-[1.5px] border-current rounded-[2px]" />
+                ),
+              },
+              {
+                id: "1:1",
+                label: "1:1",
+                icon: (
+                  <div className="w-4 h-4 border-[1.5px] border-current rounded-[2px]" />
+                ),
+              },
+              {
+                id: "16:9",
+                label: "16:9",
+                icon: (
+                  <div className="w-6 h-3 border-[1.5px] border-current rounded-[2px]" />
+                ),
+              },
             ].map((item) => (
               <ToggleGroupItem
                 key={item.id}
@@ -251,76 +377,120 @@ function WorkstationSidebar({
                 <span className="text-[10px] font-mono">{item.label}</span>
               </ToggleGroupItem>
             ))}
-            
+
             <Popover>
               <PopoverTrigger asChild>
                 <ToggleGroupItem
                   value="custom"
                   className="flex flex-col items-center justify-center gap-2 h-auto aspect-square flex-1"
                 >
-                  <div className="opacity-70"><Maximize className="w-4 h-4" /></div>
-                  <span className={cn("font-mono text-center", ratio === "custom" ? "text-[9px] tracking-tighter" : "text-[10px]")}>
-                    {ratio === "custom" ? `${customWidth}×${customHeight}` : "Custom"}
+                  <div className="opacity-70">
+                    <Maximize className="w-4 h-4" />
+                  </div>
+                  <span
+                    className={cn(
+                      "font-mono text-center",
+                      ratio === "custom"
+                        ? "text-[9px] tracking-tighter"
+                        : "text-[10px]",
+                    )}
+                  >
+                    {ratio === "custom"
+                      ? `${customWidth}×${customHeight}`
+                      : "Custom"}
                   </span>
                 </ToggleGroupItem>
               </PopoverTrigger>
-              <PopoverContent side="right" sideOffset={16} className="w-64 bg-background border-border p-4 text-foreground rounded-xl shadow-2xl">
-                 <div className="space-y-4">
-                   <div className="flex items-center justify-between mb-2">
-                     <p className="text-sm font-medium text-foreground">Custom dimensions</p>
-                     <div className="flex items-center gap-1.5" title="Lock aspect ratio">
-                       <Switch checked={isLinked} onCheckedChange={setIsLinked} className="scale-75 data-[state=checked]:bg-green-500" />
-                     </div>
-                   </div>
-                   
-                   <div className="space-y-6">
-                     <div className="space-y-3">
-                       <div className="flex items-center justify-between">
-                         <span className="text-xs font-medium text-muted-foreground">Width</span>
-                          <input type="number" 
-                            value={customWidth} 
-                            min={256} 
-                            max={1024}
-                            onChange={e => {
-                              const val = Math.min(1024, Math.max(256, parseInt(e.target.value) || 256));
-                              setCustomWidth(val.toString());
-                              if (isLinked) setCustomHeight(val.toString());
-                            }} className="w-16 bg-muted border border-border rounded-md h-7 text-xs font-mono text-center focus:outline-none focus:border-accent transition-colors" />
-                       </div>
-                        <Slider 
-                          value={[parseInt(customWidth) || 1024]} 
-                          min={256} max={1024} step={64} 
-                         onValueChange={(v) => {
-                           setCustomWidth(v[0].toString());
-                           if (isLinked) setCustomHeight(v[0].toString());
-                         }} 
-                       />
-                     </div>
+              <PopoverContent
+                side="right"
+                sideOffset={16}
+                className="w-64 bg-background border-border p-4 text-foreground rounded-xl shadow-2xl"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-sm font-medium text-foreground">
+                      Custom dimensions
+                    </p>
+                    <div
+                      className="flex items-center gap-1.5"
+                      title="Lock aspect ratio"
+                    >
+                      <Switch
+                        checked={isLinked}
+                        onCheckedChange={setIsLinked}
+                        className="scale-75 data-[state=checked]:bg-green-500"
+                      />
+                    </div>
+                  </div>
 
-                     <div className="space-y-3">
-                       <div className="flex items-center justify-between">
-                         <span className="text-xs font-medium text-muted-foreground">Height</span>
-                          <input type="number" 
-                            value={customHeight} 
-                            min={256} 
-                            max={1024}
-                            onChange={e => {
-                              const val = Math.min(1024, Math.max(256, parseInt(e.target.value) || 256));
-                              setCustomHeight(val.toString());
-                              if (isLinked) setCustomWidth(val.toString());
-                            }} className="w-16 bg-secondary border border-border rounded-md h-7 text-xs font-mono text-center focus:outline-none focus:border-accent transition-colors" />
-                       </div>
-                        <Slider 
-                          value={[parseInt(customHeight) || 1024]} 
-                          min={256} max={1024} step={64} 
-                         onValueChange={(v) => {
-                           setCustomHeight(v[0].toString());
-                           if (isLinked) setCustomWidth(v[0].toString());
-                         }} 
-                       />
-                     </div>
-                   </div>
-                 </div>
+                  <div className="space-y-6">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium text-muted-foreground">
+                          Width
+                        </span>
+                        <input
+                          type="number"
+                          value={customWidth}
+                          min={256}
+                          max={1024}
+                          onChange={(e) => {
+                            const val = Math.min(
+                              1024,
+                              Math.max(256, parseInt(e.target.value) || 256),
+                            );
+                            setCustomWidth(val.toString());
+                            if (isLinked) setCustomHeight(val.toString());
+                          }}
+                          className="w-16 bg-muted border border-border rounded-md h-7 text-xs font-mono text-center focus:outline-none focus:border-accent transition-colors"
+                        />
+                      </div>
+                      <Slider
+                        value={[parseInt(customWidth) || 1024]}
+                        min={256}
+                        max={1024}
+                        step={64}
+                        onValueChange={(v) => {
+                          setCustomWidth(v[0].toString());
+                          if (isLinked) setCustomHeight(v[0].toString());
+                        }}
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium text-muted-foreground">
+                          Height
+                        </span>
+                        <input
+                          type="number"
+                          value={customHeight}
+                          min={256}
+                          max={1024}
+                          onChange={(e) => {
+                            const val = Math.min(
+                              1024,
+                              Math.max(256, parseInt(e.target.value) || 256),
+                            );
+                            setCustomHeight(val.toString());
+                            if (isLinked) setCustomWidth(val.toString());
+                          }}
+                          className="w-16 bg-secondary border border-border rounded-md h-7 text-xs font-mono text-center focus:outline-none focus:border-accent transition-colors"
+                        />
+                      </div>
+                      <Slider
+                        value={[parseInt(customHeight) || 1024]}
+                        min={256}
+                        max={1024}
+                        step={64}
+                        onValueChange={(v) => {
+                          setCustomHeight(v[0].toString());
+                          if (isLinked) setCustomWidth(v[0].toString());
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
               </PopoverContent>
             </Popover>
           </ToggleGroup>
@@ -328,31 +498,39 @@ function WorkstationSidebar({
 
         {/* Number of Generations */}
         <div className="space-y-4">
-           <div className="flex items-center gap-2">
-            <h3 className="text-xs font-heading font-medium text-foreground tracking-tight">Number of generations</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-xs font-heading font-medium text-foreground tracking-tight">
+              Number of generations
+            </h3>
             <Tooltip>
               <TooltipTrigger asChild>
                 <HelpCircle className="w-3 h-3 text-muted-foreground cursor-help" />
               </TooltipTrigger>
-              <TooltipContent>How many images to generate at once</TooltipContent>
+              <TooltipContent>
+                How many images to generate at once
+              </TooltipContent>
             </Tooltip>
           </div>
-          <ToggleGroup 
-            type="single" 
-            value={count} 
+          <ToggleGroup
+            type="single"
+            value={count}
             onValueChange={(v) => {
               if (!v) return;
               const requested = parseInt(v);
               if (availableCredits !== null && requested > availableCredits) {
-                toast.error(`Insufficient credits. You only have ${availableCredits} remaining.`);
+                toast.error(
+                  `Insufficient credits. You only have ${availableCredits} remaining.`,
+                );
                 return;
               }
               setCount(v);
-            }} 
-            variant="outline" 
+            }}
+            variant="outline"
             className="w-full"
           >
-            {Array.from({ length: DAILY_CREDIT_LIMIT }, (_, i) => (i + 1).toString()).map((num) => (
+            {Array.from({ length: DAILY_CREDIT_LIMIT }, (_, i) =>
+              (i + 1).toString(),
+            ).map((num) => (
               <ToggleGroupItem
                 key={num}
                 value={num}
@@ -370,24 +548,32 @@ function WorkstationSidebar({
         <div className="space-y-6">
           <div className="flex items-center gap-2">
             <Settings2 className="w-4 h-4 text-muted-foreground" />
-            <h3 className="text-xs font-heading font-semibold text-foreground tracking-tight">Advanced Settings</h3>
+            <h3 className="text-xs font-heading font-semibold text-foreground tracking-tight">
+              Advanced Settings
+            </h3>
           </div>
-
-          {/* Inference Steps */}           <div className="space-y-4">
+          {/* Inference Steps */}{" "}
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Label className="text-[11px] font-medium text-muted-foreground">Inference Steps</Label>
+                <Label className="text-[11px] font-medium text-muted-foreground">
+                  Inference Steps
+                </Label>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <HelpCircle className="w-3 h-3 text-muted-foreground cursor-help" />
                   </TooltipTrigger>
-                  <TooltipContent>More steps = higher quality but slower generation (max 8)</TooltipContent>
+                  <TooltipContent>
+                    More steps = higher quality but slower generation (max 8)
+                  </TooltipContent>
                 </Tooltip>
               </div>
-              <span className="text-[10px] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">{numInferenceSteps}</span>
+              <span className="text-[10px] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
+                {numInferenceSteps}
+              </span>
             </div>
-            <Slider 
-              value={[numInferenceSteps]} 
+            <Slider
+              value={[numInferenceSteps]}
               onValueChange={(v) => setNumInferenceSteps(v[0])}
               max={8}
               min={1}
@@ -395,24 +581,26 @@ function WorkstationSidebar({
               className="[&_[role=slider]]:h-3 [&_[role=slider]]:w-3 [&_[role=slider]]:bg-foreground [&_[role=slider]]:border-none"
             />
           </div>
-
-
           {/* Output Format */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <Label className="text-[11px] font-medium text-muted-foreground">Output Format</Label>
+              <Label className="text-[11px] font-medium text-muted-foreground">
+                Output Format
+              </Label>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <HelpCircle className="w-3 h-3 text-muted-foreground cursor-help" />
                 </TooltipTrigger>
-                <TooltipContent>The file format of the generated image</TooltipContent>
+                <TooltipContent>
+                  The file format of the generated image
+                </TooltipContent>
               </Tooltip>
             </div>
-            <ToggleGroup 
-              type="single" 
-              value={format} 
-              onValueChange={(v) => v && setFormat(v)} 
-              variant="outline" 
+            <ToggleGroup
+              type="single"
+              value={format}
+              onValueChange={(v) => v && setFormat(v)}
+              variant="outline"
               className="w-full h-8"
             >
               {["png", "jpeg"].map((f) => (
@@ -426,20 +614,23 @@ function WorkstationSidebar({
               ))}
             </ToggleGroup>
           </div>
-
           {/* Negative Prompt */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <Label className="text-[11px] font-medium text-muted-foreground">Negative Prompt</Label>
+              <Label className="text-[11px] font-medium text-muted-foreground">
+                Negative Prompt
+              </Label>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <HelpCircle className="w-3 h-3 text-muted-foreground cursor-help" />
                 </TooltipTrigger>
-                <TooltipContent>Describe elements you want to exclude from the image</TooltipContent>
+                <TooltipContent>
+                  Describe elements you want to exclude from the image
+                </TooltipContent>
               </Tooltip>
             </div>
-            <Textarea 
-              placeholder="e.g. blurry, low quality, distorted..." 
+            <Textarea
+              placeholder="e.g. blurry, low quality, distorted..."
               value={negativePrompt}
               onChange={(e) => setNegativePrompt(e.target.value)}
               className="bg-muted/50 border-border text-foreground placeholder-muted-foreground text-[11px] min-h-[80px] focus-visible:ring-1 focus-visible:ring-ring/10 resize-none rounded-xl"
@@ -450,15 +641,15 @@ function WorkstationSidebar({
 
       {/* SIDEBAR FOOTER */}
       <div className="p-6 bg-muted/30 space-y-6">
-         <UsageText className="px-1" />
-         
-         <button 
-           onClick={resetDefaults}
-           className="flex items-center gap-2 text-[10px] font-mono font-bold text-muted-foreground hover:text-foreground transition-colors tracking-tight w-full justify-center group"
-         >
-            <RefreshCcw className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" />
-            Reset settings
-         </button>
+        <UsageText className="px-1" />
+
+        <button
+          onClick={resetDefaults}
+          className="flex items-center gap-2 text-[10px] font-mono font-bold text-muted-foreground hover:text-foreground transition-colors tracking-tight w-full justify-center group"
+        >
+          <RefreshCcw className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" />
+          Reset settings
+        </button>
       </div>
     </div>
   );
@@ -477,9 +668,11 @@ export default function ImageGenerationPage() {
   const [negativePrompt, setNegativePrompt] = useState("");
   const [format, setFormat] = useState("png");
   const [isLinked, setIsLinked] = useState(false);
-  const [generationToDelete, setGenerationToDelete] = useState<string | null>(null);
+  const [generationToDelete, setGenerationToDelete] = useState<string | null>(
+    null,
+  );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
+
   // Real Data State
   const [results, setResults] = useState<GenerationWithImages[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -491,53 +684,60 @@ export default function ImageGenerationPage() {
     threshold: 0,
   });
 
-  const fetchGenerations = useCallback(async (currentCursor: string | null = null) => {
-    if (isLoadingMore || (!hasMore && currentCursor)) return;
-    
-    setIsLoadingMore(true);
-    try {
-      const url = new URL("/api/ai/generations", window.location.origin);
-      url.searchParams.append("limit", "3");
-      if (currentCursor) url.searchParams.append("cursor", currentCursor);
-      
-      const res = await fetch(url);
-      const data = await res.json();
-      
-      if (data.generations) {
-        setResults((prev) => {
-          // Prevent duplicates by checking IDs
-          const existingIds = new Set(prev.map(g => g.id));
-          const newItems = data.generations.filter((g: GenerationWithImages) => !existingIds.has(g.id));
-          return [...prev, ...newItems];
-        });
-        setCursor(data.nextCursor);
-        setHasMore(!!data.nextCursor);
+  const fetchGenerations = useCallback(
+    async (currentCursor: string | null = null) => {
+      if (isLoadingMore || (!hasMore && currentCursor)) return;
+
+      setIsLoadingMore(true);
+      try {
+        const url = new URL("/api/ai/generations", window.location.origin);
+        url.searchParams.append("limit", "3");
+        if (currentCursor) url.searchParams.append("cursor", currentCursor);
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.generations) {
+          setResults((prev) => {
+            // Prevent duplicates by checking IDs
+            const existingIds = new Set(prev.map((g) => g.id));
+            const newItems = data.generations.filter(
+              (g: GenerationWithImages) => !existingIds.has(g.id),
+            );
+            return [...prev, ...newItems];
+          });
+          setCursor(data.nextCursor);
+          setHasMore(!!data.nextCursor);
+        }
+      } catch (error) {
+        console.error("Failed to fetch generations:", error);
+        toast.error("Failed to load generations");
+      } finally {
+        setIsLoadingMore(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch generations:", error);
-      toast.error("Failed to load generations");
-    } finally {
-      setIsLoadingMore(false);
-    }
-  }, [isLoadingMore, hasMore]);
+    },
+    [isLoadingMore, hasMore],
+  );
 
   // Initial load
   useEffect(() => {
     fetchGenerations();
     refreshCredits();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const refreshCredits = async () => {
     try {
       const c = await getCredits();
       setAvailableCredits(c);
-    } catch { /* silently handle credit fetch errors */ }
+    } catch {
+      /* silently handle credit fetch errors */
+    }
   };
 
   // Auto-clear attachments on model change if unsupported
   useEffect(() => {
-    const currentModelObj = IMAGE_MODELS.find(m => m.id === model);
+    const currentModelObj = IMAGE_MODELS.find((m) => m.id === model);
     if (currentModelObj && !currentModelObj.capabilities?.imageToImage) {
       window.dispatchEvent(new CustomEvent("clear-attachments"));
     }
@@ -548,15 +748,23 @@ export default function ImageGenerationPage() {
     if (inView && hasMore && !isLoadingMore && results.length > 0) {
       fetchGenerations(cursor);
     }
-  }, [inView, hasMore, isLoadingMore, results.length, cursor, fetchGenerations]);
-
+  }, [
+    inView,
+    hasMore,
+    isLoadingMore,
+    results.length,
+    cursor,
+    fetchGenerations,
+  ]);
 
   const handleDeleteGeneration = async (id: string) => {
     try {
-      const res = await fetch(`/api/ai/generations/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/ai/generations/${id}`, {
+        method: "DELETE",
+      });
       if (res.ok) {
         toast.success("Generation deleted");
-        setResults(prev => prev.filter(g => g.id !== id));
+        setResults((prev) => prev.filter((g) => g.id !== id));
       } else {
         toast.error("Failed to delete generation");
       }
@@ -567,21 +775,30 @@ export default function ImageGenerationPage() {
     }
   };
   const handleDeleteImage = (imageId: string, generationId: string) => {
-    setResults(prev => prev.map(g => {
-      if (g.id === generationId) {
-        const remainingImages = g.images.filter(img => img.id !== imageId);
-        return {
-          ...g,
-          images: remainingImages
-        };
-      }
-      return g;
-    }).filter(g => g.images.length > 0)); 
+    setResults((prev) =>
+      prev
+        .map((g) => {
+          if (g.id === generationId) {
+            const remainingImages = g.images.filter(
+              (img) => img.id !== imageId,
+            );
+            return {
+              ...g,
+              images: remainingImages,
+            };
+          }
+          return g;
+        })
+        .filter((g) => g.images.length > 0),
+    );
   };
 
-  const handleGenerate = async (overridePrompt?: string, attachmentFiles: { url: string }[] = []) => {
+  const handleGenerate = async (
+    overridePrompt?: string,
+    attachmentFiles: { url: string }[] = [],
+  ) => {
     const activePrompt = overridePrompt || prompt;
-    
+
     if (!activePrompt.trim()) {
       toast.error("Please enter a prompt first.");
       return;
@@ -591,8 +808,8 @@ export default function ImageGenerationPage() {
     const fileToBase64 = (url: string): Promise<string> => {
       return new Promise((resolve, reject) => {
         fetch(url)
-          .then(res => res.blob())
-          .then(blob => {
+          .then((res) => res.blob())
+          .then((blob) => {
             const reader = new FileReader();
             reader.onloadend = () => resolve(reader.result as string);
             reader.onerror = reject;
@@ -605,17 +822,32 @@ export default function ImageGenerationPage() {
     // 0. Client-side Credit Check
     const imageCount = parseInt(count) || 1;
     if (availableCredits !== null && availableCredits < imageCount) {
-      toast.error(`Insufficient credits. You have ${availableCredits} remaining.`);
+      toast.error(
+        `Insufficient credits. You have ${availableCredits} remaining.`,
+      );
       return;
     }
 
     setIsGenerating(true);
 
-    
     // 1. Create an Optimistic Generation object
     const tempId = `opt-${Date.now()}`;
-    const w = ratio === "custom" ? Math.min(1024, parseInt(customWidth)) : (ratio === "1:1" ? 1024 : (ratio === "2:3" ? 682 : 1024));
-    const h = ratio === "custom" ? Math.min(1024, parseInt(customHeight)) : (ratio === "1:1" ? 1024 : (ratio === "2:3" ? 1024 : 576));
+    const w =
+      ratio === "custom"
+        ? Math.min(1024, parseInt(customWidth))
+        : ratio === "1:1"
+          ? 1024
+          : ratio === "2:3"
+            ? 682
+            : 1024;
+    const h =
+      ratio === "custom"
+        ? Math.min(1024, parseInt(customHeight))
+        : ratio === "1:1"
+          ? 1024
+          : ratio === "2:3"
+            ? 1024
+            : 576;
 
     const optimisticGeneration: GenerationWithImages = {
       id: tempId,
@@ -624,7 +856,7 @@ export default function ImageGenerationPage() {
       height: h,
       isGenerating: true,
       images: Array(imageCount).fill({ id: "", path: "", prompt: "" }),
-      createdAt: new Date()
+      createdAt: new Date(),
     };
 
     // Prepend the optimistic result to the list immediately
@@ -638,7 +870,7 @@ export default function ImageGenerationPage() {
 
       // Convert attachments to base64
       const base64Images = await Promise.all(
-        attachmentFiles.map(file => fileToBase64(file.url))
+        attachmentFiles.map((file) => fileToBase64(file.url)),
       );
 
       const res = await fetch("/api/ai/generate", {
@@ -655,13 +887,15 @@ export default function ImageGenerationPage() {
           numInferenceSteps,
           negativePrompt,
           format,
-          images: base64Images
+          images: base64Images,
         }),
       });
 
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || `Failed to generate: ${res.statusText}`);
+        throw new Error(
+          errData.error || `Failed to generate: ${res.statusText}`,
+        );
       }
 
       const reader = res.body?.getReader();
@@ -687,26 +921,28 @@ export default function ImageGenerationPage() {
             if (data.type === "generation_id") {
               const realId = data.id;
               currentGenerationId = realId;
-              setResults((prev) => 
-                prev.map((gen) => 
-                  gen.id === tempId ? { ...gen, id: realId } : gen
-                )
+              setResults((prev) =>
+                prev.map((gen) =>
+                  gen.id === tempId ? { ...gen, id: realId } : gen,
+                ),
               );
             } else if (data.type === "image") {
               const newImage = data.image;
-              setResults((prev) => 
+              setResults((prev) =>
                 prev.map((gen) => {
                   if (gen.id === currentGenerationId) {
                     const newImages = [...gen.images];
                     // Replace the first "placeholder" image (one with id: "")
-                    const placeholderIndex = newImages.findIndex(img => img.id === "");
+                    const placeholderIndex = newImages.findIndex(
+                      (img) => img.id === "",
+                    );
                     if (placeholderIndex !== -1) {
                       newImages[placeholderIndex] = newImage;
                     }
                     return { ...gen, images: newImages };
                   }
                   return gen;
-                })
+                }),
               );
               receivedImagesCount++;
             } else if (data.type === "error") {
@@ -719,31 +955,42 @@ export default function ImageGenerationPage() {
       }
 
       // Mark as finished generating
-      setResults((prev) => 
-        prev.map((gen) => 
-          gen.id === currentGenerationId ? { ...gen, isGenerating: false } : gen
-        )
+      setResults((prev) =>
+        prev.map((gen) =>
+          gen.id === currentGenerationId
+            ? { ...gen, isGenerating: false }
+            : gen,
+        ),
       );
       toast.success("Masterpiece generated!");
-      
+
       // Notify components to refresh credits
       window.dispatchEvent(new CustomEvent("refresh-credits"));
       refreshCredits();
-
     } catch (error: unknown) {
       console.error("Generation error:", error);
       // Remove the optimistic item on error if no images were received
       if (receivedImagesCount === 0) {
-        setResults((prev) => prev.filter((gen) => gen.id !== tempId && gen.id !== currentGenerationId));
+        setResults((prev) =>
+          prev.filter(
+            (gen) => gen.id !== tempId && gen.id !== currentGenerationId,
+          ),
+        );
       } else {
         // Just turn off generating state
-        setResults((prev) => 
-          prev.map((gen) => 
-            (gen.id === tempId || gen.id === currentGenerationId) ? { ...gen, isGenerating: false } : gen
-          )
+        setResults((prev) =>
+          prev.map((gen) =>
+            gen.id === tempId || gen.id === currentGenerationId
+              ? { ...gen, isGenerating: false }
+              : gen,
+          ),
         );
       }
-      toast.error(error instanceof Error ? error.message : "Generation failed. Please try again.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Generation failed. Please try again.",
+      );
     } finally {
       setIsGenerating(false);
       // Clear attachments after successful trigger
@@ -769,32 +1016,44 @@ export default function ImageGenerationPage() {
         {/* Background elements */}
         <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-orange-500/5 blur-[120px] rounded-full pointer-events-none opacity-40"></div>
         <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-500/5 blur-[100px] rounded-full pointer-events-none opacity-40"></div>
-        
+
         {/* Grid Pattern */}
-        <div className="fixed inset-0 pointer-events-none z-0" 
-          style={{ 
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", 
-            backgroundSize: "4rem 4rem", 
-            maskImage: "radial-gradient(circle at center, black, transparent 80%)", 
-            WebkitMaskImage: "radial-gradient(circle at center, black, transparent 80%)" 
+        <div
+          className="fixed inset-0 pointer-events-none z-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
+            backgroundSize: "4rem 4rem",
+            maskImage:
+              "radial-gradient(circle at center, black, transparent 80%)",
+            WebkitMaskImage:
+              "radial-gradient(circle at center, black, transparent 80%)",
           }}
         ></div>
 
         {/* BESPOKE SIDEBAR WORKSTATION (Desktop) */}
-        <aside 
-          className="hidden lg:flex w-80 border border-border bg-card/80 backdrop-blur-xl z-20 flex-col rounded-3xl ml-6 my-6 h-[calc(100vh-112px)] overflow-hidden shadow-2xl relative"
-        >
-          <WorkstationSidebar 
-            model={model} setModel={setModel}
-            style={style} setStyle={setStyle}
-            ratio={ratio} setRatio={setRatio}
-            count={count} setCount={setCount}
-            customWidth={customWidth} setCustomWidth={setCustomWidth}
-            customHeight={customHeight} setCustomHeight={setCustomHeight}
-            numInferenceSteps={numInferenceSteps} setNumInferenceSteps={setNumInferenceSteps}
-            isLinked={isLinked} setIsLinked={setIsLinked}
-            negativePrompt={negativePrompt} setNegativePrompt={setNegativePrompt}
-            format={format} setFormat={setFormat}
+        <aside className="hidden lg:flex w-80 border border-border bg-card/80 backdrop-blur-xl z-20 flex-col rounded-3xl ml-6 my-6 h-[calc(100vh-112px)] overflow-hidden shadow-2xl relative">
+          <WorkstationSidebar
+            model={model}
+            setModel={setModel}
+            style={style}
+            setStyle={setStyle}
+            ratio={ratio}
+            setRatio={setRatio}
+            count={count}
+            setCount={setCount}
+            customWidth={customWidth}
+            setCustomWidth={setCustomWidth}
+            customHeight={customHeight}
+            setCustomHeight={setCustomHeight}
+            numInferenceSteps={numInferenceSteps}
+            setNumInferenceSteps={setNumInferenceSteps}
+            isLinked={isLinked}
+            setIsLinked={setIsLinked}
+            negativePrompt={negativePrompt}
+            setNegativePrompt={setNegativePrompt}
+            format={format}
+            setFormat={setFormat}
             resetDefaults={resetDefaults}
             availableCredits={availableCredits}
           />
@@ -802,18 +1061,32 @@ export default function ImageGenerationPage() {
 
         {/* BESPOKE SIDEBAR WORKSTATION (Mobile) */}
         <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-          <SheetContent side="left" className="p-4 bg-transparent border-none w-fit overflow-visible" showCloseButton={false}>
-            <WorkstationSidebar 
-              model={model} setModel={setModel}
-              style={style} setStyle={setStyle}
-              ratio={ratio} setRatio={setRatio}
-              count={count} setCount={setCount}
-              customWidth={customWidth} setCustomWidth={setCustomWidth}
-              customHeight={customHeight} setCustomHeight={setCustomHeight}
-              numInferenceSteps={numInferenceSteps} setNumInferenceSteps={setNumInferenceSteps}
-              isLinked={isLinked} setIsLinked={setIsLinked}
-              negativePrompt={negativePrompt} setNegativePrompt={setNegativePrompt}
-              format={format} setFormat={setFormat}
+          <SheetContent
+            side="left"
+            className="p-4 bg-transparent border-none w-fit overflow-visible"
+            showCloseButton={false}
+          >
+            <WorkstationSidebar
+              model={model}
+              setModel={setModel}
+              style={style}
+              setStyle={setStyle}
+              ratio={ratio}
+              setRatio={setRatio}
+              count={count}
+              setCount={setCount}
+              customWidth={customWidth}
+              setCustomWidth={setCustomWidth}
+              customHeight={customHeight}
+              setCustomHeight={setCustomHeight}
+              numInferenceSteps={numInferenceSteps}
+              setNumInferenceSteps={setNumInferenceSteps}
+              isLinked={isLinked}
+              setIsLinked={setIsLinked}
+              negativePrompt={negativePrompt}
+              setNegativePrompt={setNegativePrompt}
+              format={format}
+              setFormat={setFormat}
               resetDefaults={resetDefaults}
               availableCredits={availableCredits}
               className="h-[calc(100vh-32px)] w-80 rounded-3xl border border-border shadow-2xl relative"
@@ -828,7 +1101,7 @@ export default function ImageGenerationPage() {
             {/* TOP GENERATION BAR */}
             <div className="animate-fade-up">
               <PromptInputProvider initialInput={prompt} maxFiles={2}>
-               <PromptInput
+                <PromptInput
                   maxFiles={2}
                   accept="image/*"
                   onSubmit={(message) => {
@@ -838,38 +1111,42 @@ export default function ImageGenerationPage() {
                   className=""
                 >
                   <PromptInputAttachments>
-                    {(attachment) => <PromptInputAttachment data={attachment} />}
+                    {(attachment) => (
+                      <PromptInputAttachment data={attachment} />
+                    )}
                   </PromptInputAttachments>
                   <PromptInputBody>
-                    <PromptInputTextarea 
+                    <PromptInputTextarea
                       placeholder="Describe your visual concept..."
                       className="bg-transparent border-none focus-visible:ring-0 text-foreground placeholder-muted-foreground min-h-[100px] p-4 text-sm"
                     />
                   </PromptInputBody>
                   <PromptInputFooter className="px-4 pb-4">
                     <PromptInputTools>
-                       <PromptInputAddDirect 
-                         disabledReason={!IMAGE_MODELS.find(m => m.id === model)?.capabilities.imageToImage 
-                           ? "Selected model doesn't support image-to-image" 
-                           : undefined
-                         } 
-                       />
+                      <PromptInputAddDirect
+                        disabledReason={
+                          !IMAGE_MODELS.find((m) => m.id === model)
+                            ?.capabilities.imageToImage
+                            ? "Selected model doesn't support image-to-image"
+                            : undefined
+                        }
+                      />
                     </PromptInputTools>
                     <div className="flex items-center gap-2">
-                       <button 
-                         type="button"
-                         onClick={() => setIsSidebarOpen(true)}
-                         className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
-                         title="Workstation Settings"
-                       >
-                         <Settings2 className="size-4" />
-                       </button>
-                       <PromptInputRefine />
-                       <PromptInputSubmit 
-                         status={isGenerating ? "submitted" : undefined}
-                         className="bg-foreground text-background hover:bg-foreground/90 transition-all font-medium rounded-xl"
-                       />
-                     </div>
+                      <button
+                        type="button"
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+                        title="Workstation Settings"
+                      >
+                        <Settings2 className="size-4" />
+                      </button>
+                      <PromptInputRefine />
+                      <PromptInputSubmit
+                        status={isGenerating ? "submitted" : undefined}
+                        className="bg-foreground text-background hover:bg-foreground/90 transition-all font-medium rounded-xl"
+                      />
+                    </div>
                   </PromptInputFooter>
                 </PromptInput>
               </PromptInputProvider>
@@ -878,20 +1155,27 @@ export default function ImageGenerationPage() {
             {/* GENERATION RESULTS */}
             {results.length > 0 && (
               <div className="space-y-12 animate-fade-in pb-40">
-                <div className="flex items-center justify-between h-8">
-                </div>
-                
+                <div className="flex items-center justify-between h-8"></div>
+
                 <div className="space-y-16">
                   {results.map((gen) => (
-                    <div key={gen.id} className={cn("space-y-6", gen.isGenerating && "animate-pulse")}>
+                    <div
+                      key={gen.id}
+                      className={cn(
+                        "space-y-6",
+                        gen.isGenerating && "animate-pulse",
+                      )}
+                    >
                       <div className="flex items-center gap-4 group/gen">
                         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#222] to-transparent" />
                         <div className="flex items-center gap-3">
                           <span className="text-[10px] font-mono text-[#444] tracking-[0.2em]">
-                            {gen.prompt.length > 50 ? gen.prompt.substring(0, 50) + "..." : gen.prompt}
+                            {gen.prompt.length > 50
+                              ? gen.prompt.substring(0, 50) + "..."
+                              : gen.prompt}
                           </span>
                           {!gen.isGenerating && (
-                            <button 
+                            <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setGenerationToDelete(gen.id);
@@ -905,16 +1189,21 @@ export default function ImageGenerationPage() {
                         </div>
                         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#222] to-transparent" />
                       </div>
-                      
-                       <div className={cn(
-                         "grid gap-8",
-                         gen.images.length === 1 ? "grid-cols-1 max-w-lg mx-auto" : 
-                         gen.images.length === 2 ? "grid-cols-1 sm:grid-cols-2 max-w-5xl mx-auto" : 
-                         gen.images.length === 3 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto" : 
-                         "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full"
-                       )}>
+
+                      <div
+                        className={cn(
+                          "grid gap-8",
+                          gen.images.length === 1
+                            ? "grid-cols-1 max-w-lg mx-auto"
+                            : gen.images.length === 2
+                              ? "grid-cols-1 sm:grid-cols-2 max-w-5xl mx-auto"
+                              : gen.images.length === 3
+                                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto"
+                                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full",
+                        )}
+                      >
                         {gen.images.map((img, i) => (
-                          <GenerationResult 
+                          <GenerationResult
                             key={img.id || `loading-${gen.id}-${i}`}
                             id={img.id}
                             imagePath={img.path}
@@ -929,11 +1218,16 @@ export default function ImageGenerationPage() {
                     </div>
                   ))}
                 </div>
-                
-                 {/* Infinite scroll ref */}
-                 <div ref={ref} className="h-10 w-full flex items-center justify-center">
-                   {isLoadingMore && <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />}
-                 </div>
+
+                {/* Infinite scroll ref */}
+                <div
+                  ref={ref}
+                  className="h-10 w-full flex items-center justify-center"
+                >
+                  {isLoadingMore && (
+                    <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                  )}
+                </div>
               </div>
             )}
 
@@ -943,9 +1237,12 @@ export default function ImageGenerationPage() {
                 <div className="size-20 rounded-[2.5rem] bg-muted/50 border border-border flex items-center justify-center mb-8">
                   <ImageIcon className="w-8 h-8 text-muted-foreground/50" />
                 </div>
-                <h3 className="text-2xl font-bold tracking-tight text-foreground mb-3 font-heading">No masterpieces yet</h3>
+                <h3 className="text-2xl font-bold tracking-tight text-foreground mb-3 font-heading">
+                  No masterpieces yet
+                </h3>
                 <p className="text-muted-foreground max-w-sm font-heading font-medium leading-relaxed">
-                  Start your creative journey by entering a prompt above. The Aesthetic Engine is ready for your concepts.
+                  Start your creative journey by entering a prompt above. The
+                  Aesthetic Engine is ready for your concepts.
                 </p>
               </div>
             )}
@@ -953,18 +1250,29 @@ export default function ImageGenerationPage() {
         </main>
 
         {/* Delete Dialog */}
-        <AlertDialog open={!!generationToDelete} onOpenChange={() => setGenerationToDelete(null)}>
+        <AlertDialog
+          open={!!generationToDelete}
+          onOpenChange={() => setGenerationToDelete(null)}
+        >
           <AlertDialogContent className="rounded-2xl border-border bg-card/80 backdrop-blur-xl">
             <AlertDialogHeader>
-              <AlertDialogTitle className="font-heading">Delete Generation?</AlertDialogTitle>
+              <AlertDialogTitle className="font-heading">
+                Delete Generation?
+              </AlertDialogTitle>
               <AlertDialogDescription className="font-heading">
-                This will permanently remove the generation and all associated images.
+                This will permanently remove the generation and all associated
+                images.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="rounded-xl border-border">Cancel</AlertDialogCancel>
-              <AlertDialogAction 
-                onClick={() => generationToDelete && handleDeleteGeneration(generationToDelete)}
+              <AlertDialogCancel className="rounded-xl border-border">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() =>
+                  generationToDelete &&
+                  handleDeleteGeneration(generationToDelete)
+                }
                 className="rounded-xl bg-red-500 text-white hover:bg-red-600 border-none"
               >
                 Delete
@@ -972,14 +1280,16 @@ export default function ImageGenerationPage() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        
+
         {/* Global Loading Overlay (for initial first generate state if needed) */}
         {isGenerating && results.length === 0 && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/20 backdrop-blur-sm animate-fade-in">
-             <div className="flex flex-col items-center gap-4">
-                <Loader2 className="w-10 h-10 animate-spin text-primary" />
-                <p className="text-xs font-mono font-medium text-muted-foreground animate-pulse">Initializing synthesis...</p>
-             </div>
+            <div className="flex flex-col items-center gap-4">
+              <Loader2 className="w-10 h-10 animate-spin text-primary" />
+              <p className="text-xs font-mono font-medium text-muted-foreground animate-pulse">
+                Initializing synthesis...
+              </p>
+            </div>
           </div>
         )}
       </div>

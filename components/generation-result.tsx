@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Download, Share2, ExternalLink, Loader2, Trash2, Sparkles } from "lucide-react";
+import { Download, Share2, ExternalLink, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -128,11 +128,7 @@ export const GenerationResult: React.FC<GenerationResultProps> = ({
       style={{ aspectRatio: `${width}/${height}` }}
     >
       {isActuallyGenerating ? (
-        <div className="flex flex-col items-center justify-center h-full gap-3 bg-muted/30">
-          <Sparkles className="w-6 h-6 text-muted-foreground animate-pulse" />
-          <span className="text-[10px] font-mono text-muted-foreground/60 italic">Synthesizing...</span>
-          <Loader2 className="w-4 h-4 text-primary animate-spin" />
-        </div>
+        <div className="h-full w-full bg-muted/30" aria-busy="true" />
       ) : url ? (
         <>
           <Image
