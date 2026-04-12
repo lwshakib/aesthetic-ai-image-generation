@@ -22,6 +22,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  credits       Int       @default(4)
+  lastCreditReset DateTime @default(now())
   generations   Generation[]
 
   @@unique([email])

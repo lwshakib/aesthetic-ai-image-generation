@@ -1,4 +1,4 @@
-import { aiService } from "@/lib/services/ai.services";
+import { aiService } from "@/services/ai.services";
 import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 

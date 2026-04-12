@@ -1,4 +1,4 @@
-import { s3Service } from "@/lib/services/s3.services";
+import { s3Service } from "@/services/s3.services";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

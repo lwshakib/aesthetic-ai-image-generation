@@ -1,9 +1,11 @@
-import { aiService } from "@/lib/services/ai.services";
-import { s3Service } from "@/lib/services/s3.services";
+import { aiService } from "@/services/ai.services";
+import { s3Service } from "@/services/s3.services";
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { nanoid } from "nanoid";
+import { getCredits } from "@/app/actions/user.actions";
+import { DAILY_CREDIT_LIMIT } from "@/lib/constants";
 
 export async function POST(req: NextRequest) {
   const session = await auth.api.getSession({
@@ -32,7 +34,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    const imageCount = parseInt(count) || 4;
+    const imageCount = Math.max(1, Math.min(DAILY_CREDIT_LIMIT, parseInt(count) || 1));
+
+    // Credit Check
+    const availableCredits = await getCredits();
+    if (availableCredits < imageCount) {
+      return NextResponse.json({ 
+        error: `Insufficient credits. You have ${availableCredits} credit(s) remaining, but requested ${imageCount}. Credits reset daily.` 
+      }, { status: 403 });
+    }
 
     // 1. Generate Prompt Variations using GLM-4.7-Flash Structured Output
     const variationMessages = [
@@ -99,6 +109,12 @@ export async function POST(req: NextRequest) {
         format: format || "png",
         userId: session.user.id,
       },
+    });
+
+    // Deduct Credits
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: { credits: { decrement: imageCount } },
     });
 
     // 3. Setup Streaming Response

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { User, LogOut, Settings, CreditCard, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { ModeToggle } from "./mode-toggle";
+import { UserAvatar } from "./user-avatar";
 
 export function MainHeader() {
   const router = useRouter();
@@ -48,18 +49,13 @@ export function MainHeader() {
         <ModeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="h-9 w-9 rounded-full border border-border bg-muted/50 overflow-hidden hover:border-accent/10 active:scale-95 transition-all outline-none">
-              {session?.user?.image ? (
-                <img 
-                  src={session.user.image} 
-                  alt={session.user.name || "User"} 
-                  className="w-full h-full object-cover" 
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-purple-500/10">
-                  <User className="w-4 h-4 text-muted-foreground" />
-                </div>
-              )}
+            <button className="relative h-9 w-9 rounded-full border border-border bg-muted/50 overflow-hidden hover:border-accent/30 active:scale-95 transition-all outline-none group/avatar">
+              <UserAvatar 
+                image={session?.user?.image} 
+                name={session?.user?.name} 
+                className="w-full h-full"
+              />
+              <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 bg-popover border-border rounded-2xl shadow-2xl p-2 animate-in fade-in zoom-in-95">

@@ -90,6 +90,9 @@ import {
   AlertDialogTitle, 
 } from "@/components/ui/alert-dialog";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { UsageText } from "@/components/usage-text";
+import { getCredits } from "@/app/actions/user.actions";
+import { DAILY_CREDIT_LIMIT } from "@/lib/constants";
 
 interface GenerationWithImages {
   id: string;
@@ -355,7 +358,7 @@ function WorkstationSidebar({
             variant="outline" 
             className="w-full"
           >
-            {["1", "2", "3", "4"].map((num) => (
+            {Array.from({ length: DAILY_CREDIT_LIMIT }, (_, i) => (i + 1).toString()).map((num) => (
               <ToggleGroupItem
                 key={num}
                 value={num}
@@ -452,7 +455,9 @@ function WorkstationSidebar({
       </div>
 
       {/* SIDEBAR FOOTER */}
-      <div className="p-6 bg-muted/30">
+      <div className="p-6 bg-muted/30 space-y-6">
+         <UsageText className="px-1" />
+         
          <button 
            onClick={resetDefaults}
            className="flex items-center gap-2 text-[10px] font-mono font-bold text-muted-foreground hover:text-foreground transition-colors tracking-widest w-full justify-center group"
@@ -550,8 +555,7 @@ export default function ImageGenerationPage() {
       setGenerationToDelete(null);
     }
   };
-
-  const handleDeleteImage = (imageId: string, generationId: string) => {
+  const handleDeleteImage = (imageId: string, generationId: string) => {
     setResults(prev => prev.map(g => {
       if (g.id === generationId) {
         const remainingImages = g.images.filter(img => img.id !== imageId);
@@ -571,13 +575,27 @@ export default function ImageGenerationPage() {
       toast.error("Please enter a prompt first.");
       return;
     }
+
+    // 0. Client-side Credit Check
+    const imageCount = parseInt(count) || 1;
+    try {
+      const availableCredits = await getCredits();
+      if (availableCredits < imageCount) {
+        toast.error(`Insufficient credits. You have ${availableCredits} remaining.`);
+        return;
+      }
+    } catch (e) {
+      toast.error("Failed to verify credits.");
+      return;
+    }
+
     setIsGenerating(true);
+
     
     // 1. Create an Optimistic Generation object
     const tempId = `opt-${Date.now()}`;
     const w = ratio === "custom" ? Math.min(1024, parseInt(customWidth)) : (ratio === "1:1" ? 1024 : (ratio === "2:3" ? 682 : 1024));
     const h = ratio === "custom" ? Math.min(1024, parseInt(customHeight)) : (ratio === "1:1" ? 1024 : (ratio === "2:3" ? 1024 : 576));
-    const imageCount = parseInt(count) || 1;
 
     const optimisticGeneration: GenerationWithImages = {
       id: tempId,
@@ -678,6 +696,9 @@ export default function ImageGenerationPage() {
         )
       );
       toast.success("Masterpiece generated!");
+      
+      // Notify components to refresh credits
+      window.dispatchEvent(new CustomEvent("refresh-credits"));
 
     } catch (error: any) {
       console.error("Generation error:", error);
