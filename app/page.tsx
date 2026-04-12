@@ -144,32 +144,96 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex-1 hidden lg:block animate-fade-up delay-200 w-full h-[600px] max-w-lg relative perspective-normal transform-style-preserve-3d mt-12 lg:mt-0">
-            {/* Back right cover */}
-            <div className="relative aspect-[2/3] overflow-hidden book-float-2 opacity-40 w-64 z-10 border-border border rounded-2xl absolute top-10 right-4 shadow-2xl" style={{ maskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)", WebkitMaskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)" }}>
-              <Image src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4d3f4658-ecfd-47b7-8318-ab5e0f7dba77_800w.webp" alt="Cover background" fill className="object-cover grayscale opacity-50" sizes="256px" />
-              <div className="z-10 bg-gradient-to-t from-black/10 via-black/0 to-black/10 absolute inset-0 translate-x-1"></div>
-            </div>
-            {/* Back left cover */}
-            <div className="relative aspect-[2/3] overflow-hidden book-float-1 opacity-60 w-64 border-border border rounded-2xl absolute top-20 left-0 shadow-2xl" style={{ maskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)", WebkitMaskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)" }}>
-              <div className="bg-gradient-to-t from-black via-black/40 to-transparent z-10 absolute inset-0"></div>
-              <Image src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/95719f33-05ac-4a57-b882-0015d0b8af8b_800w.webp" alt="Cover background" fill className="object-cover" sizes="256px" />
-              <div className="absolute bottom-6 left-4 right-4 z-20">
-                <p className="text-[10px] tracking-widest text-[#aaaaaa] mb-1 font-mono">MASTERY</p>
-                <h3 className="text-xl tracking-tight text-white leading-tight font-heading font-medium">Urban Synthesis</h3>
+          <div className="flex-1 hidden lg:flex animate-fade-up delay-200 w-full min-h-[520px] max-w-lg relative mt-12 lg:mt-0 items-center justify-center perspective-normal transform-style-preserve-3d">
+            <div className="relative mx-auto h-[480px] w-full max-w-[22rem]">
+              {/* Back right — layout shell + motion wrapper */}
+              <div className="pointer-events-none absolute top-8 right-0 z-10 w-64">
+                <div className="hero-anim-back-right opacity-[0.42]">
+                  <div
+                    className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl border border-border shadow-2xl"
+                    style={{
+                      maskImage:
+                        "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)",
+                      WebkitMaskImage:
+                        "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)",
+                    }}
+                  >
+                    <Image
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4d3f4658-ecfd-47b7-8318-ab5e0f7dba77_800w.webp"
+                      alt="Muted reference cover in the hero stack"
+                      fill
+                      className="object-cover grayscale opacity-70"
+                      sizes="256px"
+                    />
+                    <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/15 via-transparent to-black/10" />
+                  </div>
+                </div>
               </div>
-            </div>
-            {/* Main front cover */}
-            <div className="relative -translate-x-1/2 aspect-[2/3] overflow-hidden z-20 transition-transform duration-500 hover:scale-105 w-80 border-border/50 border rounded-[2rem] absolute top-0 left-1/2 shadow-2xl" style={{ maskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)", WebkitMaskImage: "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)" }}>
-              <div className="z-10 bg-gradient-to-t from-background/80 via-transparent to-transparent absolute inset-0"></div>
-              <Image src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c43265c1-3d68-44f0-b248-d7969e9fed75_800w.webp" alt="Cover background" fill className="object-cover" sizes="320px" />
-              <div className="text-[0.65rem] uppercase font-semibold text-primary tracking-wider font-mono bg-background/90 z-30 rounded-md py-1 px-3 absolute top-6 right-6 border border-border">
-                FLUX.1 Powered
+
+              {/* Back left */}
+              <div className="pointer-events-none absolute top-16 left-0 z-[11] w-64">
+                <div className="hero-anim-back-left opacity-70">
+                  <div
+                    className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl border border-border shadow-2xl"
+                    style={{
+                      maskImage:
+                        "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)",
+                      WebkitMaskImage:
+                        "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)",
+                    }}
+                  >
+                    <Image
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/95719f33-05ac-4a57-b882-0015d0b8af8b_800w.webp"
+                      alt="Urban synthesis style cover in the hero stack"
+                      fill
+                      className="object-cover"
+                      sizes="256px"
+                    />
+                    <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                    <div className="pointer-events-none absolute bottom-5 left-3 right-3 z-20">
+                      <p className="mb-1 font-mono text-[10px] tracking-widest text-[#aaaaaa]">MASTERY</p>
+                      <h3 className="font-heading text-xl font-medium leading-tight tracking-tight text-white">
+                        Urban Synthesis
+                      </h3>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="absolute bottom-10 left-8 right-8 z-20">
-                <p className="text-[10px] tracking-widest text-white/70 mb-2 uppercase font-mono">Aesthetic Prompt</p>
-                <h3 className="text-3xl tracking-tight text-white leading-tight mb-3 font-heading font-medium">Architectural Glimpse</h3>
-                <p className="text-xs text-white/50 font-mono italic">Styled with FLUX.1</p>
+
+              {/* Front — centered without transform on the positioned shell */}
+              <div className="absolute left-1/2 top-2 z-20 w-80 max-w-[calc(100%-1rem)] -translate-x-1/2">
+                <div className="hero-anim-front">
+                  <div
+                    className="group relative aspect-[2/3] w-full overflow-hidden rounded-[2rem] border border-border/50 shadow-2xl transition-transform duration-500 ease-out group-hover:scale-[1.04] group-hover:shadow-[0_25px_80px_-12px_rgba(0,0,0,0.45)]"
+                    style={{
+                      maskImage:
+                        "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)",
+                      WebkitMaskImage:
+                        "linear-gradient(0deg, transparent, black 0%, black 100%, transparent)",
+                    }}
+                  >
+                    <Image
+                      src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c43265c1-3d68-44f0-b248-d7969e9fed75_800w.webp"
+                      alt="Featured architectural glimpse cover"
+                      fill
+                      className="object-cover"
+                      sizes="320px"
+                    />
+                    <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                    <div className="pointer-events-none absolute top-5 right-5 z-30 rounded-md border border-border bg-background/90 px-3 py-1 font-mono text-[0.65rem] font-semibold uppercase tracking-wider text-primary">
+                      FLUX.1 Powered
+                    </div>
+                    <div className="pointer-events-none absolute bottom-8 left-6 right-6 z-20">
+                      <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-white/70">
+                        Aesthetic Prompt
+                      </p>
+                      <h3 className="mb-3 font-heading text-3xl font-medium leading-tight tracking-tight text-white">
+                        Architectural Glimpse
+                      </h3>
+                      <p className="font-mono text-xs italic text-white/50">Styled with FLUX.1</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
