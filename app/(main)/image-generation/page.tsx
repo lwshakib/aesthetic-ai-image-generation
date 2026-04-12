@@ -52,7 +52,8 @@ import {
   PromptInputActionAddAttachments, 
   PromptInputSubmit,
   PromptInputRefine,
-  PromptInputProvider
+  PromptInputProvider,
+  PromptInputAddDirect
 } from "@/components/ai/prompt-input";
 import { toast } from "sonner";
 import { 
@@ -130,6 +131,7 @@ interface WorkstationSidebarProps {
   format: string;
   setFormat: (v: string) => void;
   resetDefaults: () => void;
+  availableCredits: number | null;
   className?: string;
   onClose?: () => void;
 }
@@ -139,7 +141,7 @@ function WorkstationSidebar({
   customWidth, setCustomWidth, customHeight, setCustomHeight,
   numInferenceSteps, setNumInferenceSteps, isLinked, setIsLinked,
   negativePrompt, setNegativePrompt, format, setFormat, resetDefaults,
-  className, onClose
+  availableCredits, className, onClose
 }: WorkstationSidebarProps) {
   return (
     <div className={cn("flex flex-col h-full bg-card/80 backdrop-blur-xl overflow-hidden relative", className)}>
@@ -358,7 +360,7 @@ function WorkstationSidebar({
             variant="outline" 
             className="w-full"
           >
-            {Array.from({ length: DAILY_CREDIT_LIMIT }, (_, i) => (i + 1).toString()).map((num) => (
+            {Array.from({ length: Math.min(availableCredits ?? DAILY_CREDIT_LIMIT, DAILY_CREDIT_LIMIT) }, (_, i) => (i + 1).toString()).map((num) => (
               <ToggleGroupItem
                 key={num}
                 value={num}
@@ -492,6 +494,7 @@ export default function ImageGenerationPage() {
   const [cursor, setCursor] = useState<string | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [availableCredits, setAvailableCredits] = useState<number | null>(null);
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -530,7 +533,15 @@ export default function ImageGenerationPage() {
   // Initial load
   useEffect(() => {
     fetchGenerations();
+    refreshCredits();
   }, []);
+
+  const refreshCredits = async () => {
+    try {
+      const c = await getCredits();
+      setAvailableCredits(c);
+    } catch (e) {}
+  };
 
   // Load more on scroll
   useEffect(() => {
@@ -578,14 +589,8 @@ export default function ImageGenerationPage() {
 
     // 0. Client-side Credit Check
     const imageCount = parseInt(count) || 1;
-    try {
-      const availableCredits = await getCredits();
-      if (availableCredits < imageCount) {
-        toast.error(`Insufficient credits. You have ${availableCredits} remaining.`);
-        return;
-      }
-    } catch (e) {
-      toast.error("Failed to verify credits.");
+    if (availableCredits !== null && availableCredits < imageCount) {
+      toast.error(`Insufficient credits. You have ${availableCredits} remaining.`);
       return;
     }
 
@@ -699,6 +704,7 @@ export default function ImageGenerationPage() {
       
       // Notify components to refresh credits
       window.dispatchEvent(new CustomEvent("refresh-credits"));
+      refreshCredits();
 
     } catch (error: any) {
       console.error("Generation error:", error);
@@ -716,6 +722,8 @@ export default function ImageGenerationPage() {
       toast.error(error.message || "Generation failed. Please try again.");
     } finally {
       setIsGenerating(false);
+      // Clear attachments after successful trigger
+      window.dispatchEvent(new CustomEvent("clear-attachments"));
     }
   };
 
@@ -764,6 +772,7 @@ export default function ImageGenerationPage() {
             negativePrompt={negativePrompt} setNegativePrompt={setNegativePrompt}
             format={format} setFormat={setFormat}
             resetDefaults={resetDefaults}
+            availableCredits={availableCredits}
           />
         </aside>
 
@@ -782,6 +791,7 @@ export default function ImageGenerationPage() {
               negativePrompt={negativePrompt} setNegativePrompt={setNegativePrompt}
               format={format} setFormat={setFormat}
               resetDefaults={resetDefaults}
+              availableCredits={availableCredits}
               className="h-[calc(100vh-32px)] w-80 rounded-3xl border border-border shadow-2xl relative"
               onClose={() => setIsSidebarOpen(false)}
             />
@@ -793,8 +803,10 @@ export default function ImageGenerationPage() {
           <div className="max-w-7xl mx-auto space-y-12">
             {/* TOP GENERATION BAR */}
             <div className="animate-fade-up">
-              <PromptInputProvider initialInput={prompt}>
+              <PromptInputProvider initialInput={prompt} maxFiles={2}>
                <PromptInput
+                  maxFiles={2}
+                  accept="image/*"
                   onSubmit={(message) => {
                     setPrompt(message.text);
                     handleGenerate(message.text);
@@ -812,12 +824,7 @@ export default function ImageGenerationPage() {
                   </PromptInputBody>
                   <PromptInputFooter className="px-4 pb-4">
                     <PromptInputTools>
-                      <PromptInputActionMenu>
-                        <PromptInputActionMenuTrigger />
-                        <PromptInputActionMenuContent>
-                          <PromptInputActionAddAttachments />
-                        </PromptInputActionMenuContent>
-                      </PromptInputActionMenu>
+                       <PromptInputAddDirect />
                     </PromptInputTools>
                     <div className="flex items-center gap-2">
                        <button 

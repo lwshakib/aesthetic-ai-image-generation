@@ -124,6 +124,7 @@ const useOptionalProviderAttachments = () => useContext(ProviderAttachmentsConte
 
 export type PromptInputProviderProps = PropsWithChildren<{
   initialInput?: string
+  maxFiles?: number
 }>
 
 /**
@@ -132,6 +133,7 @@ export type PromptInputProviderProps = PropsWithChildren<{
  */
 export function PromptInputProvider({
   initialInput: initialTextInput = "",
+  maxFiles,
   children,
 }: PromptInputProviderProps) {
   // ----- textInput state
@@ -149,18 +151,22 @@ export function PromptInputProvider({
       return
     }
 
-    setAttachmentFiles(prev =>
-      prev.concat(
-        incoming.map(file => ({
+    setAttachmentFiles(prev => {
+      const currentCount = prev.length
+      const limit = typeof maxFiles === "number" ? Math.max(0, maxFiles - currentCount) : undefined
+      const accepted = typeof limit === "number" ? incoming.slice(0, limit) : incoming
+
+      return prev.concat(
+        accepted.map(file => ({
           id: nanoid(),
           type: "file" as const,
           url: URL.createObjectURL(file),
           mediaType: file.type,
           filename: file.name,
         })),
-      ),
-    )
-  }, [])
+      )
+    })
+  }, [maxFiles])
 
   const remove = useCallback((id: string) => {
     setAttachmentFiles(prev => {
@@ -197,6 +203,13 @@ export function PromptInputProvider({
       }
     }
   }, [])
+
+  // Clear listener for global triggers
+  useEffect(() => {
+    const handleClear = () => clear()
+    window.addEventListener("clear-attachments", handleClear)
+    return () => window.removeEventListener("clear-attachments", handleClear)
+  }, [clear])
 
   const openFileDialog = useCallback(() => {
     openRef.current?.()
@@ -396,6 +409,31 @@ export const PromptInputActionAddAttachments = ({
     >
       <ImageIcon className="mr-2 size-4" /> {label}
     </DropdownMenuItem>
+  )
+}
+
+export type PromptInputAddDirectProps = ComponentProps<typeof Button>
+
+export const PromptInputAddDirect = ({
+  className,
+  ...props
+}: PromptInputAddDirectProps) => {
+  const attachments = usePromptInputAttachments()
+  const maxReached = attachments.files.length >= 2
+
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      className={cn("size-8 rounded-full", className)}
+      onClick={attachments.openFileDialog}
+      disabled={maxReached}
+      {...props}
+    >
+      <PlusIcon className="size-4" />
+      <span className="sr-only">Add photos</span>
+    </Button>
   )
 }
 
